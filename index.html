@@ -14,6 +14,33 @@
             <h3>Informe Integral del Proceso Educativo del Estudiante</h3>
         </header>
 
+        <!-- Estado de Conexión -->
+        <section class="connection-status" id="connectionStatus">
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span class="status-text" id="statusText">Desconectado</span>
+            </div>
+            <button type="button" id="connectBtn" class="btn btn-success">Conectar a Google Sheets</button>
+        </section>
+
+        <!-- Gestión de Estudiantes -->
+        <section class="students-management" id="studentsManagement">
+            <h4>Gestión de Estudiantes</h4>
+            <div class="students-controls">
+                <div class="student-selector">
+                    <label for="studentSelect">Seleccionar Estudiante:</label>
+                    <select id="studentSelect" name="studentSelect">
+                        <option value="">-- Nuevo Estudiante --</option>
+                    </select>
+                </div>
+                <div class="student-actions">
+                    <button type="button" id="newStudentBtn" class="btn btn-primary">Nuevo Estudiante</button>
+                    <button type="button" id="deleteStudentBtn" class="btn btn-danger">Eliminar Estudiante</button>
+                    <button type="button" id="exportAllBtn" class="btn btn-warning">Exportar Todos</button>
+                </div>
+            </div>
+        </section>
+
         <form id="anexo7Form" class="form-container">
             <!-- Información del Estudiante -->
             <section class="student-info">
@@ -213,8 +240,33 @@
                 <button type="button" id="clearBtn" class="btn btn-danger">Limpiar</button>
             </div>
         </form>
+
+        <!-- Lista de Estudiantes Guardados -->
+        <section class="saved-students" id="savedStudents">
+            <h4>Estudiantes Guardados</h4>
+            <div class="students-list" id="studentsList">
+                <!-- Los estudiantes se cargarán dinámicamente aquí -->
+            </div>
+        </section>
     </div>
 
+    <!-- Modal para confirmar eliminación -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Eliminación</h3>
+            <p>¿Está seguro de que desea eliminar el estudiante "<span id="studentToDelete"></span>"?</p>
+            <p><strong>Esta acción no se puede deshacer.</strong></p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="btn btn-danger">Eliminar</button>
+                <button id="cancelDeleteBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="google-sheets.js"></script>
+    <script src="print-manager.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
