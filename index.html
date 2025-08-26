@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANEXO 7: Trámite de Apoyo Curricular Significativo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="form-header">
+            <h1>ANEXO 7:</h1>
+            <h2>Trámite de Apoyo Curricular Significativo</h2>
+            <h3>Informe Integral del Proceso Educativo del Estudiante</h3>
+        </header>
+
+        <form id="anexo7Form" class="form-container">
+            <!-- Información del Estudiante -->
+            <section class="student-info">
+                <h4>Información del Estudiante</h4>
+                <div class="info-grid">
+                    <div class="info-group">
+                        <label for="institucion">Institución:</label>
+                        <input type="text" id="institucion" name="institucion" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="circuito">Circuito escolar:</label>
+                        <input type="text" id="circuito" name="circuito" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="estudiante">Estudiante:</label>
+                        <input type="text" id="estudiante" name="estudiante" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="edad">Edad:</label>
+                        <input type="number" id="edad" name="edad" min="0" max="25" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="nivel">Nivel que cursa:</label>
+                        <input type="text" id="nivel" name="nivel" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="cedula">Cédula:</label>
+                        <input type="text" id="cedula" name="cedula" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="fechaNacimiento">Fecha nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" required>
+                    </div>
+                    <div class="info-group">
+                        <label for="encargado">Nombre del encargado:</label>
+                        <input type="text" id="encargado" name="encargado" required>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-columns">
+                <!-- Columna Izquierda -->
+                <div class="left-column">
+                    <!-- Condición General de Salud -->
+                    <section class="form-section">
+                        <h4>Condición General de Salud</h4>
+                        <p class="section-description">(nutrición, capacidad visual, capacidad auditiva, enfermedades crónicas de tipo respiratorio, neurodegenerativas, secuelas ocasionadas por accidentes, entre otros)</p>
+                        <textarea name="condicionSalud" rows="3" placeholder="Describa la condición general de salud del estudiante..."></textarea>
+                    </section>
+
+                    <!-- Condición Física y de Movilidad -->
+                    <section class="form-section">
+                        <h4>Condición Física y de Movilidad</h4>
+                        <p class="section-description">(movilidad, motricidad fina y gruesa, coordinación visomotora)</p>
+                        <textarea name="condicionFisica" rows="3" placeholder="Describa la condición física y de movilidad..."></textarea>
+                    </section>
+
+                    <!-- Desarrollo Socio Afectivo -->
+                    <section class="form-section">
+                        <h4>Desarrollo Socio Afectivo</h4>
+                        <p class="section-description">(autoestima, independencia, toma de decisiones, relación con iguales, relación con los adultos, capacidad para seguir normas establecidas)</p>
+                        <textarea name="desarrolloSocial" rows="3" placeholder="Describa el desarrollo socio afectivo..."></textarea>
+                    </section>
+
+                    <!-- Aspectos Relevantes de Familia y Comunidad -->
+                    <section class="form-section">
+                        <h4>Aspectos Relevantes de Familia y Comunidad</h4>
+                        <p class="section-description">(descripción de la participación familiar en el proceso educativo y en la toma de decisiones, manejo de límites responsabilidades, autonomía en el hogar y la comunidad, describiendo los apoyos requeridos para su participación en estos ámbitos)</p>
+                        <textarea name="aspectosFamilia" rows="3" placeholder="Describa los aspectos familiares y comunitarios..."></textarea>
+                    </section>
+
+                    <!-- Comunicación y Lenguaje -->
+                    <section class="form-section">
+                        <h4>Comunicación y Lenguaje</h4>
+                        <p class="section-description">(escucha, habla, lectura, escritura. Lenguas que usa el estudiante para comunicarse, "LESCO, lenguas indígenas entre otras". Sistemas de comunicación utilizados)</p>
+                        <textarea name="comunicacion" rows="3" placeholder="Describa la comunicación y lenguaje..."></textarea>
+                    </section>
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="right-column">
+                    <!-- Capacidades y Condiciones Básicas para el Aprendizaje -->
+                    <section class="form-section">
+                        <h4>Capacidades y Condiciones Básicas para el Aprendizaje</h4>
+                        
+                        <h5>Habilidades del Pensamiento</h5>
+                        <div class="skills-table">
+                            <div class="skill-row">
+                                <label>Estilos de aprendizaje (visual, auditivo y kinestésico):</label>
+                                <input type="text" name="estilosAprendizaje" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Ritmo de aprendizajes (igual, lento, rápido):</label>
+                                <input type="text" name="ritmoAprendizaje" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Memoria (corta o largo plazo):</label>
+                                <input type="text" name="memoria" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Atención y concentración (periodos y tipos de actividades de interés):</label>
+                                <input type="text" name="atencion" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Razonamiento (resolución de problemas académicos y de la vida diaria):</label>
+                                <input type="text" name="razonamiento" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Tipo de agrupamientos en que se desempeña mejor (parejas, tríos, otros):</label>
+                                <input type="text" name="agrupamientos" placeholder="Especifique...">
+                            </div>
+                            <div class="skill-row">
+                                <label>Materiales y apoyos requeridos:</label>
+                                <input type="text" name="materiales" placeholder="Especifique...">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Funcionamiento Académico -->
+                    <section class="form-section">
+                        <h4>Funcionamiento Académico</h4>
+                        <p class="section-description">(descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura)</p>
+                        
+                        <div class="academic-table">
+                            <div class="table-header">
+                                <div class="header-cell">Asignatura</div>
+                                <div class="header-cell">Logros</div>
+                                <div class="header-cell">Nivel de Func.</div>
+                                <div class="header-cell">Nombre y firma del docente</div>
+                            </div>
+                            <div class="table-row">
+                                <div class="cell">Español</div>
+                                <div class="cell"><textarea name="logrosEspanol" rows="2" placeholder="Logros..."></textarea></div>
+                                <div class="cell"><input type="text" name="nivelEspanol" placeholder="Nivel..."></div>
+                                <div class="cell"><input type="text" name="firmaEspanol" placeholder="Nombre y firma..."></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="cell">Matemáticas</div>
+                                <div class="cell"><textarea name="logrosMatematicas" rows="2" placeholder="Logros..."></textarea></div>
+                                <div class="cell"><input type="text" name="nivelMatematicas" placeholder="Nivel..."></div>
+                                <div class="cell"><input type="text" name="firmaMatematicas" placeholder="Nombre y firma..."></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="cell">Ciencias</div>
+                                <div class="cell"><textarea name="logrosCiencias" rows="2" placeholder="Logros..."></textarea></div>
+                                <div class="cell"><input type="text" name="nivelCiencias" placeholder="Nivel..."></div>
+                                <div class="cell"><input type="text" name="firmaCiencias" placeholder="Nombre y firma..."></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="cell">Estudios Soc.</div>
+                                <div class="cell"><textarea name="logrosEstudiosSoc" rows="2" placeholder="Logros..."></textarea></div>
+                                <div class="cell"><input type="text" name="nivelEstudiosSoc" placeholder="Nivel..."></div>
+                                <div class="cell"><input type="text" name="firmaEstudiosSoc" placeholder="Nombre y firma..."></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="cell">Otras:</div>
+                                <div class="cell"><textarea name="logrosOtras" rows="2" placeholder="Logros..."></textarea></div>
+                                <div class="cell"><input type="text" name="nivelOtras" placeholder="Nivel..."></div>
+                                <div class="cell"><input type="text" name="firmaOtras" placeholder="Nombre y firma..."></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Desarrollo Vocacional -->
+                    <section class="form-section">
+                        <h4>Desarrollo Vocacional</h4>
+                        <p class="section-description">(Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas)</p>
+                        <textarea name="desarrolloVocacional" rows="3" placeholder="Describa el desarrollo vocacional..."></textarea>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Firmas -->
+            <section class="signatures">
+                <div class="signature-group">
+                    <label for="firmaDocente">Nombre y Firma del Docente Solicitante:</label>
+                    <input type="text" id="firmaDocente" name="firmaDocente" required>
+                </div>
+                <div class="signature-group">
+                    <label for="firmaEncargado">Nombre y firma del encargado legal:</label>
+                    <input type="text" id="firmaEncargado" name="firmaEncargado" required>
+                </div>
+                <div class="file-note">
+                    <small>C.C Expediente Único del Estudiante</small>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <div class="form-actions">
+                <button type="button" id="saveBtn" class="btn btn-primary">Guardar</button>
+                <button type="button" id="previewBtn" class="btn btn-info">Vista Previa</button>
+                <button type="button" id="printBtn" class="btn btn-secondary">Imprimir</button>
+                <button type="button" id="clearBtn" class="btn btn-danger">Limpiar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

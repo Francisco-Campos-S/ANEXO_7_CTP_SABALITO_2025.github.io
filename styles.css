@@ -1,0 +1,861 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header del formulario */
+.form-header {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.form-header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.form-header h2 {
+    color: #34495e;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-header h3 {
+    color: #7f8c8d;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* Contenedor del formulario */
+.form-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Información del estudiante */
+.student-info {
+    padding: 30px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.student-info h4 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.info-group input {
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.info-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Columnas del formulario */
+.form-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.left-column, .right-column {
+    padding: 30px;
+}
+
+.left-column {
+    background: #f8f9fa;
+    border-right: 2px solid #e9ecef;
+}
+
+/* Secciones del formulario */
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h4 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 5px;
+}
+
+.form-section h5 {
+    color: #34495e;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.section-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+/* Campos de texto */
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Tabla de habilidades */
+.skills-table {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.skill-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skill-row label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.skill-row input {
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.skill-row input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Tabla académica */
+.academic-table {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1.5fr;
+    background: #667eea;
+    color: white;
+}
+
+.header-cell {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1.5fr;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.cell {
+    padding: 8px;
+    border-right: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+.cell:first-child {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.cell textarea, .cell input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+.cell textarea:focus, .cell input:focus {
+    outline: none;
+    background: #fff;
+    border-radius: 4px;
+}
+
+/* Firmas */
+.signatures {
+    padding: 30px;
+    background: #f8f9fa;
+    border-top: 2px solid #e9ecef;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: end;
+}
+
+.signature-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.signature-group label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 1rem;
+}
+
+.signature-group input {
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.signature-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.file-note {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.file-note small {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Botones de acción */
+.form-actions {
+    padding: 30px;
+    background: #f8f9fa;
+    border-top: 2px solid #e9ecef;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .form-columns {
+        grid-template-columns: 1fr;
+    }
+    
+    .left-column {
+        border-right: none;
+        border-bottom: 2px solid #e9ecef;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .form-header {
+        padding: 20px;
+    }
+    
+    .form-header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .left-column, .right-column, .student-info, .signatures, .form-actions {
+        padding: 20px;
+    }
+    
+    .academic-table {
+        font-size: 0.8rem;
+    }
+    
+    .table-header, .table-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-cell, .cell {
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+        text-align: left;
+        justify-content: flex-start;
+    }
+    
+    .cell:first-child {
+        background: #e9ecef;
+        font-weight: 600;
+    }
+    
+    .signatures {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .form-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .form-header h3 {
+        font-size: 1rem;
+    }
+    
+    .left-column, .right-column, .student-info, .signatures, .form-actions {
+        padding: 15px;
+    }
+}
+
+/* Estilos para impresión */
+@media print {
+    body {
+        background: white;
+        font-family: 'Times New Roman', serif;
+        line-height: 1.2;
+        color: black;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .form-header {
+        text-align: center;
+        background: white;
+        padding: 20px;
+        border: 2px solid black;
+        border-radius: 0;
+        box-shadow: none;
+        margin-bottom: 20px;
+        page-break-after: avoid;
+    }
+    
+    .form-header h1 {
+        color: black;
+        font-size: 24pt;
+        margin-bottom: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .form-header h2 {
+        color: black;
+        font-size: 18pt;
+        margin-bottom: 6px;
+        font-weight: bold;
+    }
+    
+    .form-header h3 {
+        color: black;
+        font-size: 14pt;
+        font-weight: bold;
+    }
+    
+    .form-container {
+        background: white;
+        border: 2px solid black;
+        border-radius: 0;
+        box-shadow: none;
+        overflow: visible;
+    }
+    
+    .student-info {
+        padding: 20px;
+        background: white;
+        border-bottom: 2px solid black;
+        page-break-inside: avoid;
+    }
+    
+    .student-info h4 {
+        color: black;
+        font-size: 16pt;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .info-group label {
+        font-weight: bold;
+        color: black;
+        margin-bottom: 5px;
+        font-size: 12pt;
+    }
+    
+    .info-group input {
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 0;
+        font-size: 12pt;
+        background: white;
+        min-height: 25px;
+    }
+    
+    .form-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        page-break-inside: avoid;
+    }
+    
+    .left-column, .right-column {
+        padding: 20px;
+        background: white;
+    }
+    
+    .left-column {
+        border-right: 2px solid black;
+    }
+    
+    .form-section {
+        margin-bottom: 25px;
+        page-break-inside: avoid;
+    }
+    
+    .form-section h4 {
+        color: black;
+        font-size: 14pt;
+        margin-bottom: 8px;
+        font-weight: bold;
+        text-decoration: underline;
+        border-bottom: 1px solid black;
+        padding-bottom: 3px;
+    }
+    
+    .form-section h5 {
+        color: black;
+        font-size: 13pt;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+    
+    .section-description {
+        color: black;
+        font-size: 10pt;
+        font-style: italic;
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+    
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 0;
+        font-size: 11pt;
+        font-family: 'Times New Roman', serif;
+        resize: none;
+        background: white;
+        min-height: 60px;
+    }
+    
+    .skills-table {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .skill-row {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .skill-row label {
+        font-weight: bold;
+        color: black;
+        font-size: 11pt;
+    }
+    
+    .skill-row input {
+        padding: 6px;
+        border: 1px solid black;
+        border-radius: 0;
+        font-size: 11pt;
+        background: white;
+        min-height: 20px;
+    }
+    
+    .academic-table {
+        border: 2px solid black;
+        border-radius: 0;
+        overflow: visible;
+        margin-top: 12px;
+        page-break-inside: avoid;
+    }
+    
+    .table-header {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 1.5fr;
+        background: #f0f0f0;
+        color: black;
+        border-bottom: 2px solid black;
+    }
+    
+    .header-cell {
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 11pt;
+        border-right: 1px solid black;
+    }
+    
+    .header-cell:last-child {
+        border-right: none;
+    }
+    
+    .table-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr 1.5fr;
+        border-bottom: 1px solid black;
+        page-break-inside: avoid;
+    }
+    
+    .table-row:last-child {
+        border-bottom: none;
+    }
+    
+    .cell {
+        padding: 6px;
+        border-right: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+    }
+    
+    .cell:last-child {
+        border-right: none;
+    }
+    
+    .cell:first-child {
+        background: #f0f0f0;
+        font-weight: bold;
+        color: black;
+        text-align: center;
+    }
+    
+    .cell textarea, .cell input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        padding: 3px;
+        font-size: 10pt;
+        min-height: 35px;
+    }
+    
+    .signatures {
+        padding: 20px;
+        background: white;
+        border-top: 2px solid black;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        align-items: end;
+        page-break-inside: avoid;
+    }
+    
+    .signature-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .signature-group label {
+        font-weight: bold;
+        color: black;
+        font-size: 12pt;
+    }
+    
+    .signature-group input {
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 0;
+        font-size: 12pt;
+        background: white;
+        min-height: 25px;
+    }
+    
+    .file-note {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .file-note small {
+        color: black;
+        font-style: italic;
+        font-size: 10pt;
+    }
+    
+    .form-actions {
+        display: none;
+    }
+    
+    .btn {
+        display: none;
+    }
+    
+    /* Evitar saltos de página no deseados */
+    .form-section, .student-info, .signatures {
+        page-break-inside: avoid;
+    }
+    
+    /* Asegurar que las columnas no se separen */
+    .form-columns {
+        page-break-inside: avoid;
+    }
+    
+    /* Estilos específicos para impresión en blanco y negro */
+    * {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    /* Ajustar márgenes de página */
+    @page {
+        margin: 1in;
+        size: A4;
+    }
+    
+    /* Ocultar elementos de navegación y UI durante impresión */
+    .printing .form-actions,
+    .printing .save-indicator,
+    .printing .message {
+        display: none !important;
+    }
+    
+    /* Estilos para modo vista previa */
+    .printing {
+        background: white !important;
+    }
+    
+    .printing .container {
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .printing .form-header {
+        border: 2px solid black !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .printing .form-container {
+        border: 2px solid black !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* Asegurar que los campos de texto tengan bordes visibles */
+    input, textarea {
+        -webkit-appearance: none;
+        appearance: none;
+        border: 1px solid black !important;
+        background: white !important;
+    }
+    
+    /* Mejorar la legibilidad de las etiquetas */
+    label {
+        font-weight: bold !important;
+        color: black !important;
+    }
+    
+    /* Asegurar que las tablas se vean bien */
+    table, .academic-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    /* Estilos para campos de fecha */
+    input[type="date"] {
+        min-height: 25px;
+        border: 1px solid black !important;
+        background: white !important;
+    }
+    
+    /* Estilos para campos numéricos */
+    input[type="number"] {
+        min-height: 25px;
+        border: 1px solid black !important;
+        background: white !important;
+    }
+}
