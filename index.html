@@ -3,224 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión Estudiantil - CTP Sabalito</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>ANEXO 7 - CTP SABALITO 2025</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1><i class="fas fa-graduation-cap"></i> Sistema de Gestión Estudiantil</h1>
-            <p>CTP Sabalito - Funcionamiento Académico y Desarrollo Vocacional</p>
+        <header>
+            <h1>ANEXO 7 - CTP SABALITO 2025</h1>
+            <p>Formulario de Funcionamiento Académico y Desarrollo Vocacional</p>
         </header>
 
-        <nav class="navigation">
-            <button class="nav-btn active" onclick="showSection('form')">
-                <i class="fas fa-plus-circle"></i> Nuevo Estudiante
-            </button>
-            <button class="nav-btn" onclick="showSection('search')">
-                <i class="fas fa-search"></i> Consultar Estudiantes
-            </button>
-        </nav>
-
-        <!-- Formulario de Ingreso -->
-        <section id="form-section" class="section active">
-            <div class="form-container">
-                <h2><i class="fas fa-user-plus"></i> Registro de Estudiante</h2>
-                
-                <form id="student-form" class="student-form">
+        <div class="form-container">
+            <!-- Student Information Section -->
+            <div class="section">
+                <h2>Información del Estudiante</h2>
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="student-name">Nombre Completo del Estudiante:</label>
-                        <input type="text" id="student-name" name="student-name" required>
+                        <label for="studentName">Nombre del Estudiante:</label>
+                        <input type="text" id="studentName" name="studentName" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="student-id">Número de Identificación:</label>
-                        <input type="text" id="student-id" name="student-id" required>
+                        <label for="studentId">Cédula:</label>
+                        <input type="text" id="studentId" name="studentId" required>
                     </div>
-
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label for="grade">Nivel/Grado:</label>
                         <input type="text" id="grade" name="grade" required>
                     </div>
-
                     <div class="form-group">
                         <label for="year">Año:</label>
-                        <input type="number" id="year" name="year" min="2020" max="2030" value="2025" required>
+                        <input type="number" id="year" name="year" value="2025" required>
                     </div>
-
-                    <div class="form-group">
-                        <label for="requesting-teacher">Docente Solicitante:</label>
-                        <input type="text" id="requesting-teacher" name="requesting-teacher" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="legal-guardian">Encargado Legal:</label>
-                        <input type="text" id="legal-guardian" name="legal-guardian" required>
-                    </div>
-
-                    <div class="academic-section">
-                        <h3><i class="fas fa-book"></i> Funcionamiento Académico</h3>
-                        <p class="section-description">Descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura.</p>
-                        
-                        <div class="subjects-table">
-                            <div class="table-header">
-                                <div class="header-cell">Asignatura</div>
-                                <div class="header-cell">Logros</div>
-                                <div class="header-cell">Nivel de Func.</div>
-                                <div class="header-cell">Nombre y Firma del Docente</div>
-                            </div>
-                            
-                            <div class="table-row">
-                                <div class="cell subject">Español</div>
-                                <div class="cell"><textarea name="espanol-logros" placeholder="Describa los logros..."></textarea></div>
-                                <div class="cell"><select name="espanol-nivel">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Excelente">Excelente</option>
-                                    <option value="Muy Bueno">Muy Bueno</option>
-                                    <option value="Bueno">Bueno</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Necesita Mejorar">Necesita Mejorar</option>
-                                </select></div>
-                                <div class="cell"><input type="text" name="espanol-docente" placeholder="Nombre del docente"></div>
-                            </div>
-
-                            <div class="table-row">
-                                <div class="cell subject">Matemáticas</div>
-                                <div class="cell"><textarea name="matematicas-logros" placeholder="Describa los logros..."></textarea></div>
-                                <div class="cell"><select name="matematicas-nivel">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Excelente">Excelente</option>
-                                    <option value="Muy Bueno">Muy Bueno</option>
-                                    <option value="Bueno">Bueno</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Necesita Mejorar">Necesita Mejorar</option>
-                                </select></div>
-                                <div class="cell"><input type="text" name="matematicas-docente" placeholder="Nombre del docente"></div>
-                            </div>
-
-                            <div class="table-row">
-                                <div class="cell subject">Ciencias</div>
-                                <div class="cell"><textarea name="ciencias-logros" placeholder="Describa los logros..."></textarea></div>
-                                <div class="cell"><select name="ciencias-nivel">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Excelente">Excelente</option>
-                                    <option value="Muy Bueno">Muy Bueno</option>
-                                    <option value="Bueno">Bueno</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Necesita Mejorar">Necesita Mejorar</option>
-                                </select></div>
-                                <div class="cell"><input type="text" name="ciencias-docente" placeholder="Nombre del docente"></div>
-                            </div>
-
-                            <div class="table-row">
-                                <div class="cell subject">Estudios Sociales</div>
-                                <div class="cell"><textarea name="sociales-logros" placeholder="Describa los logros..."></textarea></div>
-                                <div class="cell"><select name="sociales-nivel">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Excelente">Excelente</option>
-                                    <option value="Muy Bueno">Muy Bueno</option>
-                                    <option value="Bueno">Bueno</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Necesita Mejorar">Necesita Mejorar</option>
-                                </select></div>
-                                <div class="cell"><input type="text" name="sociales-docente" placeholder="Nombre del docente"></div>
-                            </div>
-
-                            <div class="table-row">
-                                <div class="cell subject">Otras:</div>
-                                <div class="cell"><input type="text" name="otras-asignatura" placeholder="Especifique asignatura"></div>
-                                <div class="cell"><textarea name="otras-logros" placeholder="Describa los logros..."></textarea></div>
-                                <div class="cell"><select name="otras-nivel">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Excelente">Excelente</option>
-                                    <option value="Muy Bueno">Muy Bueno</option>
-                                    <option value="Bueno">Bueno</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Necesita Mejorar">Necesita Mejorar</option>
-                                </select></div>
-                                <div class="cell"><input type="text" name="otras-docente" placeholder="Nombre del docente"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="vocational-section">
-                        <h3><i class="fas fa-lightbulb"></i> Desarrollo Vocacional</h3>
-                        <p class="section-description">Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas.</p>
-                        
-                        <div class="vocational-grid">
-                            <div class="vocational-item">
-                                <label>Intereses y Habilidades Deportivas:</label>
-                                <textarea name="deportivas" placeholder="Describa intereses y habilidades deportivas..."></textarea>
-                            </div>
-                            
-                            <div class="vocational-item">
-                                <label>Intereses y Habilidades Creativas:</label>
-                                <textarea name="creativas" placeholder="Describa intereses y habilidades creativas..."></textarea>
-                            </div>
-                            
-                            <div class="vocational-item">
-                                <label>Intereses y Habilidades Ocupacionales:</label>
-                                <textarea name="ocupacionales" placeholder="Describa intereses y habilidades ocupacionales..."></textarea>
-                            </div>
-                            
-                            <div class="vocational-item">
-                                <label>Intereses y Habilidades Vocacionales:</label>
-                                <textarea name="vocacionales" placeholder="Describa intereses y habilidades vocacionales..."></textarea>
-                            </div>
-                            
-                            <div class="vocational-item full-width">
-                                <label>Expectativas Vocacionales y Laborales:</label>
-                                <textarea name="expectativas" placeholder="Describa las expectativas vocacionales y laborales del estudiante..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Guardar Estudiante
-                        </button>
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="fas fa-undo"></i> Limpiar Formulario
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </section>
 
-        <!-- Sección de Consulta -->
-        <section id="search-section" class="section">
-            <div class="search-container">
-                <h2><i class="fas fa-search"></i> Consultar Estudiantes</h2>
+            <!-- Academic Performance Section -->
+            <div class="section">
+                <h2>Funcionamiento Académico</h2>
+                <p class="section-description">(Descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura).</p>
                 
-                <div class="search-controls">
-                    <div class="search-input-group">
-                        <input type="text" id="search-input" placeholder="Buscar por nombre o ID..." class="search-input">
-                        <button onclick="searchStudents()" class="btn btn-primary">
-                            <i class="fas fa-search"></i> Buscar
-                        </button>
-                    </div>
-                    <button onclick="showAllStudents()" class="btn btn-secondary">
-                        <i class="fas fa-list"></i> Mostrar Todos
-                    </button>
-                </div>
-
-                <div id="students-list" class="students-list">
-                    <!-- Los estudiantes se mostrarán aquí dinámicamente -->
+                <div class="table-container">
+                    <table class="academic-table">
+                        <thead>
+                            <tr>
+                                <th>Asignatura</th>
+                                <th>Logros</th>
+                                <th>Nivel de Func.</th>
+                                <th>Nombre y firma del docente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Español</td>
+                                <td><textarea name="espanol_logros" rows="3" placeholder="Describir logros..."></textarea></td>
+                                <td>
+                                    <select name="espanol_nivel">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="espanol_docente" placeholder="Nombre del docente"></td>
+                            </tr>
+                            <tr>
+                                <td>Matemáticas</td>
+                                <td><textarea name="matematicas_logros" rows="3" placeholder="Describir logros..."></textarea></td>
+                                <td>
+                                    <select name="matematicas_nivel">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="matematicas_docente" placeholder="Nombre del docente"></td>
+                            </tr>
+                            <tr>
+                                <td>Ciencias</td>
+                                <td><textarea name="ciencias_logros" rows="3" placeholder="Describir logros..."></textarea></td>
+                                <td>
+                                    <select name="ciencias_nivel">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="ciencias_docente" placeholder="Nombre del docente"></td>
+                            </tr>
+                            <tr>
+                                <td>Estudios Soc.</td>
+                                <td><textarea name="estudios_sociales_logros" rows="3" placeholder="Describir logros..."></textarea></td>
+                                <td>
+                                    <select name="estudios_sociales_nivel">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="estudios_sociales_docente" placeholder="Nombre del docente"></td>
+                            </tr>
+                            <tr>
+                                <td>Otras:</td>
+                                <td><textarea name="otras_logros" rows="3" placeholder="Describir logros..."></textarea></td>
+                                <td>
+                                    <select name="otras_nivel">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="otras_docente" placeholder="Nombre del docente"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </section>
 
-        <!-- Modal para mostrar detalles del estudiante -->
-        <div id="student-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div id="modal-body">
-                    <!-- El contenido del modal se llenará dinámicamente -->
+            <!-- Vocational Development Section -->
+            <div class="section">
+                <h2>Desarrollo Vocacional</h2>
+                <p class="section-description">(Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas).</p>
+                
+                <div class="vocational-container">
+                    <div class="form-group">
+                        <label for="vocational_interests">Intereses y Habilidades:</label>
+                        <textarea id="vocational_interests" name="vocational_interests" rows="4" placeholder="Describir intereses deportivos, creativos, ocupacionales y vocacionales..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vocational_expectations">Expectativas Vocacionales y Laborales:</label>
+                        <textarea id="vocational_expectations" name="vocational_expectations" rows="4" placeholder="Describir expectativas vocacionales y laborales..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productive_skills">Habilidades Productivas:</label>
+                        <textarea id="productive_skills" name="productive_skills" rows="4" placeholder="Describir habilidades productivas..."></textarea>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+                <button type="button" id="submitBtn" class="btn btn-primary">Guardar Formulario</button>
+                <button type="button" id="queryBtn" class="btn btn-secondary">Consultar Estudiante</button>
+                <button type="button" id="clearBtn" class="btn btn-outline">Limpiar Formulario</button>
             </div>
         </div>
+
+        <!-- Query Modal -->
+        <div id="queryModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Consultar Estudiante</h3>
+                <div class="form-group">
+                    <label for="queryStudentId">Cédula del Estudiante:</label>
+                    <input type="text" id="queryStudentId" placeholder="Ingrese la cédula">
+                </div>
+                <button type="button" id="searchBtn" class="btn btn-primary">Buscar</button>
+                
+                <div id="queryResults" class="query-results"></div>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div id="messageContainer" class="message-container"></div>
     </div>
 
     <script src="script.js"></script>

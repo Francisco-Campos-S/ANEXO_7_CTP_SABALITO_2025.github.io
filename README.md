@@ -1,155 +1,164 @@
-# Sistema de Gestión Estudiantil - CTP Sabalito
+# ANEXO 7 - CTP SABALITO 2025
 
-Sistema web para gestionar información académica y vocacional de estudiantes del CTP Sabalito, diseñado para funcionar en GitHub Pages.
+Formulario web para el seguimiento del funcionamiento académico y desarrollo vocacional de estudiantes, integrado con Google Sheets mediante Google Apps Script.
 
 ## 🚀 Características
 
-- **Formulario completo** para registro de estudiantes
-- **Gestión académica** con evaluación por asignaturas
-- **Desarrollo vocacional** con seguimiento de intereses y habilidades
-- **Búsqueda y consulta** de estudiantes registrados
-- **Almacenamiento local** usando localStorage del navegador
-- **Interfaz responsiva** que funciona en dispositivos móviles
-- **Diseño moderno** con gradientes y animaciones
+- **Formulario completo** que replica el ANEXO 7 original
+- **Integración con Google Sheets** para almacenamiento de datos
+- **Consulta de estudiantes** por número de cédula
+- **Interfaz moderna y responsiva** optimizada para dispositivos móviles
+- **Validación de formularios** en tiempo real
+- **Mensajes de confirmación** para el usuario
 
-## 📋 Funcionalidades
+## 📋 Estructura del Formulario
 
-### 1. Registro de Estudiantes
-- Información básica del estudiante
-- Evaluación académica por asignaturas:
-  - Español
-  - Matemáticas
-  - Ciencias
-  - Estudios Sociales
-  - Otras asignaturas personalizables
-- Niveles de funcionamiento académico
-- Registro de docentes por asignatura
+### 1. Información del Estudiante
+- Nombre completo
+- Número de cédula
+- Nivel/Grado
+- Año académico
 
-### 2. Desarrollo Vocacional
-- Intereses y habilidades deportivas
-- Intereses y habilidades creativas
-- Intereses y habilidades ocupacionales
-- Intereses y habilidades vocacionales
+### 2. Funcionamiento Académico
+- **Español**: Logros, nivel de funcionamiento, docente
+- **Matemáticas**: Logros, nivel de funcionamiento, docente
+- **Ciencias**: Logros, nivel de funcionamiento, docente
+- **Estudios Sociales**: Logros, nivel de funcionamiento, docente
+- **Otras asignaturas**: Logros, nivel de funcionamiento, docente
+
+### 3. Desarrollo Vocacional
+- Intereses y habilidades (deportivas, creativas, ocupacionales)
 - Expectativas vocacionales y laborales
+- Habilidades productivas
 
-### 3. Consulta y Búsqueda
-- Búsqueda por nombre o ID del estudiante
-- Vista de todos los estudiantes registrados
-- Detalles completos de cada estudiante
-- Opción de eliminación de registros
+## 🛠️ Configuración
 
-## 🛠️ Tecnologías Utilizadas
+### Paso 1: Configurar Google Apps Script
 
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos modernos con gradientes y animaciones
-- **JavaScript ES6+** - Funcionalidad completa del sistema
-- **Font Awesome** - Iconos para la interfaz
-- **Google Fonts** - Tipografía Inter para mejor legibilidad
+1. **Abrir Google Apps Script**
+   - Ve a [script.google.com](https://script.google.com)
+   - Crea un nuevo proyecto
 
-## 📱 Compatibilidad
+2. **Copiar el código**
+   - Copia todo el contenido del archivo `GoogleAppsScript.gs`
+   - Pégalo en el editor de Google Apps Script
 
-- ✅ Navegadores modernos (Chrome, Firefox, Safari, Edge)
-- ✅ Dispositivos móviles y tablets
-- ✅ GitHub Pages
-- ✅ Funciona offline (datos almacenados localmente)
+3. **Configurar la hoja de cálculo**
+   - Asegúrate de que el ID de la hoja en el código coincida con tu Google Sheet
+   - El ID está en la URL: `https://docs.google.com/spreadsheets/d/[ID]/edit`
 
-## 🚀 Instalación y Uso
+4. **Ejecutar la función de configuración**
+   - En el editor, selecciona la función `setupSpreadsheet`
+   - Haz clic en "Ejecutar" para crear la estructura de la hoja
 
-### Opción 1: GitHub Pages (Recomendado)
-1. Haz fork de este repositorio
-2. Activa GitHub Pages en la configuración del repositorio
-3. El sistema estará disponible en `https://tuusuario.github.io/nombre-repositorio`
+5. **Desplegar como aplicación web**
+   - Haz clic en "Implementar" → "Nueva implementación"
+   - Selecciona "Aplicación web"
+   - Configura:
+     - **Ejecutar como**: Tu cuenta
+     - **Quién tiene acceso**: Cualquier persona
+   - Haz clic en "Implementar"
+   - Copia la URL de la aplicación web
 
-### Opción 2: Uso Local
-1. Descarga todos los archivos
-2. Abre `index.html` en tu navegador
-3. ¡Listo para usar!
+### Paso 2: Configurar el Formulario Web
 
-## 📖 Instrucciones de Uso
+1. **Actualizar la URL de Google Apps Script**
+   - Abre `script.js`
+   - Reemplaza `YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE` con la URL que obtuviste en el paso anterior
 
-### Registrando un Nuevo Estudiante
-1. Haz clic en "Nuevo Estudiante"
-2. Completa la información básica (campos obligatorios marcados con *)
-3. Llena la evaluación académica para cada asignatura
-4. Completa la información vocacional
-5. Haz clic en "Guardar Estudiante"
+2. **Subir archivos a GitHub**
+   - Crea un nuevo repositorio en GitHub
+   - Sube los archivos: `index.html`, `style.css`, `script.js`
+   - Asegúrate de que `index.html` esté en la raíz del repositorio
 
-### Consultando Estudiantes
-1. Haz clic en "Consultar Estudiantes"
-2. Usa la barra de búsqueda para encontrar estudiantes específicos
-3. Haz clic en "Mostrar Todos" para ver todos los registros
-4. Haz clic en cualquier tarjeta de estudiante para ver detalles completos
+3. **Habilitar GitHub Pages**
+   - Ve a Settings → Pages
+   - En "Source", selecciona "Deploy from a branch"
+   - Selecciona la rama principal (main/master)
+   - Guarda la configuración
 
-### Niveles Académicos
-- **Excelente**: Rendimiento sobresaliente
-- **Muy Bueno**: Rendimiento muy satisfactorio
-- **Bueno**: Rendimiento satisfactorio
-- **Regular**: Rendimiento básico
-- **Necesita Mejorar**: Rendimiento por debajo del esperado
+## 📱 Uso del Sistema
 
-## 💾 Almacenamiento de Datos
+### Enviar Formulario
+1. Llena todos los campos requeridos
+2. Haz clic en "Guardar Formulario"
+3. Los datos se enviarán automáticamente a Google Sheets
 
-- Los datos se guardan en el **localStorage** del navegador
-- Los datos persisten entre sesiones
-- **Importante**: Los datos se almacenan localmente en cada dispositivo
-- Para respaldo, se recomienda exportar los datos regularmente
+### Consultar Estudiante
+1. Haz clic en "Consultar Estudiante"
+2. Ingresa el número de cédula
+3. Haz clic en "Buscar"
+4. Se mostrará toda la información del estudiante
 
-## 🔧 Personalización
+### Limpiar Formulario
+- Haz clic en "Limpiar Formulario" para resetear todos los campos
 
-### Cambiar Colores
-Edita el archivo `styles.css` y modifica las variables de color:
-```css
-/* Cambiar el gradiente principal */
-body {
-    background: linear-gradient(135deg, #tu-color-1 0%, #tu-color-2 100%);
-}
-```
+## 🔧 Estructura de Datos en Google Sheets
 
-### Agregar Nuevas Asignaturas
-Edita el archivo `index.html` y agrega nuevas filas en la tabla de asignaturas.
+La hoja se organiza en las siguientes columnas:
 
-### Modificar Campos Vocacionales
-Edita la sección de desarrollo vocacional en `index.html` y `script.js`.
+| Columna | Descripción |
+|---------|-------------|
+| A | Timestamp |
+| B | Nombre del Estudiante |
+| C | Cédula |
+| D | Grado/Nivel |
+| E | Año |
+| F-H | Español (Logros, Nivel, Docente) |
+| I-K | Matemáticas (Logros, Nivel, Docente) |
+| L-N | Ciencias (Logros, Nivel, Docente) |
+| O-Q | Estudios Sociales (Logros, Nivel, Docente) |
+| R-T | Otras (Logros, Nivel, Docente) |
+| U | Intereses y Habilidades |
+| V | Expectativas Vocacionales |
+| W | Habilidades Productivas |
 
-## 📱 Responsive Design
+## 🚨 Solución de Problemas
 
-El sistema se adapta automáticamente a diferentes tamaños de pantalla:
-- **Desktop**: Vista completa con tabla de asignaturas horizontal
-- **Tablet**: Diseño adaptado con elementos reorganizados
-- **Móvil**: Vista vertical optimizada para pantallas pequeñas
+### Error de CORS
+- Asegúrate de que Google Apps Script esté configurado correctamente
+- Verifica que la URL de la aplicación web sea correcta
 
-## 🚨 Consideraciones Importantes
+### Datos no se guardan
+- Revisa la consola del navegador para errores
+- Verifica que tienes permisos de escritura en la hoja de Google Sheets
+- Asegúrate de que el ID de la hoja sea correcto
 
-1. **Datos Locales**: La información se guarda solo en el dispositivo del usuario
-2. **Sin Servidor**: No requiere base de datos o servidor web
-3. **Límite de Almacenamiento**: localStorage tiene límites (generalmente 5-10MB)
-4. **Respaldo**: Exporta regularmente los datos para respaldo
+### Formulario no se envía
+- Verifica que todos los campos requeridos estén completos
+- Revisa la conexión a internet
+- Confirma que la URL de Google Apps Script sea válida
 
-## 🔮 Funcionalidades Futuras
+## 📊 Funciones Adicionales
 
-- [ ] Exportación a PDF
-- [ ] Sincronización con Google Drive
-- [ ] Múltiples años académicos
-- [ ] Reportes y estadísticas
-- [ ] Sistema de usuarios y permisos
+### Estadísticas
+El script incluye una función `getStatistics()` que puedes ejecutar manualmente para obtener:
+- Total de estudiantes registrados
+- Distribución por grado/nivel
+- Última actualización
+
+### Personalización
+- Modifica `style.css` para cambiar colores y estilos
+- Ajusta `script.js` para agregar validaciones adicionales
+- Personaliza `GoogleAppsScript.gs` para modificar la lógica de almacenamiento
+
+## 🔒 Seguridad
+
+- El formulario es público y puede ser usado por cualquier persona
+- Los datos se almacenan en tu Google Sheet personal
+- Considera implementar autenticación si necesitas restringir el acceso
 
 ## 📞 Soporte
 
-Para reportar problemas o sugerir mejoras:
-1. Crea un issue en GitHub
-2. Describe el problema o sugerencia
-3. Incluye detalles del navegador y dispositivo
+Para problemas técnicos o preguntas sobre la implementación:
+1. Revisa la consola del navegador para errores
+2. Verifica la configuración de Google Apps Script
+3. Confirma que todos los archivos estén correctamente subidos
 
-## 📄 Licencia
+## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Puedes usarlo, modificarlo y distribuirlo libremente.
-
-## 🙏 Agradecimientos
-
-- CTP Sabalito por la confianza
-- Comunidad de desarrolladores web
-- Contribuidores del proyecto
+Este proyecto está diseñado para uso educativo en el CTP SABALITO 2025.
 
 ---
 
-**Desarrollado con ❤️ para la comunidad educativa del CTP Sabalito**
+**Desarrollado para el sistema educativo costarricense** 🇨🇷
