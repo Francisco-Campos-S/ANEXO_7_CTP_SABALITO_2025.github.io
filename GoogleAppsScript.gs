@@ -279,7 +279,7 @@ function setupSpreadsheet() {
   }
 }
 
-// Función para obtener estadísticas básicas
+// Función para obtener estadísticas  
 function getStatistics() {
   try {
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -315,3 +315,4 @@ function getStatistics() {
     };
   }
 }
+   

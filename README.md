@@ -24,8 +24,8 @@ Formulario web para el seguimiento del funcionamiento académico y desarrollo vo
 - **Matemáticas**: Logros, nivel de funcionamiento, docente
 - **Ciencias**: Logros, nivel de funcionamiento, docente
 - **Estudios Sociales**: Logros, nivel de funcionamiento, docente
-- **Otras asignaturas**: Logros, nivel de funcionamiento, docente
-
+- **Otras asignaturas**: Logros, nivel de funcionamiento, docente222
+ 
 ### 3. Desarrollo Vocacional
 - Intereses y habilidades (deportivas, creativas, ocupacionales)
 - Expectativas vocacionales y laborales
