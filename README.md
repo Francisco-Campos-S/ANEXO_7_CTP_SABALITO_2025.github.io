@@ -1,158 +1,155 @@
-# ANEXO 7: Trámite de Apoyo Curricular Significativo
+# Sistema de Gestión Estudiantil - CTP Sabalito
 
-## Descripción
+Sistema web para gestionar información académica y vocacional de estudiantes del CTP Sabalito, diseñado para funcionar en GitHub Pages.
 
-Este repositorio contiene un formulario web moderno y responsivo para el **ANEXO 7: Trámite de Apoyo Curricular Significativo, Informe Integral del Proceso Educativo del Estudiante**.
+## 🚀 Características
 
-El formulario está diseñado para ser desplegado en GitHub Pages y permite a los docentes completar de manera digital la información integral de los estudiantes que requieren apoyo curricular significativo.
+- **Formulario completo** para registro de estudiantes
+- **Gestión académica** con evaluación por asignaturas
+- **Desarrollo vocacional** con seguimiento de intereses y habilidades
+- **Búsqueda y consulta** de estudiantes registrados
+- **Almacenamiento local** usando localStorage del navegador
+- **Interfaz responsiva** que funciona en dispositivos móviles
+- **Diseño moderno** con gradientes y animaciones
 
-## Características
+## 📋 Funcionalidades
 
-### ✨ Funcionalidades Principales
-- **Formulario completo** basado en el ANEXO 7 oficial
-- **Diseño responsivo** que se adapta a todos los dispositivos
-- **Auto-guardado** automático en el navegador
-- **Validación en tiempo real** de campos requeridos
-- **Exportación de datos** en formato JSON
-- **Función de impresión** optimizada
-- **Interfaz moderna** con animaciones suaves
+### 1. Registro de Estudiantes
+- Información básica del estudiante
+- Evaluación académica por asignaturas:
+  - Español
+  - Matemáticas
+  - Ciencias
+  - Estudios Sociales
+  - Otras asignaturas personalizables
+- Niveles de funcionamiento académico
+- Registro de docentes por asignatura
 
-### 📱 Diseño Responsivo
-- **Desktop**: Layout de dos columnas para mejor aprovechamiento del espacio
-- **Tablet**: Adaptación automática a pantallas medianas
-- **Mobile**: Diseño optimizado para dispositivos móviles
-- **Impresión**: Estilos especiales para impresión profesional
+### 2. Desarrollo Vocacional
+- Intereses y habilidades deportivas
+- Intereses y habilidades creativas
+- Intereses y habilidades ocupacionales
+- Intereses y habilidades vocacionales
+- Expectativas vocacionales y laborales
 
-### 🔒 Validaciones
-- Campos requeridos marcados automáticamente
-- Validación de formato de cédula costarricense (9 dígitos)
-- Validación de rango de edad (0-25 años)
-- Indicadores visuales de estado de los campos
+### 3. Consulta y Búsqueda
+- Búsqueda por nombre o ID del estudiante
+- Vista de todos los estudiantes registrados
+- Detalles completos de cada estudiante
+- Opción de eliminación de registros
 
-## Estructura del Formulario
+## 🛠️ Tecnologías Utilizadas
 
-### 1. Información del Estudiante
-- Institución y circuito escolar
-- Datos personales del estudiante
-- Información del encargado legal
+- **HTML5** - Estructura semántica
+- **CSS3** - Estilos modernos con gradientes y animaciones
+- **JavaScript ES6+** - Funcionalidad completa del sistema
+- **Font Awesome** - Iconos para la interfaz
+- **Google Fonts** - Tipografía Inter para mejor legibilidad
 
-### 2. Columna Izquierda
-- **Condición General de Salud**: Nutrición, capacidad visual/auditiva, enfermedades crónicas
-- **Condición Física y de Movilidad**: Movilidad, motricidad, coordinación visomotora
-- **Desarrollo Socio Afectivo**: Autoestima, independencia, relaciones sociales
-- **Aspectos Familiares y Comunitarios**: Participación familiar, autonomía
-- **Comunicación y Lenguaje**: Habilidades comunicativas, idiomas, sistemas de comunicación
+## 📱 Compatibilidad
 
-### 3. Columna Derecha
-- **Capacidades Básicas para el Aprendizaje**: Estilos de aprendizaje, ritmo, memoria, atención
-- **Funcionamiento Académico**: Logros por asignatura con firmas de docentes
-- **Desarrollo Vocacional**: Intereses, habilidades y expectativas laborales
+- ✅ Navegadores modernos (Chrome, Firefox, Safari, Edge)
+- ✅ Dispositivos móviles y tablets
+- ✅ GitHub Pages
+- ✅ Funciona offline (datos almacenados localmente)
 
-### 4. Firmas
-- Docente solicitante
-- Encargado legal
-- Referencia al expediente único del estudiante
+## 🚀 Instalación y Uso
 
-## Cómo Usar
+### Opción 1: GitHub Pages (Recomendado)
+1. Haz fork de este repositorio
+2. Activa GitHub Pages en la configuración del repositorio
+3. El sistema estará disponible en `https://tuusuario.github.io/nombre-repositorio`
 
-### 🚀 Despliegue en GitHub Pages
+### Opción 2: Uso Local
+1. Descarga todos los archivos
+2. Abre `index.html` en tu navegador
+3. ¡Listo para usar!
 
-1. **Clona el repositorio**:
-   ```bash
-   git clone https://github.com/tu-usuario/ANEXO_7_CTP_SABALITO_2025.github.io.git
-   cd ANEXO_7_CTP_SABALITO_2025.github.io
-   ```
+## 📖 Instrucciones de Uso
 
-2. **Sube los archivos**:
-   ```bash
-   git add .
-   git commit -m "Agregar formulario ANEXO 7"
-   git push origin main
-   ```
+### Registrando un Nuevo Estudiante
+1. Haz clic en "Nuevo Estudiante"
+2. Completa la información básica (campos obligatorios marcados con *)
+3. Llena la evaluación académica para cada asignatura
+4. Completa la información vocacional
+5. Haz clic en "Guardar Estudiante"
 
-3. **Activa GitHub Pages**:
-   - Ve a Settings > Pages
-   - Selecciona "Deploy from a branch"
-   - Elige la rama "main"
-   - Tu formulario estará disponible en: `https://tu-usuario.github.io/ANEXO_7_CTP_SABALITO_2025.github.io/`
+### Consultando Estudiantes
+1. Haz clic en "Consultar Estudiantes"
+2. Usa la barra de búsqueda para encontrar estudiantes específicos
+3. Haz clic en "Mostrar Todos" para ver todos los registros
+4. Haz clic en cualquier tarjeta de estudiante para ver detalles completos
 
-### 💻 Uso del Formulario
+### Niveles Académicos
+- **Excelente**: Rendimiento sobresaliente
+- **Muy Bueno**: Rendimiento muy satisfactorio
+- **Bueno**: Rendimiento satisfactorio
+- **Regular**: Rendimiento básico
+- **Necesita Mejorar**: Rendimiento por debajo del esperado
 
-1. **Completar información**: Llena todos los campos requeridos
-2. **Auto-guardado**: Los datos se guardan automáticamente en tu navegador
-3. **Guardar**: Descarga los datos en formato JSON
-4. **Imprimir**: Imprime el formulario completado
-5. **Limpiar**: Borra todos los datos del formulario
+## 💾 Almacenamiento de Datos
 
-## Tecnologías Utilizadas
+- Los datos se guardan en el **localStorage** del navegador
+- Los datos persisten entre sesiones
+- **Importante**: Los datos se almacenan localmente en cada dispositivo
+- Para respaldo, se recomienda exportar los datos regularmente
 
-- **HTML5**: Estructura semántica del formulario
-- **CSS3**: Estilos modernos con Grid y Flexbox
-- **JavaScript ES6+**: Funcionalidad interactiva
-- **LocalStorage**: Persistencia de datos en el navegador
-- **Responsive Design**: Adaptación a múltiples dispositivos
+## 🔧 Personalización
 
-## Archivos del Proyecto
-
-- `index.html` - Estructura principal del formulario
-- `styles.css` - Estilos y diseño responsivo
-- `script.js` - Funcionalidad JavaScript
-- `README.md` - Documentación del proyecto
-
-## Personalización
-
-### Colores
-Los colores principales se pueden modificar en `styles.css`:
+### Cambiar Colores
+Edita el archivo `styles.css` y modifica las variables de color:
 ```css
-:root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
+/* Cambiar el gradiente principal */
+body {
+    background: linear-gradient(135deg, #tu-color-1 0%, #tu-color-2 100%);
 }
 ```
 
-### Logo Institucional
-Para agregar el logo de tu institución, modifica el header en `index.html`:
-```html
-<div class="institution-logo">
-    <img src="ruta-a-tu-logo.png" alt="Logo Institucional">
-</div>
-```
+### Agregar Nuevas Asignaturas
+Edita el archivo `index.html` y agrega nuevas filas en la tabla de asignaturas.
 
-## Contribuciones
+### Modificar Campos Vocacionales
+Edita la sección de desarrollo vocacional en `index.html` y `script.js`.
 
-Las contribuciones son bienvenidas. Para contribuir:
+## 📱 Responsive Design
 
-1. Haz un fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+El sistema se adapta automáticamente a diferentes tamaños de pantalla:
+- **Desktop**: Vista completa con tabla de asignaturas horizontal
+- **Tablet**: Diseño adaptado con elementos reorganizados
+- **Móvil**: Vista vertical optimizada para pantallas pequeñas
 
-## Licencia
+## 🚨 Consideraciones Importantes
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+1. **Datos Locales**: La información se guarda solo en el dispositivo del usuario
+2. **Sin Servidor**: No requiere base de datos o servidor web
+3. **Límite de Almacenamiento**: localStorage tiene límites (generalmente 5-10MB)
+4. **Respaldo**: Exporta regularmente los datos para respaldo
 
-## Soporte
+## 🔮 Funcionalidades Futuras
 
-Si tienes preguntas o necesitas ayuda:
+- [ ] Exportación a PDF
+- [ ] Sincronización con Google Drive
+- [ ] Múltiples años académicos
+- [ ] Reportes y estadísticas
+- [ ] Sistema de usuarios y permisos
 
-- Abre un issue en GitHub
-- Contacta al equipo de desarrollo
-- Revisa la documentación oficial del MEP
+## 📞 Soporte
 
-## Changelog
+Para reportar problemas o sugerir mejoras:
+1. Crea un issue en GitHub
+2. Describe el problema o sugerencia
+3. Incluye detalles del navegador y dispositivo
 
-### v1.0.0 (2025-01-XX)
-- ✅ Formulario completo del ANEXO 7
-- ✅ Diseño responsivo
-- ✅ Auto-guardado automático
-- ✅ Validaciones en tiempo real
-- ✅ Función de impresión
-- ✅ Exportación de datos
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Puedes usarlo, modificarlo y distribuirlo libremente.
+
+## 🙏 Agradecimientos
+
+- CTP Sabalito por la confianza
+- Comunidad de desarrolladores web
+- Contribuidores del proyecto
 
 ---
 
-**Desarrollado para el CTP Sabalito 2025** 🎓
+**Desarrollado con ❤️ para la comunidad educativa del CTP Sabalito**
