@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Connection - ANEXO 7 CTP SABALITO 2025</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .url-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .url-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #138496;
+        }
+        .response-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .response-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .response-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status-success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .status-error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .form-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .test-data {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .test-data h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Connection - ANEXO 7 CTP SABALITO 2025</h1>
+        
+        <div class="url-section">
+            <h3>🔗 URL del Web App</h3>
+            <input type="text" id="webAppUrl" class="url-input" 
+                   value="https://script.google.com/macros/s/AKfycbysRAs_Swk0mJVSmq0LrMrTLarDfKwJMAkNNKh5ZZcKbBNpdhinqtS02ouvsrMtWIC1VA/exec" 
+                   readonly>
+            <p><strong>Estado:</strong> <span class="status-success">✅ Web App funcionando correctamente</span></p>
+        </div>
+
+        <div class="test-data">
+            <h3>📊 Datos de Prueba</h3>
+            <p><strong>Spreadsheet ID:</strong> 1I3_cpVR8wvAwXFWuXgJEkUf8bEuARwuq6p5JaDbbfus</p>
+            <p><strong>Última verificación:</strong> 27 de Agosto, 2025 - 23:55 UTC</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="testConnection()">🔗 Test Connection</button>
+            <button class="btn btn-success" onclick="setupSpreadsheet()">📊 Setup Spreadsheet</button>
+            <button class="btn btn-info" onclick="getAllStudents()">👥 Get All Students</button>
+            <button class="btn btn-warning" onclick="getStatistics()">📈 Get Statistics</button>
+        </div>
+
+        <div class="form-section">
+            <h3>📝 Prueba de Formulario</h3>
+            <div class="form-group">
+                <label class="form-label">Nombre del Estudiante:</label>
+                <input type="text" id="studentName" class="form-input" value="Juan Pérez" placeholder="Nombre del estudiante">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Cédula:</label>
+                <input type="text" id="studentId" class="form-input" value="123456789" placeholder="Cédula del estudiante">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Grado/Nivel:</label>
+                <input type="text" id="studentGrade" class="form-input" value="9no" placeholder="Grado o nivel">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Año:</label>
+                <input type="text" id="studentYear" class="form-input" value="2025" placeholder="Año">
+            </div>
+            <button class="btn btn-success" onclick="submitTestForm()">💾 Submit Test Form</button>
+        </div>
+
+        <div class="form-section">
+            <h3>🔍 Consulta de Estudiante</h3>
+            <div class="form-group">
+                <label class="form-label">Cédula a consultar:</label>
+                <input type="text" id="queryStudentId" class="form-input" value="123456789" placeholder="Cédula del estudiante">
+            </div>
+            <button class="btn btn-info" onclick="queryStudent()">🔍 Query Student</button>
+        </div>
+
+        <div class="response-section">
+            <div class="response-title">📡 Respuesta del Servidor:</div>
+            <div id="responseContent" class="response-content">Haz clic en cualquier botón para probar la conexión...</div>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbysRAs_Swk0mJVSmq0LrMrTLarDfKwJMAkNNKh5ZZcKbBNpdhinqtS02ouvsrMtWIC1VA/exec';
+
+        // Función para mostrar la respuesta
+        function showResponse(title, data) {
+            const responseDiv = document.getElementById('responseContent');
+            const timestamp = new Date().toLocaleString();
+            
+            let content = `=== ${title} ===\n`;
+            content += `⏰ Timestamp: ${timestamp}\n`;
+            content += `🔗 URL: ${WEB_APP_URL}\n`;
+            content += `📊 Response:\n`;
+            content += JSON.stringify(data, null, 2);
+            
+            responseDiv.textContent = content;
+        }
+
+        // Función para manejar errores
+        function showError(title, error) {
+            const responseDiv = document.getElementById('responseContent');
+            const timestamp = new Date().toLocaleString();
+            
+            let content = `=== ${title} ===\n`;
+            content += `⏰ Timestamp: ${timestamp}\n`;
+            content += `🔗 URL: ${WEB_APP_URL}\n`;
+            content += `❌ Error:\n`;
+            content += error.toString();
+            
+            responseDiv.textContent = content;
+        }
+
+        // Función para hacer peticiones al servidor
+        async function makeRequest(action, data = null) {
+            try {
+                const requestData = {
+                    action: action,
+                    ...(data && { data: data })
+                };
+
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // Test Connection
+        async function testConnection() {
+            try {
+                showResponse('🔄 Test Connection', { status: 'Enviando petición...' });
+                
+                const result = await makeRequest('testConnection');
+                showResponse('✅ Test Connection', result);
+            } catch (error) {
+                showError('❌ Test Connection Error', error);
+            }
+        }
+
+        // Setup Spreadsheet
+        async function setupSpreadsheet() {
+            try {
+                showResponse('🔄 Setup Spreadsheet', { status: 'Configurando hoja...' });
+                
+                const result = await makeRequest('setupSpreadsheet');
+                showResponse('✅ Setup Spreadsheet', result);
+            } catch (error) {
+                showError('❌ Setup Spreadsheet Error', error);
+            }
+        }
+
+        // Get All Students
+        async function getAllStudents() {
+            try {
+                showResponse('👥 Get All Students', { status: 'Obteniendo estudiantes...' });
+                
+                const result = await makeRequest('getAllStudents');
+                showResponse('✅ Get All Students', result);
+            } catch (error) {
+                showError('❌ Get All Students Error', error);
+            }
+        }
+
+        // Get Statistics
+        async function getStatistics() {
+            try {
+                showResponse('📈 Get Statistics', { status: 'Obteniendo estadísticas...' });
+                
+                const result = await makeRequest('getStatistics');
+                showResponse('✅ Get Statistics', result);
+            } catch (error) {
+                showError('❌ Get Statistics Error', error);
+            }
+        }
+
+        // Submit Test Form
+        async function submitTestForm() {
+            try {
+                const formData = {
+                    studentInfo: {
+                        name: document.getElementById('studentName').value,
+                        id: document.getElementById('studentId').value,
+                        grade: document.getElementById('studentGrade').value,
+                        year: document.getElementById('studentYear').value
+                    },
+                    academicPerformance: {
+                        espanol: {
+                            logros: 'Lectura comprensiva avanzada',
+                            nivel: 'Alto',
+                            docente: 'Prof. García'
+                        },
+                        matematicas: {
+                            logros: 'Resolución de ecuaciones cuadráticas',
+                            nivel: 'Medio-Alto',
+                            docente: 'Prof. Rodríguez'
+                        },
+                        ciencias: {
+                            logros: 'Comprensión de procesos biológicos',
+                            nivel: 'Alto',
+                            docente: 'Prof. Martínez'
+                        },
+                        estudiosSociales: {
+                            logros: 'Análisis histórico crítico',
+                            nivel: 'Medio',
+                            docente: 'Prof. López'
+                        },
+                        otras: {
+                            logros: 'Manejo de herramientas digitales',
+                            nivel: 'Alto',
+                            docente: 'Prof. Torres'
+                        }
+                    },
+                    vocationalDevelopment: {
+                        interests: 'Tecnología y programación',
+                        expectations: 'Ingeniería en Sistemas',
+                        productiveSkills: 'Desarrollo web básico'
+                    }
+                };
+
+                showResponse('💾 Submit Test Form', { status: 'Enviando formulario...', data: formData });
+                
+                const result = await makeRequest('submit', formData);
+                showResponse('✅ Submit Test Form', result);
+            } catch (error) {
+                showError('❌ Submit Test Form Error', error);
+            }
+        }
+
+        // Query Student
+        async function queryStudent() {
+            try {
+                const studentId = document.getElementById('queryStudentId').value;
+                
+                if (!studentId) {
+                    showError('❌ Query Student Error', { message: 'Por favor ingresa una cédula' });
+                    return;
+                }
+
+                showResponse('🔍 Query Student', { status: 'Consultando estudiante...', studentId: studentId });
+                
+                const result = await makeRequest('query', { studentId: studentId });
+                showResponse('✅ Query Student', result);
+            } catch (error) {
+                showError('❌ Query Student Error', error);
+            }
+        }
+
+        // Test inicial de conexión
+        window.onload = function() {
+            showResponse('🚀 Sistema Inicializado', { 
+                message: 'Web App funcionando correctamente',
+                url: WEB_APP_URL,
+                spreadsheetId: '1I3_cpVR8wvAwXFWuXgJEkUf8bEuARwuq6p5JaDbbfus',
+                timestamp: new Date().toISOString()
+            });
+        };
+    </script>
+</body>
+</html>
