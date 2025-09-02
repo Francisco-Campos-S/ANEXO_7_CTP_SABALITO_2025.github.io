@@ -403,7 +403,7 @@ function obtenerTodosEstudiantes() {
     
     if (!sheet) {
       return ContentService
-        .createTextOutput(JSON.stringify({success: true, data: []}))
+        .createTextOutput(JSON.stringify({success: true, data: [], message: 'Hoja no encontrada'}))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
@@ -411,13 +411,18 @@ function obtenerTodosEstudiantes() {
     
     if (data.length <= 1) {
       return ContentService
-        .createTextOutput(JSON.stringify({success: true, data: []}))
+        .createTextOutput(JSON.stringify({success: true, data: [], message: 'No hay datos en la hoja'}))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
     const headers = data[0];
     const rows = data.slice(1);
     
+    console.log('Headers:', headers);
+    console.log('Total rows:', rows.length);
+    console.log('Primera fila:', rows[0]);
+    
+    // Filtrar solo estudiantes (columna Tipo = 'estudiante')
     const estudiantes = rows
       .filter(row => row[24] === 'estudiante') // Columna Tipo (índice 24)
       .map(row => {
@@ -428,8 +433,14 @@ function obtenerTodosEstudiantes() {
         return obj;
       });
     
+    console.log('Estudiantes filtrados:', estudiantes.length);
+    
     return ContentService
-      .createTextOutput(JSON.stringify({success: true, data: estudiantes}))
+      .createTextOutput(JSON.stringify({
+        success: true, 
+        data: estudiantes,
+        message: `Total de estudiantes: ${estudiantes.length}`
+      }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {

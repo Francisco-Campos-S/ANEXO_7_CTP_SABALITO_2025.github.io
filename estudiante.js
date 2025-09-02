@@ -895,107 +895,67 @@ window.cargarListaEstudiantes = async function() {
         console.log('=== CARGANDO LISTA DE ESTUDIANTES ===');
         console.log('URL del script:', scriptUrl);
         
-        // Intentar con CORS primero
-        let response;
-        let result;
+        const response = await fetch(`${scriptUrl}?action=getAllStudents`);
+        console.log('Respuesta HTTP:', response.status, response.statusText);
         
-        try {
-            response = await fetch(`${scriptUrl}?action=getAllStudents`, {
-                method: 'GET',
-                mode: 'cors'
-            });
-            console.log('Respuesta HTTP:', response.status, response.statusText);
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Datos recibidos del servidor:', result);
             
-            if (response.ok) {
-                result = await response.json();
-                console.log('Datos recibidos del servidor:', result);
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (corsError) {
-            console.log('Error CORS, intentando con no-cors:', corsError);
-            
-            // Fallback: usar no-cors y cargar datos de prueba
-            response = await fetch(`${scriptUrl}?action=getAllStudents`, {
-                method: 'GET',
-                mode: 'no-cors'
-            });
-            
-            // Con no-cors no podemos leer la respuesta, así que usamos datos de prueba
-            result = {
-                success: true,
-                data: [
-                    {
-                        Cédula: "123456789",
-                        Nombre: "Juan Carlos Pérez González",
-                        Sección: "A"
-                    },
-                    {
-                        Cédula: "888888888", 
-                        Nombre: "Estudiante Prueba Completo",
-                        Sección: "B"
-                    }
-                ]
-            };
-            console.log('Usando datos de prueba debido a CORS:', result);
-        }
-        
-        if (result) {
-            
-            // Verificar si result es un array directamente o tiene la estructura {success, data}
+            // Procesar datos directamente - asumir que siempre hay datos
             let estudiantes = [];
+            
+            // Intentar diferentes formatos de respuesta
             if (Array.isArray(result)) {
                 estudiantes = result;
                 console.log('Datos recibidos como array directo');
-            } else if (result.success && result.data && Array.isArray(result.data)) {
-                estudiantes = result.data;
-                console.log('Datos recibidos con estructura {success, data}');
-            } else if (result.data && Array.isArray(result.data)) {
+            } else if (result && result.data && Array.isArray(result.data)) {
                 estudiantes = result.data;
                 console.log('Datos recibidos con estructura {data}');
+            } else if (result && result.success && result.data && Array.isArray(result.data)) {
+                estudiantes = result.data;
+                console.log('Datos recibidos con estructura {success, data}');
             }
             
-            console.log('Estudiantes procesados:', estudiantes);
+            console.log('Estudiantes extraídos:', estudiantes);
+            console.log('Cantidad de estudiantes:', estudiantes ? estudiantes.length : 'undefined');
             
-            if (estudiantes && estudiantes.length > 0) {
-                const select = document.getElementById('listaEstudiantes');
-                if (!select) {
-                    console.error('Elemento listaEstudiantes no encontrado');
-                    showErrorMessage('❌ Error: Elemento de lista no encontrado');
-                    return;
-                }
-                
-                select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
-                console.log(`Procesando ${estudiantes.length} estudiantes...`);
-                
-                estudiantes.forEach((estudiante, index) => {
-                    console.log(`Estudiante ${index + 1}:`, estudiante);
-                    const option = document.createElement('option');
-                    
-                    // Obtener datos del estudiante (manejar tanto mayúsculas como minúsculas)
-                    const cedula = estudiante.Cédula || estudiante.cedula || '';
-                    const nombre = estudiante.Nombre || estudiante.nombre || 'Sin nombre';
-                    const seccion = estudiante.Sección || estudiante.seccion || '';
-                    
-                    console.log(`  - Cédula: ${cedula}`);
-                    console.log(`  - Nombre: ${nombre}`);
-                    console.log(`  - Sección: ${seccion}`);
-                    
-                    // Formato simplificado: solo nombre y sección
-                    option.value = cedula;
-                    option.textContent = `${nombre} - ${seccion}`;
-                    
-                    select.appendChild(option);
-                });
-                
-                console.log('Lista actualizada exitosamente');
-                showSuccessMessage(`✅ Lista actualizada: ${estudiantes.length} estudiantes encontrados`);
-            } else {
-                console.log('No se encontraron estudiantes o datos vacíos');
-                console.log('Result original:', result);
-                console.log('Estudiantes procesados:', estudiantes);
+            // Si no hay estudiantes, mostrar error
+            if (!estudiantes || estudiantes.length === 0) {
+                console.log('No se encontraron estudiantes en el servidor');
+                console.log('Result completo:', result);
                 showErrorMessage('❌ No se encontraron estudiantes en la base de datos');
+                return;
             }
+            
+            console.log('Estudiantes a procesar:', estudiantes);
+            
+            // Procesar la lista
+            const select = document.getElementById('listaEstudiantes');
+            if (!select) {
+                console.error('Elemento listaEstudiantes no encontrado');
+                showErrorMessage('❌ Error: Elemento de lista no encontrado');
+                return;
+            }
+            
+            select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
+            
+            estudiantes.forEach((estudiante, index) => {
+                const option = document.createElement('option');
+                
+                // Obtener datos del estudiante
+                const cedula = estudiante.Cédula || estudiante.cedula || '';
+                const nombre = estudiante.Nombre || estudiante.nombre || 'Sin nombre';
+                const seccion = estudiante.Sección || estudiante.seccion || '';
+                
+                option.value = cedula;
+                option.textContent = `${nombre} - ${seccion}`;
+                
+                select.appendChild(option);
+            });
+            
+            console.log('Lista actualizada exitosamente');
+            showSuccessMessage(`✅ Lista actualizada: ${estudiantes.length} estudiantes encontrados`);
         } else {
             console.error('Error en la respuesta del servidor:', response.status);
             showErrorMessage(`❌ Error al cargar la lista de estudiantes (${response.status})`);
