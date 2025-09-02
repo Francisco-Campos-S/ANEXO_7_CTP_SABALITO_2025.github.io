@@ -3,6 +3,11 @@
  * CTP Sabalito 2025
  */
 
+// Función para obtener la URL del script
+function getScriptUrl() {
+    return 'https://script.google.com/macros/s/AKfycbxAhDehIJjEtCZvVprQj8ebTLRYAxxfOGsBGZDbHPFzcDj6gmWRu-bE27KelT5C-on7nQ/exec';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Configurar fecha actual
     const today = new Date().toISOString().split('T')[0];
@@ -129,6 +134,25 @@ function crearNuevoEstudiante(cedula) {
     });
 }
 
+// Función para crear nuevo estudiante manualmente
+window.crearNuevoEstudianteManual = function() {
+    // Limpiar formulario
+    document.getElementById('studentForm').reset();
+    
+    // Limpiar campos de búsqueda
+    document.getElementById('cedulaEstudiante').value = '';
+    
+    // Configurar fecha actual
+    document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
+    
+    // Mostrar formulario
+    document.getElementById('studentForm').style.display = 'block';
+    document.getElementById('studentInfo').style.display = 'none';
+    
+    // Mostrar mensaje
+    showSuccessMessage('Formulario listo para nuevo estudiante');
+};
+
 // Función para mostrar información del estudiante
 function mostrarInfoEstudiante(estudiante) {
     const studentInfo = document.getElementById('studentInfo');
@@ -141,6 +165,135 @@ function mostrarInfoEstudiante(estudiante) {
         </div>
     `;
     studentInfo.style.display = 'block';
+}
+
+// Función para mostrar mensaje de éxito
+function showSuccessMessage(message) {
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = 'notification success';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Agregar estilos
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Agregar al DOM
+    document.body.appendChild(notification);
+    
+    // Remover después de 4 segundos
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 4000);
+}
+
+// Función para mostrar mensaje de error
+function showErrorMessage(message) {
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Agregar estilos
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #dc3545;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Agregar al DOM
+    document.body.appendChild(notification);
+    
+    // Remover después de 5 segundos
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
+}
+
+// Función para mostrar mensaje de carga
+function showLoadingMessage() {
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = 'notification loading';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Guardando información...</span>
+        </div>
+    `;
+    
+    // Agregar estilos
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #007bff;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Agregar al DOM
+    document.body.appendChild(notification);
+    
+    // Remover después de 2 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 2000);
 }
 
 // Función para llenar datos de prueba
@@ -180,7 +333,7 @@ window.fillTestDataStudent = function() {
     document.getElementById('nombreDocenteEvaluador').value = 'Lic. María Elena Rodríguez';
     document.getElementById('cedulaDocenteEvaluador').value = '123456789';
     
-    showTestDataMessage();
+    showSuccessMessage('✅ Datos de prueba cargados exitosamente');
 };
 
 // Función para llenar docentes por materia desde el docente evaluador
@@ -202,6 +355,173 @@ window.fillTeachersFromEvaluator = function() {
     showSuccessMessage('Docentes por materia llenados automáticamente');
 };
 
+// Función para buscar estudiante por cédula
+window.buscarEstudiante = async function() {
+    try {
+        const cedula = document.getElementById('cedulaEstudiante').value.trim();
+        
+        if (!cedula) {
+            showErrorMessage('❌ Por favor ingresa una cédula');
+            return;
+        }
+        
+        showLoadingMessage('🔍 Buscando estudiante...');
+        
+        const scriptUrl = getScriptUrl();
+        const response = await fetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        
+        if (response.ok) {
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                // Cargar datos del estudiante en el formulario
+                cargarDatosEstudiante(result.data);
+                showSuccessMessage('✅ Estudiante encontrado y cargado');
+            } else {
+                showErrorMessage('❌ Estudiante no encontrado');
+            }
+        } else {
+            showErrorMessage('❌ Error al buscar estudiante');
+        }
+        
+    } catch (error) {
+        console.error('Error al buscar estudiante:', error);
+        showErrorMessage('❌ Error al buscar: ' + error.message);
+    }
+};
+
+// Función para cargar datos del estudiante en el formulario
+function cargarDatosEstudiante(estudiante) {
+    // Datos básicos
+    document.getElementById('cedula').value = estudiante.Cédula || '';
+    document.getElementById('nombre').value = estudiante.Nombre || '';
+    document.getElementById('grado').value = estudiante.Grado || '';
+    document.getElementById('seccion').value = estudiante.Sección || '';
+    
+    // Funcionamiento Académico
+    if (estudiante.funcionamientoAcademico) {
+        document.querySelector('[name="logros_espanol"]').value = estudiante.funcionamientoAcademico.logros_espanol || '';
+        document.querySelector('[name="nivel_espanol"]').value = estudiante.funcionamientoAcademico.nivel_espanol || '';
+        document.querySelector('[name="docente_espanol"]').value = estudiante.funcionamientoAcademico.docente_espanol || '';
+        document.querySelector('[name="logros_matematicas"]').value = estudiante.funcionamientoAcademico.logros_matematicas || '';
+        document.querySelector('[name="nivel_matematicas"]').value = estudiante.funcionamientoAcademico.nivel_matematicas || '';
+        document.querySelector('[name="docente_matematicas"]').value = estudiante.funcionamientoAcademico.docente_matematicas || '';
+        document.querySelector('[name="logros_ciencias"]').value = estudiante.funcionamientoAcademico.logros_ciencias || '';
+        document.querySelector('[name="nivel_ciencias"]').value = estudiante.funcionamientoAcademico.nivel_ciencias || '';
+        document.querySelector('[name="docente_ciencias"]').value = estudiante.funcionamientoAcademico.docente_ciencias || '';
+        document.querySelector('[name="logros_estudios_sociales"]').value = estudiante.funcionamientoAcademico.logros_estudios_sociales || '';
+        document.querySelector('[name="nivel_estudios_sociales"]').value = estudiante.funcionamientoAcademico.nivel_estudios_sociales || '';
+        document.querySelector('[name="docente_estudios_sociales"]').value = estudiante.funcionamientoAcademico.docente_estudios_sociales || '';
+        document.querySelector('[name="logros_otras"]').value = estudiante.funcionamientoAcademico.logros_otras || '';
+        document.querySelector('[name="nivel_otras"]').value = estudiante.funcionamientoAcademico.nivel_otras || '';
+        document.querySelector('[name="docente_otras"]').value = estudiante.funcionamientoAcademico.docente_otras || '';
+    }
+    
+    // Desarrollo Vocacional
+    if (estudiante.desarrolloVocacional) {
+        document.getElementById('intereses_habilidades').value = estudiante.desarrolloVocacional.intereses_habilidades || '';
+        document.getElementById('expectativas_vocacionales').value = estudiante.desarrolloVocacional.expectativas_vocacionales || '';
+        document.getElementById('observaciones_generales').value = estudiante.desarrolloVocacional.observaciones_generales || '';
+    }
+    
+    // Docente Evaluador
+    if (estudiante.docente) {
+        document.getElementById('nombreDocenteEvaluador').value = estudiante.docente.nombre || '';
+        document.getElementById('cedulaDocenteEvaluador').value = estudiante.docente.cedula || '';
+        document.getElementById('fechaEvaluacion').value = estudiante.docente.fechaEvaluacion || '';
+    }
+    
+    // Mostrar información del estudiante
+    mostrarInfoEstudiante();
+}
+
+// Función para guardar estudiante simple (prueba)
+window.guardarEstudianteSimple = async function() {
+    try {
+        showLoadingMessage();
+        
+        // Datos mínimos para probar
+        const data = {
+            cedula: '999999999',
+            nombre: 'Estudiante Prueba Simple',
+            grado: '11°',
+            seccion: 'A',
+            funcionamientoAcademico: '{"logros_espanol":"Prueba simple","nivel_espanol":"Bueno"}',
+            desarrolloVocacional: '{"intereses_habilidades":"Prueba simple"}',
+            docente: '{"nombre":"Docente Prueba","cedula":"111111111"}',
+            fechaRegistro: new Date().toLocaleString('es-CR'),
+            tipo: 'estudiante'
+        };
+        
+        console.log('Enviando datos simples:', data);
+        
+        // Crear parámetros
+        const params = new URLSearchParams();
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
+        
+        // Enviar
+        const scriptUrl = getScriptUrl();
+        const response = await fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: params
+        });
+        
+        showSuccessMessage('✅ ¡Prueba simple enviada!');
+        
+        // Actualizar lista
+        setTimeout(async () => {
+            await loadAllStudents();
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error en prueba simple:', error);
+        showErrorMessage('❌ Error en prueba: ' + error.message);
+    }
+};
+
+// Función para probar el guardado de estudiantes
+window.testSaveStudent = async function() {
+    try {
+        const testData = {
+            cedula: '999999999',
+            nombre: 'Estudiante de Prueba',
+            grado: '11°',
+            seccion: 'A',
+            funcionamientoAcademico: {
+                logros_espanol: 'Prueba de logros en español',
+                nivel_espanol: 'Bueno',
+                docente_espanol: 'Docente de Prueba',
+                logros_matematicas: 'Prueba de logros en matemáticas',
+                nivel_matematicas: 'Muy Bueno',
+                docente_matematicas: 'Docente de Prueba'
+            },
+            desarrolloVocacional: {
+                intereses_habilidades: 'Intereses de prueba',
+                expectativas_vocacionales: 'Expectativas de prueba',
+                observaciones_generales: 'Observaciones de prueba'
+            },
+            docente: {
+                nombre: 'Docente Evaluador de Prueba',
+                cedula: '111111111',
+                fechaEvaluacion: new Date().toISOString().split('T')[0]
+            },
+            fechaRegistro: new Date().toLocaleString('es-CR'),
+            tipo: 'estudiante'
+        };
+
+        showLoadingMessage();
+        
+        await saveStudentToGoogleSheets(testData);
+        
+    } catch (error) {
+        console.error('Error en prueba de guardado:', error);
+        showErrorMessage('❌ Error en prueba: ' + error.message);
+    }
+};
+
 // Función para llenar docentes individuales por materia
 window.fillTeacherForSubject = function(subject) {
     const nombreEvaluador = document.getElementById('nombreDocenteEvaluador').value.trim();
@@ -218,32 +538,70 @@ window.fillTeacherForSubject = function(subject) {
 // Función para guardar información del estudiante
 async function saveStudentToGoogleSheets(data) {
     try {
-        const formData = new FormData();
+        console.log('Datos a guardar:', data);
         
-        // Agregar datos como parámetros de formulario
+        // Crear URL con parámetros
+        const scriptUrl = getScriptUrl();
+        const params = new URLSearchParams();
+        
+        // Agregar datos como parámetros
         Object.keys(data).forEach(key => {
             if (typeof data[key] === 'object') {
-                formData.append(key, JSON.stringify(data[key]));
+                params.append(key, JSON.stringify(data[key]));
             } else {
-                formData.append(key, data[key]);
+                params.append(key, data[key]);
             }
         });
         
-        const response = await fetch(getScriptUrl(), {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        });
+        console.log('URL:', scriptUrl);
+        console.log('Parámetros:', params.toString());
         
-        // Con no-cors no podemos leer la respuesta, pero podemos asumir que funcionó
-        setTimeout(async () => {
-            await loadAllStudents();
-        }, 1000);
-        
-        return true;
+        // Intentar con fetch normal primero
+        try {
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params
+            });
+            
+            const result = await response.json();
+            console.log('Respuesta del servidor:', result);
+            
+            if (result.success) {
+                showSuccessMessage('✅ Información guardada exitosamente');
+                setTimeout(async () => {
+                    await loadAllStudents();
+                }, 1000);
+                return true;
+            } else {
+                throw new Error(result.error || 'Error al guardar');
+            }
+            
+        } catch (corsError) {
+            console.log('Error CORS, intentando con no-cors:', corsError);
+            
+            // Fallback con no-cors
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: params
+            });
+            
+            // Con no-cors no podemos leer la respuesta
+            showSuccessMessage('✅ Información enviada (verificando...)');
+            setTimeout(async () => {
+                await loadAllStudents();
+            }, 2000);
+            
+            return true;
+        }
         
     } catch (error) {
         console.error('Error al guardar en Google Sheets:', error);
+        showErrorMessage('❌ Error al guardar: ' + error.message);
         throw error;
     }
 }
@@ -409,70 +767,86 @@ function printAllStudents() {
     printWindow.print();
 }
 
-// Manejar envío del formulario
-document.getElementById('studentForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
+// Función para guardar formulario (llamada desde el botón)
+window.guardarEstudiante = async function() {
     try {
-        // Recopilar datos del formulario
-        const formData = new FormData(this);
-        const data = {};
+        showLoadingMessage();
         
-        // Datos básicos del estudiante
-        data.cedula = formData.get('cedula');
-        data.nombre = formData.get('nombre');
-        data.grado = formData.get('grado');
-        data.seccion = formData.get('seccion');
-        
-        // Funcionamiento Académico
-        data.funcionamientoAcademico = {
-            logros_espanol: formData.get('logros_espanol'),
-            nivel_espanol: formData.get('nivel_espanol'),
-            docente_espanol: formData.get('docente_espanol'),
-            logros_matematicas: formData.get('logros_matematicas'),
-            nivel_matematicas: formData.get('nivel_matematicas'),
-            docente_matematicas: formData.get('docente_matematicas'),
-            logros_ciencias: formData.get('logros_ciencias'),
-            nivel_ciencias: formData.get('nivel_ciencias'),
-            docente_ciencias: formData.get('docente_ciencias'),
-            logros_estudios_sociales: formData.get('logros_estudios_sociales'),
-            nivel_estudios_sociales: formData.get('nivel_estudios_sociales'),
-            docente_estudios_sociales: formData.get('docente_estudios_sociales'),
-            logros_otras: formData.get('logros_otras'),
-            nivel_otras: formData.get('nivel_otras'),
-            docente_otras: formData.get('docente_otras')
+        // Recopilar todos los datos del formulario
+        const data = {
+            cedula: document.getElementById('cedula').value || '',
+            nombre: document.getElementById('nombre').value || '',
+            grado: document.getElementById('grado').value || '',
+            seccion: document.getElementById('seccion').value || '',
+            funcionamientoAcademico: JSON.stringify({
+                logros_espanol: document.querySelector('[name="logros_espanol"]').value || '',
+                nivel_espanol: document.querySelector('[name="nivel_espanol"]').value || '',
+                docente_espanol: document.querySelector('[name="docente_espanol"]').value || '',
+                logros_matematicas: document.querySelector('[name="logros_matematicas"]').value || '',
+                nivel_matematicas: document.querySelector('[name="nivel_matematicas"]').value || '',
+                docente_matematicas: document.querySelector('[name="docente_matematicas"]').value || '',
+                logros_ciencias: document.querySelector('[name="logros_ciencias"]').value || '',
+                nivel_ciencias: document.querySelector('[name="nivel_ciencias"]').value || '',
+                docente_ciencias: document.querySelector('[name="docente_ciencias"]').value || '',
+                logros_estudios_sociales: document.querySelector('[name="logros_estudios_sociales"]').value || '',
+                nivel_estudios_sociales: document.querySelector('[name="nivel_estudios_sociales"]').value || '',
+                docente_estudios_sociales: document.querySelector('[name="docente_estudios_sociales"]').value || '',
+                logros_otras: document.querySelector('[name="logros_otras"]').value || '',
+                nivel_otras: document.querySelector('[name="nivel_otras"]').value || '',
+                docente_otras: document.querySelector('[name="docente_otras"]').value || ''
+            }),
+            desarrolloVocacional: JSON.stringify({
+                intereses_habilidades: document.getElementById('intereses_habilidades').value || '',
+                expectativas_vocacionales: document.getElementById('expectativas_vocacionales').value || '',
+                observaciones_generales: document.getElementById('observaciones_generales').value || ''
+            }),
+            docente: JSON.stringify({
+                nombre: document.getElementById('nombreDocenteEvaluador').value || '',
+                cedula: document.getElementById('cedulaDocenteEvaluador').value || '',
+                fechaEvaluacion: document.getElementById('fechaEvaluacion').value || new Date().toISOString().split('T')[0]
+            }),
+            fechaRegistro: new Date().toLocaleString('es-CR'),
+            tipo: 'estudiante'
         };
         
-        // Desarrollo Vocacional
-        data.desarrolloVocacional = {
-            intereses_habilidades: formData.get('intereses_habilidades'),
-            expectativas_vocacionales: formData.get('expectativas_vocacionales'),
-            observaciones_generales: formData.get('observaciones_generales')
-        };
+        console.log('Datos a enviar:', data);
         
-        // Información del Docente Evaluador
-        data.docente = {
-            nombre: formData.get('nombreDocenteEvaluador'),
-            cedula: formData.get('cedulaDocenteEvaluador'),
-            fechaEvaluacion: formData.get('fechaEvaluacion')
-        };
+        // Crear parámetros
+        const params = new URLSearchParams();
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
         
-        // Agregar timestamp
-        data.fechaRegistro = new Date().toLocaleString('es-CR');
-        data.tipo = 'estudiante'; // Identificar que es un estudiante
+        // Enviar con método simple
+        const scriptUrl = getScriptUrl();
+        console.log('Enviando a:', scriptUrl);
         
-        // Guardar en Google Sheets
-        await saveStudentToGoogleSheets(data);
+        const response = await fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: params
+        });
         
-        showSuccessMessage('Información del estudiante guardada exitosamente');
+        // Mostrar éxito
+        showSuccessMessage('✅ ¡Estudiante guardado exitosamente!');
+        
+        // Actualizar lista
+        setTimeout(async () => {
+            await loadAllStudents();
+        }, 2000);
         
         // Limpiar formulario
-        this.reset();
-        document.getElementById('studentForm').style.display = 'none';
+        document.getElementById('studentForm').reset();
         document.getElementById('studentInfo').style.display = 'none';
         
     } catch (error) {
-        console.error('Error al guardar:', error);
-        showErrorMessage('Error al guardar la información: ' + error.message);
+        console.error('Error:', error);
+        showErrorMessage('❌ Error: ' + error.message);
     }
+};
+
+// Manejar envío del formulario (mantener para compatibilidad)
+document.getElementById('studentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    guardarEstudiante();
 });

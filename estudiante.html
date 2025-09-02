@@ -36,6 +36,9 @@
                     <button type="button" class="btn-search" onclick="buscarEstudiante()">
                         <i class="fas fa-search"></i> Buscar Estudiante
                     </button>
+                    <button type="button" class="btn-new-student" onclick="crearNuevoEstudianteManual()">
+                        <i class="fas fa-plus"></i> Nuevo Estudiante
+                    </button>
                 </div>
                 <div id="studentInfo" class="student-info" style="display: none;">
                     <!-- Información del estudiante aparecerá aquí -->
@@ -44,7 +47,7 @@
         </section>
 
         <!-- Formulario Principal -->
-        <form id="studentForm" class="form" style="display: none;">
+        <form id="studentForm" class="form">
             <!-- Información del Estudiante -->
             <section class="form-section">
                 <h3><i class="fas fa-user"></i> Información del Estudiante</h3>
@@ -251,10 +254,13 @@
                 <button type="button" class="btn-test-data" onclick="fillTestDataStudent()">
                     <i class="fas fa-flask"></i> Datos de Prueba
                 </button>
+                <button type="button" class="btn-test-simple" onclick="guardarEstudianteSimple()">
+                    <i class="fas fa-rocket"></i> Guardar Prueba Simple
+                </button>
                 <button type="button" class="btn-fill-teachers" onclick="fillTeachersFromEvaluator()">
                     <i class="fas fa-users"></i> Llenar Docentes por Materia
                 </button>
-                <button type="submit" class="btn-submit">
+                <button type="button" class="btn-submit" onclick="guardarEstudiante()">
                     <i class="fas fa-save"></i> Guardar Información
                 </button>
                 <button type="button" class="btn-print" onclick="printStudentForm()">
@@ -275,6 +281,9 @@
                     </button>
                     <button type="button" class="btn-test-connection" onclick="testConnection()">
                         <i class="fas fa-wifi"></i> Probar Conexión
+                    </button>
+                    <button type="button" class="btn-test-save" onclick="testSaveStudent()">
+                        <i class="fas fa-save"></i> Probar Guardado
                     </button>
                     <button type="button" class="btn-export" onclick="exportStudentsToCSV()">
                         <i class="fas fa-download"></i> Exportar a Excel

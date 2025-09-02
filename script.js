@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsSection = document.getElementById('resultsSection');
     const resultsContent = document.getElementById('resultsContent');
 
+    // Solo inicializar si el formulario existe (página de docentes)
+    if (!form) return;
+
     // Validación en tiempo real
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {

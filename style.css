@@ -705,6 +705,26 @@ body {
     transform: translateY(-2px);
 }
 
+.btn-new-student {
+    background: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-new-student:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
 .student-info {
     margin-top: 20px;
 }
@@ -835,6 +855,46 @@ body {
 
 .btn-fill-teachers:hover {
     background: #138496;
+    transform: translateY(-2px);
+}
+
+.btn-test-save {
+    background: #fd7e14;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-test-save:hover {
+    background: #e8650e;
+    transform: translateY(-2px);
+}
+
+.btn-test-simple {
+    background: #6f42c1;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-test-simple:hover {
+    background: #5a32a3;
     transform: translateY(-2px);
 }
 
@@ -970,4 +1030,64 @@ body {
         padding: 3px 5px;
         font-size: 0.65rem;
     }
+    
+    .btn-search,
+    .btn-new-student {
+        width: 100%;
+        justify-content: center;
+        margin: 5px 0;
+    }
+}
+
+/* Animaciones para notificaciones */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Estilos para notificaciones */
+.notification {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+}
+
+.notification.loading {
+    background: linear-gradient(135deg, #007bff, #6f42c1);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification i {
+    font-size: 16px;
 }

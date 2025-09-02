@@ -207,17 +207,30 @@ function createNewStudent(data, sheet) {
     // Agregar timestamp
     data.fechaRegistro = new Date().toLocaleString('es-CR');
     
-    // Preparar fila para insertar (formato extendido para estudiantes)
+    // Preparar fila para insertar (formato completo con todas las columnas)
     const row = [
-      data.cedula,
-      data.nombre,
-      data.grado || '',
-      data.seccion || '',
-      JSON.stringify(data.funcionamientoAcademico || {}),
-      JSON.stringify(data.desarrolloVocacional || {}),
-      JSON.stringify(data.docente || {}),
-      data.fechaRegistro,
-      'estudiante' // Tipo de registro
+      data.cedula,                    // Cédula
+      data.nombre,                    // Nombre
+      '',                            // Teléfono
+      '',                            // Email
+      '',                            // Dirección
+      '',                            // Fecha de Nacimiento
+      '',                            // Especialidad
+      '',                            // Nivel Académico
+      '',                            // Experiencia
+      '',                            // Estado
+      '',                            // Cursos
+      '',                            // Horas Semanales
+      '',                            // Modalidad
+      '',                            // Certificaciones
+      '',                            // Observaciones
+      data.fechaRegistro,            // Fecha de Registro
+      data.grado || '',              // Grado
+      data.seccion || '',            // Sección
+      data.funcionamientoAcademico || '', // Funcionamiento Académico
+      data.desarrolloVocacional || '',    // Desarrollo Vocacional
+      data.docente || '',            // Docente
+      'estudiante'                   // Tipo
     ];
     
     // Insertar nueva fila
@@ -245,18 +258,31 @@ function updateStudent(data, sheet, existingData) {
     
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row[0] && row[0].toString() === data.cedula) {
-        // Actualizar la fila
+      if (row[0] && row[0].toString() === data.cedula && row[21] === 'estudiante') {
+        // Actualizar la fila (formato completo con todas las columnas)
         const updatedRow = [
-          data.cedula,
-          data.nombre,
-          data.grado || '',
-          data.seccion || '',
-          JSON.stringify(data.funcionamientoAcademico || {}),
-          JSON.stringify(data.desarrolloVocacional || {}),
-          JSON.stringify(data.docente || {}),
-          new Date().toLocaleString('es-CR'),
-          'estudiante'
+          data.cedula,                    // Cédula
+          data.nombre,                    // Nombre
+          row[2] || '',                   // Teléfono (mantener existente)
+          row[3] || '',                   // Email (mantener existente)
+          row[4] || '',                   // Dirección (mantener existente)
+          row[5] || '',                   // Fecha de Nacimiento (mantener existente)
+          row[6] || '',                   // Especialidad (mantener existente)
+          row[7] || '',                   // Nivel Académico (mantener existente)
+          row[8] || '',                   // Experiencia (mantener existente)
+          row[9] || '',                   // Estado (mantener existente)
+          row[10] || '',                  // Cursos (mantener existente)
+          row[11] || '',                  // Horas Semanales (mantener existente)
+          row[12] || '',                  // Modalidad (mantener existente)
+          row[13] || '',                  // Certificaciones (mantener existente)
+          row[14] || '',                  // Observaciones (mantener existente)
+          new Date().toLocaleString('es-CR'), // Fecha de Registro (actualizar)
+          data.grado || '',               // Grado
+          data.seccion || '',             // Sección
+          data.funcionamientoAcademico || '', // Funcionamiento Académico
+          data.desarrolloVocacional || '',     // Desarrollo Vocacional
+          data.docente || '',             // Docente
+          'estudiante'                    // Tipo
         ];
         
         // Actualizar la fila (fila i+2 porque empezamos desde la fila 2)
@@ -325,7 +351,7 @@ function getAllTeachers() {
     
     // Convertir a objetos (solo docentes, no estudiantes)
     const docentes = rows
-      .filter(row => !row[8] || row[8] !== 'estudiante') // Filtrar estudiantes
+      .filter(row => !row[21] || row[21] !== 'estudiante') // Filtrar estudiantes (columna 22, índice 21)
       .map(row => {
         const docente = {};
         headers.forEach((header, index) => {
@@ -366,7 +392,7 @@ function getAllStudents() {
     
     // Convertir a objetos (solo estudiantes)
     const estudiantes = rows
-      .filter(row => row[8] === 'estudiante') // Solo estudiantes
+      .filter(row => row[21] === 'estudiante') // Solo estudiantes (columna 22, índice 21)
       .map(row => {
         const estudiante = {};
         headers.forEach((header, index) => {
@@ -422,7 +448,7 @@ function getStudent(cedula) {
     
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row[0] && row[0].toString() === cedula && row[8] === 'estudiante') {
+      if (row[0] && row[0].toString() === cedula && row[21] === 'estudiante') {
         const estudiante = {};
         headers.forEach((header, index) => {
           estudiante[header] = row[index] || '';
@@ -477,5 +503,29 @@ function initializeSheet() {
     return 'Hoja inicializada correctamente';
   } catch (error) {
     return 'Error al inicializar la hoja: ' + error.toString();
+  }
+}
+
+/**
+ * Función de prueba para verificar que el script funciona
+ */
+function testStudentSave() {
+  try {
+    const testData = {
+      cedula: '999999999',
+      nombre: 'Estudiante Prueba',
+      grado: '11°',
+      seccion: 'A',
+      funcionamientoAcademico: '{"logros_espanol":"Prueba","nivel_espanol":"Bueno"}',
+      desarrolloVocacional: '{"intereses_habilidades":"Prueba"}',
+      docente: '{"nombre":"Docente Prueba","cedula":"111111111"}',
+      fechaRegistro: new Date().toLocaleString('es-CR'),
+      tipo: 'estudiante'
+    };
+    
+    const result = saveStudent(testData);
+    return result.getContent();
+  } catch (error) {
+    return 'Error en prueba: ' + error.toString();
   }
 }
