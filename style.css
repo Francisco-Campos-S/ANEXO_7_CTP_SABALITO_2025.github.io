@@ -400,8 +400,23 @@ body {
 
 .search-form .form-group {
     flex: 1;
-    min-width: 200px;
+    min-width: 300px;
     margin-bottom: 0;
+}
+
+.search-form select {
+    font-size: 1rem;
+    padding: 12px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.search-form select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Información del estudiante */

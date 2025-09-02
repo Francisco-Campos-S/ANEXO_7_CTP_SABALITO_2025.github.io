@@ -26,15 +26,16 @@
         <!-- Sección de Búsqueda de Estudiante -->
         <section class="search-section">
             <div class="search-card">
-                <h3><i class="fas fa-search"></i> Buscar Estudiante</h3>
+                <h3><i class="fas fa-search"></i> Seleccionar Estudiante</h3>
                 <div class="search-form">
                     <div class="form-group">
-                        <label for="cedulaEstudiante">Cédula del Estudiante:</label>
-                        <input type="text" id="cedulaEstudiante" name="cedulaEstudiante" 
-                               placeholder="Ej: 123456789" maxlength="9" required>
+                        <label for="listaEstudiantes">Lista de Estudiantes:</label>
+                        <select id="listaEstudiantes" name="listaEstudiantes" onchange="cargarEstudianteSeleccionado()">
+                            <option value="">-- Seleccionar un estudiante --</option>
+                        </select>
                     </div>
-                    <button type="button" class="btn-search" onclick="buscarEstudiante()">
-                        <i class="fas fa-search"></i> Buscar Estudiante
+                    <button type="button" class="btn-refresh" onclick="cargarListaEstudiantes()">
+                        <i class="fas fa-sync-alt"></i> Actualizar Lista
                     </button>
                     <button type="button" class="btn-new-student" onclick="crearNuevoEstudianteManual()">
                         <i class="fas fa-plus"></i> Nuevo Estudiante

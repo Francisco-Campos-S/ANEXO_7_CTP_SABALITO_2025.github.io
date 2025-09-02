@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar lista de estudiantes al inicio
     loadAllStudents();
+    
+    // Cargar lista de estudiantes en el select
+    cargarListaEstudiantes();
 });
 
 // Función para buscar estudiante
@@ -850,3 +853,73 @@ document.getElementById('studentForm').addEventListener('submit', function(e) {
     e.preventDefault();
     guardarEstudiante();
 });
+
+// Función para cargar la lista de estudiantes en el select
+window.cargarListaEstudiantes = async function() {
+    try {
+        showLoadingMessage();
+        
+        const scriptUrl = getScriptUrl();
+        const response = await fetch(`${scriptUrl}?action=getAllStudents`);
+        
+        if (response.ok) {
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                const select = document.getElementById('listaEstudiantes');
+                select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
+                
+                result.data.forEach(estudiante => {
+                    const option = document.createElement('option');
+                    option.value = estudiante.Cédula || estudiante.cedula;
+                    option.textContent = `${estudiante.Nombre || estudiante.nombre} - ${estudiante.Cédula || estudiante.cedula} (${estudiante.Grado || estudiante.grado}° ${estudiante.Sección || estudiante.seccion})`;
+                    select.appendChild(option);
+                });
+                
+                showSuccessMessage(`✅ Lista actualizada: ${result.data.length} estudiantes encontrados`);
+            } else {
+                showErrorMessage('❌ No se encontraron estudiantes');
+            }
+        } else {
+            showErrorMessage('❌ Error al cargar la lista de estudiantes');
+        }
+    } catch (error) {
+        console.error('Error al cargar lista de estudiantes:', error);
+        showErrorMessage('❌ Error de conexión al cargar estudiantes');
+    }
+};
+
+// Función para cargar estudiante seleccionado
+window.cargarEstudianteSeleccionado = async function() {
+    const select = document.getElementById('listaEstudiantes');
+    const cedula = select.value;
+    
+    if (!cedula) {
+        return;
+    }
+    
+    try {
+        showLoadingMessage();
+        
+        const scriptUrl = getScriptUrl();
+        const response = await fetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        
+        if (response.ok) {
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                llenarFormularioEstudiante(result.data);
+                document.getElementById('studentForm').style.display = 'block';
+                mostrarInfoEstudiante(result.data);
+                showSuccessMessage('✅ Estudiante cargado correctamente');
+            } else {
+                showErrorMessage('❌ No se pudo cargar la información del estudiante');
+            }
+        } else {
+            showErrorMessage('❌ Error al cargar el estudiante');
+        }
+    } catch (error) {
+        console.error('Error al cargar estudiante:', error);
+        showErrorMessage('❌ Error de conexión al cargar estudiante');
+    }
+};
