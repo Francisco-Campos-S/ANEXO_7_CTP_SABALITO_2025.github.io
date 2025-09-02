@@ -55,20 +55,35 @@ function guardarEstudianteFinal(data) {
     // Si no existe la hoja, crearla
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_NAME);
-      // Crear encabezados
-      sheet.getRange(1, 1, 1, 17).setValues([[
+      console.log('Hoja creada, estableciendo encabezados...');
+      
+      // Crear encabezados completos con TODAS las materias
+      const headers = [
         'Cédula', 'Nombre', 'Grado', 'Sección', 
         'Logros Español', 'Nivel Español', 'Docente Español',
         'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
         'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
         'Docente Evaluador', 'Fecha Evaluación', 'Fecha Registro', 'Tipo'
-      ]]);
+      ];
+      
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      // Aplicar formato a los encabezados
+      const headerRange = sheet.getRange(1, 1, 1, headers.length);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#4285f4');
+      headerRange.setFontColor('white');
+      
+      console.log('Encabezados creados exitosamente - 25 columnas');
     }
     
     // Verificar si ya existe un estudiante con esa cédula
     const existingData = sheet.getDataRange().getValues();
     const cedulaExists = existingData.length > 1 && existingData.slice(1).some(row => 
-      row[0] && row[0].toString() === data.cedula && row[16] === 'estudiante'
+      row[0] && row[0].toString() === data.cedula && row[24] === 'estudiante'
     );
     
     if (cedulaExists) {
@@ -86,6 +101,15 @@ function guardarEstudianteFinal(data) {
     let logrosMatematicas = '';
     let nivelMatematicas = '';
     let docenteMatematicas = '';
+    let logrosCiencias = '';
+    let nivelCiencias = '';
+    let docenteCiencias = '';
+    let logrosEstudiosSociales = '';
+    let nivelEstudiosSociales = '';
+    let docenteEstudiosSociales = '';
+    let logrosOtras = '';
+    let nivelOtras = '';
+    let docenteOtras = '';
     
     if (data.funcionamientoAcademico) {
       try {
@@ -93,12 +117,30 @@ function guardarEstudianteFinal(data) {
           ? JSON.parse(data.funcionamientoAcademico) 
           : data.funcionamientoAcademico;
         
+        // Español
         logrosEspanol = academico.logros_espanol || '';
         nivelEspanol = academico.nivel_espanol || '';
         docenteEspanol = academico.docente_espanol || '';
+        
+        // Matemáticas
         logrosMatematicas = academico.logros_matematicas || '';
         nivelMatematicas = academico.nivel_matematicas || '';
         docenteMatematicas = academico.docente_matematicas || '';
+        
+        // Ciencias
+        logrosCiencias = academico.logros_ciencias || '';
+        nivelCiencias = academico.nivel_ciencias || '';
+        docenteCiencias = academico.docente_ciencias || '';
+        
+        // Estudios Sociales
+        logrosEstudiosSociales = academico.logros_estudios_sociales || '';
+        nivelEstudiosSociales = academico.nivel_estudios_sociales || '';
+        docenteEstudiosSociales = academico.docente_estudios_sociales || '';
+        
+        // Otras
+        logrosOtras = academico.logros_otras || '';
+        nivelOtras = academico.nivel_otras || '';
+        docenteOtras = academico.docente_otras || '';
       } catch (e) {
         console.log('Error parseando funcionamiento académico:', e);
       }
@@ -145,15 +187,31 @@ function guardarEstudianteFinal(data) {
       data.nombre || '',
       data.grado || '',
       data.seccion || '',
+      // Español
       logrosEspanol,
       nivelEspanol,
       docenteEspanol,
+      // Matemáticas
       logrosMatematicas,
       nivelMatematicas,
       docenteMatematicas,
+      // Ciencias
+      logrosCiencias,
+      nivelCiencias,
+      docenteCiencias,
+      // Estudios Sociales
+      logrosEstudiosSociales,
+      nivelEstudiosSociales,
+      docenteEstudiosSociales,
+      // Otras
+      logrosOtras,
+      nivelOtras,
+      docenteOtras,
+      // Desarrollo Vocacional
       interesesHabilidades,
       expectativasVocacionales,
       observacionesGenerales,
+      // Docente Evaluador
       docenteEvaluador,
       fechaEvaluacion,
       data.fechaRegistro || timestamp,
@@ -200,14 +258,29 @@ function guardarDocenteFinal(data) {
     // Si no existe la hoja, crearla
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_NAME);
-      // Crear encabezados
-      sheet.getRange(1, 1, 1, 15).setValues([[
+      console.log('Hoja creada, estableciendo encabezados...');
+      
+      // Crear encabezados completos con TODAS las materias
+      const headers = [
         'Cédula', 'Nombre', 'Grado', 'Sección', 
         'Logros Español', 'Nivel Español', 'Docente Español',
         'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
         'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
         'Docente Evaluador', 'Fecha Evaluación', 'Fecha Registro', 'Tipo'
-      ]]);
+      ];
+      
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      // Aplicar formato a los encabezados
+      const headerRange = sheet.getRange(1, 1, 1, headers.length);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#4285f4');
+      headerRange.setFontColor('white');
+      
+      console.log('Encabezados creados exitosamente - 25 columnas');
     }
     
     // Preparar datos para insertar
@@ -346,7 +419,7 @@ function obtenerTodosEstudiantes() {
     const rows = data.slice(1);
     
     const estudiantes = rows
-      .filter(row => row[16] === 'estudiante') // Columna Tipo (índice 16)
+      .filter(row => row[24] === 'estudiante') // Columna Tipo (índice 24)
       .map(row => {
         const obj = {};
         headers.forEach((header, index) => {
@@ -392,7 +465,7 @@ function obtenerTodosDocentes() {
     const rows = data.slice(1);
     
     const docentes = rows
-      .filter(row => row[16] === 'docente') // Columna Tipo (índice 16)
+      .filter(row => row[24] === 'docente') // Columna Tipo (índice 24)
       .map(row => {
         const obj = {};
         headers.forEach((header, index) => {
@@ -442,7 +515,7 @@ function obtenerEstudiantePorCedula(cedula) {
     // Buscar estudiante por cédula
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row[0] && row[0].toString() === cedula && row[16] === 'estudiante') {
+      if (row[0] && row[0].toString() === cedula && row[24] === 'estudiante') {
         const estudiante = {};
         headers.forEach((header, index) => {
           estudiante[header] = row[index] || '';
@@ -450,12 +523,26 @@ function obtenerEstudiantePorCedula(cedula) {
         
         // Reconstruir los objetos JSON para el formulario
         estudiante.funcionamientoAcademico = {
+          // Español
           logros_espanol: estudiante['Logros Español'] || '',
           nivel_espanol: estudiante['Nivel Español'] || '',
           docente_espanol: estudiante['Docente Español'] || '',
+          // Matemáticas
           logros_matematicas: estudiante['Logros Matemáticas'] || '',
           nivel_matematicas: estudiante['Nivel Matemáticas'] || '',
-          docente_matematicas: estudiante['Docente Matemáticas'] || ''
+          docente_matematicas: estudiante['Docente Matemáticas'] || '',
+          // Ciencias
+          logros_ciencias: estudiante['Logros Ciencias'] || '',
+          nivel_ciencias: estudiante['Nivel Ciencias'] || '',
+          docente_ciencias: estudiante['Docente Ciencias'] || '',
+          // Estudios Sociales
+          logros_estudios_sociales: estudiante['Logros Estudios Sociales'] || '',
+          nivel_estudios_sociales: estudiante['Nivel Estudios Sociales'] || '',
+          docente_estudios_sociales: estudiante['Docente Estudios Sociales'] || '',
+          // Otras
+          logros_otras: estudiante['Logros Otras'] || '',
+          nivel_otras: estudiante['Nivel Otras'] || '',
+          docente_otras: estudiante['Docente Otras'] || ''
         };
         
         estudiante.desarrolloVocacional = {
@@ -502,7 +589,7 @@ function actualizarEstudianteExistente(data, sheet, existingData) {
     
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row[0] && row[0].toString() === data.cedula && row[16] === 'estudiante') {
+      if (row[0] && row[0].toString() === data.cedula && row[24] === 'estudiante') {
         
         // Preparar datos actualizados
         const timestamp = new Date().toLocaleString('es-CR');
@@ -514,6 +601,15 @@ function actualizarEstudianteExistente(data, sheet, existingData) {
         let logrosMatematicas = '';
         let nivelMatematicas = '';
         let docenteMatematicas = '';
+        let logrosCiencias = '';
+        let nivelCiencias = '';
+        let docenteCiencias = '';
+        let logrosEstudiosSociales = '';
+        let nivelEstudiosSociales = '';
+        let docenteEstudiosSociales = '';
+        let logrosOtras = '';
+        let nivelOtras = '';
+        let docenteOtras = '';
         
         if (data.funcionamientoAcademico) {
           try {
@@ -521,12 +617,30 @@ function actualizarEstudianteExistente(data, sheet, existingData) {
               ? JSON.parse(data.funcionamientoAcademico) 
               : data.funcionamientoAcademico;
             
+            // Español
             logrosEspanol = academico.logros_espanol || '';
             nivelEspanol = academico.nivel_espanol || '';
             docenteEspanol = academico.docente_espanol || '';
+            
+            // Matemáticas
             logrosMatematicas = academico.logros_matematicas || '';
             nivelMatematicas = academico.nivel_matematicas || '';
             docenteMatematicas = academico.docente_matematicas || '';
+            
+            // Ciencias
+            logrosCiencias = academico.logros_ciencias || '';
+            nivelCiencias = academico.nivel_ciencias || '';
+            docenteCiencias = academico.docente_ciencias || '';
+            
+            // Estudios Sociales
+            logrosEstudiosSociales = academico.logros_estudios_sociales || '';
+            nivelEstudiosSociales = academico.nivel_estudios_sociales || '';
+            docenteEstudiosSociales = academico.docente_estudios_sociales || '';
+            
+            // Otras
+            logrosOtras = academico.logros_otras || '';
+            nivelOtras = academico.nivel_otras || '';
+            docenteOtras = academico.docente_otras || '';
           } catch (e) {
             console.log('Error parseando funcionamiento académico:', e);
           }
@@ -574,15 +688,31 @@ function actualizarEstudianteExistente(data, sheet, existingData) {
           data.nombre || '',
           data.grado || '',
           data.seccion || '',
+          // Español
           logrosEspanol,
           nivelEspanol,
           docenteEspanol,
+          // Matemáticas
           logrosMatematicas,
           nivelMatematicas,
           docenteMatematicas,
+          // Ciencias
+          logrosCiencias,
+          nivelCiencias,
+          docenteCiencias,
+          // Estudios Sociales
+          logrosEstudiosSociales,
+          nivelEstudiosSociales,
+          docenteEstudiosSociales,
+          // Otras
+          logrosOtras,
+          nivelOtras,
+          docenteOtras,
+          // Desarrollo Vocacional
           interesesHabilidades,
           expectativasVocacionales,
           observacionesGenerales,
+          // Docente Evaluador
           docenteEvaluador,
           fechaEvaluacion,
           timestamp, // Actualizar fecha de registro
@@ -619,6 +749,56 @@ function actualizarEstudianteExistente(data, sheet, existingData) {
         error: 'Error al actualizar: ' + error.toString()
       }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para inicializar/actualizar la estructura de la hoja
+ */
+function initializeSheetStructure() {
+  try {
+    console.log('Inicializando estructura de la hoja...');
+    
+    const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+    }
+    
+    // Verificar si ya tiene la estructura correcta (25 columnas)
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0] || [];
+    
+    if (headers.length < 25) {
+      console.log('Actualizando estructura de la hoja...');
+      
+      // Crear encabezados completos
+      const newHeaders = [
+        'Cédula', 'Nombre', 'Grado', 'Sección', 
+        'Logros Español', 'Nivel Español', 'Docente Español',
+        'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
+        'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
+        'Docente Evaluador', 'Fecha Evaluación', 'Fecha Registro', 'Tipo'
+      ];
+      
+      // Limpiar la hoja y establecer nuevos encabezados
+      sheet.clear();
+      sheet.getRange(1, 1, 1, newHeaders.length).setValues([newHeaders]);
+      
+      console.log('Estructura de la hoja actualizada exitosamente');
+      return 'Estructura de la hoja actualizada exitosamente';
+    } else {
+      console.log('La hoja ya tiene la estructura correcta');
+      return 'La hoja ya tiene la estructura correcta';
+    }
+    
+  } catch (error) {
+    console.log('Error al inicializar estructura:', error);
+    return 'Error al inicializar estructura: ' + error.toString();
   }
 }
 
