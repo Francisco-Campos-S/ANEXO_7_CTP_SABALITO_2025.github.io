@@ -1,153 +1,70 @@
-# ANEXO 7 - CTP Sabalito 2025
+# ANEXO 7 - Formulario de Estudiantes | CTP Sabalito 2025
 
-## Formulario de Información Docente
+## 📋 Descripción
 
-Este proyecto contiene un formulario web moderno y responsivo para la recopilación de información del personal docente del Colegio Técnico Profesional Sabalito para el año académico 2025.
+Sistema web para la evaluación del funcionamiento académico y desarrollo vocacional de estudiantes del Colegio Técnico Profesional Sabalito.
 
-### 🎯 Características
+## 🚀 Características
 
-- **Formulario Completo**: Recopila información personal, profesional y académica de los docentes
-- **Diseño Moderno**: Interfaz atractiva con gradientes y efectos visuales
-- **Responsivo**: Funciona perfectamente en dispositivos móviles, tablets y escritorio
-- **Validación en Tiempo Real**: Validación de campos con retroalimentación inmediata
-- **Almacenamiento Local**: Los datos se guardan en el navegador del usuario
-- **Funcionalidad de Impresión**: Permite imprimir los resultados del formulario
-- **Accesible**: Diseño accesible con iconos y colores apropiados
+- ✅ **Búsqueda de estudiantes** por cédula
+- ✅ **Formulario completo** con todas las materias
+- ✅ **Guardado en Google Sheets** para colaboración
+- ✅ **Edición de registros** existentes
+- ✅ **Exportación a Excel**
+- ✅ **Impresión** de formularios
+- ✅ **Diseño responsivo** para móviles
 
-### 📋 Campos del Formulario
+## 📁 Archivos del Proyecto
 
-#### Información Personal
-- Cédula de Identidad (obligatorio)
-- Nombre Completo (obligatorio)
-- Teléfono
-- Correo Electrónico (obligatorio)
-- Dirección
-- Fecha de Nacimiento
+- `index.html` - Formulario principal (página de inicio)
+- `estudiante.js` - Lógica JavaScript del formulario
+- `style.css` - Estilos del formulario
+- `config.js` - Configuración de URLs
+- `GoogleAppsScript_FINAL.gs` - Script de Google Apps Script
+- `INSTRUCCIONES_FINALES.md` - Instrucciones de configuración
 
-#### Información Profesional
-- Especialidad/Área (obligatorio)
-- Nivel Académico (obligatorio)
-- Años de Experiencia
-- Estado Laboral (obligatorio)
+## 🔧 Configuración
 
-#### Información de Enseñanza
-- Cursos que Imparte
-- Horas Semanales
-- Modalidad de Trabajo
+1. **Configurar Google Sheets** siguiendo `INSTRUCCIONES_FINALES.md`
+2. **Actualizar URL** en `config.js` con tu deploy de Google Apps Script
+3. **Subir archivos** a GitHub Pages
 
-#### Información Adicional
-- Certificaciones o Cursos Adicionales
-- Observaciones
+## 📱 Uso
 
-### 🚀 Cómo Usar
+1. **Buscar estudiante**: Ingresa la cédula y haz clic en "Buscar"
+2. **Nuevo estudiante**: Haz clic en "Nuevo Estudiante"
+3. **Llenar formulario**: Completa todos los campos requeridos
+4. **Guardar**: Haz clic en "Guardar Información"
 
-1. **Acceder al Formulario**: Abra el archivo `index.html` en cualquier navegador web
-2. **Completar Información**: Llene todos los campos obligatorios (marcados con *)
-3. **Validación**: El sistema validará automáticamente los datos ingresados
-4. **Guardar**: Haga clic en "Guardar Información" para procesar los datos
-5. **Revisar**: Los datos se mostrarán en una sección de resultados
-6. **Imprimir**: Use el botón "Imprimir" si necesita una copia física
+## 🎯 Funcionalidades
 
-### 🛠️ Tecnologías Utilizadas
+### Funcionamiento Académico
+- Español, Matemáticas, Ciencias, Estudios Sociales, Otras materias
+- Logros, nivel de funcionamiento, docente por materia
 
-- **HTML5**: Estructura semántica del formulario
-- **CSS3**: Estilos modernos con gradientes y animaciones
-- **JavaScript ES6+**: Funcionalidad interactiva y validación
-- **Font Awesome**: Iconos para mejorar la experiencia visual
-- **LocalStorage**: Almacenamiento de datos en el navegador
+### Desarrollo Vocacional
+- Intereses y habilidades
+- Expectativas vocacionales y laborales
+- Observaciones generales
 
-### 📱 Compatibilidad
+### Docente Evaluador
+- Información del docente que realiza la evaluación
+- Fecha de evaluación
 
-- ✅ Chrome 60+
-- ✅ Firefox 55+
-- ✅ Safari 12+
-- ✅ Edge 79+
-- ✅ Dispositivos móviles (iOS/Android)
+## 📊 Datos Guardados
 
-### 🎨 Características de Diseño
+Todos los datos se guardan en Google Sheets con las siguientes columnas:
+- Información básica del estudiante
+- Logros y niveles por materia
+- Docentes por materia
+- Desarrollo vocacional
+- Información del docente evaluador
+- Fechas de registro y evaluación
 
-- **Paleta de Colores**: Gradiente azul-púrpura profesional
-- **Tipografía**: Segoe UI para mejor legibilidad
-- **Animaciones**: Transiciones suaves y efectos hover
-- **Layout**: Grid responsivo para organización óptima
-- **Accesibilidad**: Contraste adecuado y navegación por teclado
+## 🔗 GitHub Pages
 
-### 📊 Funcionalidades Técnicas
+Este proyecto está configurado para funcionar en GitHub Pages. El archivo `index.html` es la página principal que se mostrará cuando accedas a tu sitio.
 
-- **Validación de Formularios**: 
-  - Campos obligatorios
-  - Formato de email
-  - Formato de cédula (9 dígitos)
-  - Formato de teléfono
-- **Almacenamiento**: Los datos se guardan en localStorage del navegador
-- **Impresión**: Función de impresión optimizada para documentos
-- **Responsive Design**: Adaptación automática a diferentes tamaños de pantalla
+## 📞 Soporte
 
-### 🔧 Instalación y Configuración
-
-#### Configuración Inicial (REQUERIDA)
-
-**IMPORTANTE**: Antes de usar el formulario, debe configurar Google Sheets como base de datos compartida.
-
-1. **Seguir instrucciones**: Consulte `INSTRUCCIONES_GOOGLE_APPS_SCRIPT.md` para la configuración completa
-2. **Configurar Google Sheets**: Crear una hoja de cálculo y configurar Google Apps Script
-3. **Actualizar config.js**: Reemplazar la URL del script en el archivo `config.js`
-4. **Probar configuración**: Verificar que el formulario funcione correctamente
-
-#### Uso Local
-
-1. **Clonar o Descargar**: Obtenga los archivos del proyecto
-2. **Configurar**: Complete la configuración de Google Sheets
-3. **Servir Localmente**: 
-   ```bash
-   # Opción 1: Servidor Python
-   python -m http.server 8000
-   
-   # Opción 2: Servidor Node.js
-   npx serve .
-   
-   # Opción 3: Abrir directamente
-   # Simplemente abra index.html en su navegador
-   ```
-4. **Acceder**: Navegue a `http://localhost:8000` o abra el archivo directamente
-
-### 🌐 GitHub Pages
-
-Este proyecto está configurado para funcionar con GitHub Pages:
-
-1. **Repositorio**: Asegúrese de que el repositorio esté configurado como público
-2. **Configuración**: Vaya a Settings > Pages en su repositorio de GitHub
-3. **Fuente**: Seleccione "Deploy from a branch" y elija "main"
-4. **Carpeta**: Seleccione "/ (root)" como carpeta de origen
-5. **Acceso**: Su sitio estará disponible en `https://[usuario].github.io/[repositorio]`
-
-### 📝 Notas Importantes
-
-- **Base de Datos Compartida**: Los datos se almacenan en Google Sheets para que todos los docentes puedan ver la información de todos
-- **Configuración Requerida**: Debe configurar Google Apps Script antes de usar el formulario
-- **Acceso Público**: Todos los docentes pueden ver y agregar información
-- **Sin Autenticación**: No requiere login para usar el formulario
-- **Instrucciones**: Consulte `INSTRUCCIONES_GOOGLE_APPS_SCRIPT.md` para la configuración
-
-### 🤝 Contribuciones
-
-Para contribuir al proyecto:
-
-1. Fork el repositorio
-2. Cree una rama para su feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit sus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abra un Pull Request
-
-### 📄 Licencia
-
-Este proyecto está desarrollado para el Colegio Técnico Profesional Sabalito y está destinado para uso educativo e institucional.
-
-### 📞 Soporte
-
-Para soporte técnico o consultas sobre el formulario, contacte al administrador del sistema del CTP Sabalito.
-
----
-
-**Desarrollado para CTP Sabalito 2025**  
-*Formulario ANEXO 7 - Recopilación de Información Docente*
+Para problemas o dudas, revisa `INSTRUCCIONES_FINALES.md` o contacta al administrador del sistema.
