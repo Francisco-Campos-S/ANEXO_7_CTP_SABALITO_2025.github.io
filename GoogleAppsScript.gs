@@ -1,524 +1,481 @@
-// Google Apps Script para ANEXO 7 - CTP SABALITO 2025
-// Este código debe ser copiado y pegado en Google Apps Script
+/**
+ * Google Apps Script para ANEXO 7 - CTP Sabalito 2025
+ * Maneja el almacenamiento y recuperación de datos de docentes
+ */
 
-// ID de la hoja de cálculo - Reemplaza con el ID de tu hoja
-const SPREADSHEET_ID = '1oziOBfMHdkoRLqrzWo0yP8sTgjHmLu9kWTzTXxt09YY';
+// ID de la hoja de cálculo (se debe configurar)
+const SHEET_ID = '1I3_cpVR8wvAwXFWuXgJEkUf8bEuARwuq6p5JaDbbfus'; // ID de la hoja de CTP Sabalito
+const SHEET_NAME = 'Docentes';
 
-// Función principal que maneja las solicitudes HTTP
+/**
+ * Función para obtener o crear la hoja de trabajo
+ */
+function getOrCreateSheet() {
+  try {
+    const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    
+    // Si la hoja no existe, crearla
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      initializeSheetHeaders(sheet);
+    }
+    
+    return sheet;
+  } catch (error) {
+    throw new Error('Error al acceder a la hoja de cálculo: ' + error.toString());
+  }
+}
+
+/**
+ * Función para inicializar los encabezados de la hoja
+ */
+function initializeSheetHeaders(sheet) {
+  const headers = [
+    'Cédula',
+    'Nombre',
+    'Teléfono',
+    'Email',
+    'Dirección',
+    'Fecha de Nacimiento',
+    'Especialidad',
+    'Nivel Académico',
+    'Experiencia',
+    'Estado',
+    'Cursos',
+    'Horas Semanales',
+    'Modalidad',
+    'Certificaciones',
+    'Observaciones',
+    'Fecha de Registro',
+    'Grado', // Para estudiantes
+    'Sección', // Para estudiantes
+    'Funcionamiento Académico', // Para estudiantes
+    'Desarrollo Vocacional', // Para estudiantes
+    'Docente', // Para estudiantes
+    'Tipo' // Para distinguir docentes de estudiantes
+  ];
+  
+  // Establecer encabezados
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  
+  // Formatear encabezados
+  const headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setFontWeight('bold');
+  headerRange.setBackground('#667eea');
+  headerRange.setFontColor('white');
+  
+  // Ajustar ancho de columnas
+  sheet.autoResizeColumns(1, headers.length);
+}
+
+/**
+ * Función para agregar un nuevo docente o estudiante
+ */
 function doPost(e) {
   try {
-    // Validar que e y e.postData existan
-    if (!e || !e.postData || !e.postData.contents) {
-      const response = ContentService
-        .createTextOutput(JSON.stringify({
-          success: false,
-          message: 'Datos de solicitud no válidos'
-        }))
+    let data;
+    
+    // Manejar diferentes tipos de datos
+    if (e.postData && e.postData.contents) {
+      // Datos JSON
+      data = JSON.parse(e.postData.contents);
+    } else if (e.parameter) {
+      // Datos de formulario
+      data = e.parameter;
+    } else {
+      throw new Error('No se recibieron datos');
+    }
+    
+    // Determinar si es docente o estudiante
+    const isStudent = data.tipo === 'estudiante';
+    
+    if (isStudent) {
+      return saveStudent(data);
+    } else {
+      return saveTeacher(data);
+    }
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para guardar un docente
+ */
+function saveTeacher(data) {
+  try {
+    // Validar datos requeridos para docentes
+    if (!data.cedula || !data.nombre || !data.email || !data.especialidad || !data.nivel || !data.estado) {
+      return ContentService
+        .createTextOutput(JSON.stringify({success: false, error: 'Faltan datos requeridos'}))
         .setMimeType(ContentService.MimeType.JSON);
-      
-      response.addHeader('Access-Control-Allow-Origin', '*');
-      response.addHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      response.addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-      
-      return response;
     }
     
-    // Obtener los datos de la solicitud
-    const requestData = JSON.parse(e.postData.contents);
-    const action = requestData.action;
+    // Obtener o crear la hoja
+    const sheet = getOrCreateSheet();
     
-    let response;
+    // Verificar si ya existe un docente con esa cédula
+    const existingData = sheet.getDataRange().getValues();
+    const cedulaExists = existingData.length > 1 && existingData.slice(1).some(row => row[0] === data.cedula);
     
-    // Manejar diferentes acciones
-    switch (action) {
-      case 'submit':
-        response = handleFormSubmission(requestData.data);
-        break;
-      case 'query':
-        response = handleStudentQuery(requestData.studentId);
-        break;
-      case 'getAllStudents':
-        response = getAllStudents();
-        break;
-      case 'testConnection':
-        response = testConnection();
-        break;
-      case 'setupSpreadsheet':
-        response = setupSpreadsheet();
-        break;
-      case 'getStatistics':
-        response = getStatistics();
-        break;
-      default:
-        response = { success: false, message: 'Acción no válida' };
+    if (cedulaExists) {
+      return ContentService
+        .createTextOutput(JSON.stringify({success: false, error: 'Ya existe un docente con esa cédula'}))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Crear respuesta con CORS headers
-    const responseObj = ContentService
-      .createTextOutput(JSON.stringify(response))
-      .setMimeType(ContentService.MimeType.JSON);
+    // Agregar timestamp
+    data.fechaRegistro = new Date().toLocaleString('es-CR');
     
-    responseObj.addHeader('Access-Control-Allow-Origin', '*');
-    responseObj.addHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    responseObj.addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    
-    return responseObj;
-      
-  } catch (error) {
-    console.error('Error en doPost:', error);
-    const errorResponse = {
-      success: false,
-      message: 'Error interno del servidor: ' + error.toString()
-    };
-    
-    const response = ContentService
-      .createTextOutput(JSON.stringify(errorResponse))
-      .setMimeType(ContentService.MimeType.JSON);
-    
-    response.addHeader('Access-Control-Allow-Origin', '*');
-    response.addHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    
-    return response;
-  }
-}
-
-// Función para manejar la opción OPTIONS (CORS preflight)
-function doOptions(e) {
-  const response = ContentService.createTextOutput('');
-  
-  response.addHeader('Access-Control-Allow-Origin', '*');
-  response.addHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  response.addHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  response.addHeader('Access-Control-Max-Age', '86400');
-  
-  return response.setMimeType(ContentService.MimeType.TEXT);
-}
-
-// Función para probar la conexión
-function testConnection() {
-  try {
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
-    
-    return {
-      success: true,
-      data: {
-        message: 'Conexión exitosa con Google Sheets',
-        spreadsheetId: SPREADSHEET_ID,
-        sheetName: sheet.getName(),
-        timestamp: new Date().toISOString()
-      }
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: 'Error de conexión: ' + error.toString()
-    };
-  }
-}
-
-// Función para manejar el envío del formulario
-function handleFormSubmission(formData) {
-  try {
-    // Validar datos requeridos
-    if (!formData || !formData.studentInfo || !formData.studentInfo.id) {
-      return {
-        success: false,
-        message: 'Datos del estudiante incompletos'
-      };
-    }
-    
-    // Abrir la hoja de cálculo
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
-    
-    // Asegurar que los headers estén configurados
-    ensureHeaders(sheet);
-    
-    // Preparar los datos para la hoja
-    const rowData = [
-      new Date(), // Timestamp
-      formData.studentInfo.name || '',
-      formData.studentInfo.id || '',
-      formData.studentInfo.grade || '',
-      formData.studentInfo.year || '',
-      
-      // Funcionamiento Académico - Español
-      formData.academicPerformance?.espanol?.logros || '',
-      formData.academicPerformance?.espanol?.nivel || '',
-      formData.academicPerformance?.espanol?.docente || '',
-      
-      // Funcionamiento Académico - Matemáticas
-      formData.academicPerformance?.matematicas?.logros || '',
-      formData.academicPerformance?.matematicas?.nivel || '',
-      formData.academicPerformance?.matematicas?.docente || '',
-      
-      // Funcionamiento Académico - Ciencias
-      formData.academicPerformance?.ciencias?.logros || '',
-      formData.academicPerformance?.ciencias?.nivel || '',
-      formData.academicPerformance?.ciencias?.docente || '',
-      
-      // Funcionamiento Académico - Estudios Sociales
-      formData.academicPerformance?.estudiosSociales?.logros || '',
-      formData.academicPerformance?.estudiosSociales?.nivel || '',
-      formData.academicPerformance?.estudiosSociales?.docente || '',
-      
-      // Funcionamiento Académico - Otras
-      formData.academicPerformance?.otras?.logros || '',
-      formData.academicPerformance?.otras?.nivel || '',
-      formData.academicPerformance?.otras?.docente || '',
-      
-      // Desarrollo Vocacional
-      formData.vocationalDevelopment?.interests || '',
-      formData.vocationalDevelopment?.expectations || '',
-      formData.vocationalDevelopment?.productiveSkills || ''
+    // Preparar fila para insertar
+    const row = [
+      data.cedula,
+      data.nombre,
+      data.telefono || '',
+      data.email,
+      data.direccion || '',
+      data.fechaNacimiento || '',
+      data.especialidad,
+      data.nivel,
+      data.experiencia || 0,
+      data.estado,
+      data.cursos || '',
+      data.horasSemanales || '',
+      data.modalidad || '',
+      data.certificaciones || '',
+      data.observaciones || '',
+      data.fechaRegistro
     ];
     
-    // Agregar la fila a la hoja
-    sheet.appendRow(rowData);
+    // Insertar nueva fila
+    sheet.appendRow(row);
     
-    return {
-      success: true,
-      message: 'Formulario guardado exitosamente',
-      data: {
-        studentId: formData.studentInfo.id,
-        timestamp: new Date().toISOString()
-      }
-    };
-    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, message: 'Docente agregado exitosamente'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
   } catch (error) {
-    console.error('Error al guardar el formulario:', error);
-    return {
-      success: false,
-      message: 'Error al guardar en la hoja de cálculo: ' + error.toString()
-    };
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Función para consultar un estudiante por cédula
-function handleStudentQuery(studentId) {
+/**
+ * Función para guardar un estudiante
+ */
+function saveStudent(data) {
   try {
-    if (!studentId) {
-      return {
-        success: false,
-        message: 'ID del estudiante requerido'
-      };
+    // Validar datos requeridos para estudiantes
+    if (!data.cedula || !data.nombre) {
+      return ContentService
+        .createTextOutput(JSON.stringify({success: false, error: 'Faltan datos requeridos del estudiante'}))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Abrir la hoja de cálculo
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
+    // Obtener o crear la hoja
+    const sheet = getOrCreateSheet();
     
-    // Obtener todos los datos
+    // Verificar si ya existe un estudiante con esa cédula
+    const existingData = sheet.getDataRange().getValues();
+    const cedulaExists = existingData.length > 1 && existingData.slice(1).some(row => row[0] === data.cedula);
+    
+    if (cedulaExists) {
+      // Actualizar estudiante existente
+      return updateStudent(data, sheet, existingData);
+    } else {
+      // Crear nuevo estudiante
+      return createNewStudent(data, sheet);
+    }
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para crear un nuevo estudiante
+ */
+function createNewStudent(data, sheet) {
+  try {
+    // Agregar timestamp
+    data.fechaRegistro = new Date().toLocaleString('es-CR');
+    
+    // Preparar fila para insertar (formato extendido para estudiantes)
+    const row = [
+      data.cedula,
+      data.nombre,
+      data.grado || '',
+      data.seccion || '',
+      JSON.stringify(data.funcionamientoAcademico || {}),
+      JSON.stringify(data.desarrolloVocacional || {}),
+      JSON.stringify(data.docente || {}),
+      data.fechaRegistro,
+      'estudiante' // Tipo de registro
+    ];
+    
+    // Insertar nueva fila
+    sheet.appendRow(row);
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, message: 'Estudiante agregado exitosamente'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para actualizar un estudiante existente
+ */
+function updateStudent(data, sheet, existingData) {
+  try {
+    // Buscar la fila del estudiante
+    const headers = existingData[0];
+    const rows = existingData.slice(1);
+    
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row[0] && row[0].toString() === data.cedula) {
+        // Actualizar la fila
+        const updatedRow = [
+          data.cedula,
+          data.nombre,
+          data.grado || '',
+          data.seccion || '',
+          JSON.stringify(data.funcionamientoAcademico || {}),
+          JSON.stringify(data.desarrolloVocacional || {}),
+          JSON.stringify(data.docente || {}),
+          new Date().toLocaleString('es-CR'),
+          'estudiante'
+        ];
+        
+        // Actualizar la fila (fila i+2 porque empezamos desde la fila 2)
+        sheet.getRange(i + 2, 1, 1, updatedRow.length).setValues([updatedRow]);
+        
+        return ContentService
+          .createTextOutput(JSON.stringify({success: true, message: 'Estudiante actualizado exitosamente'}))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: 'Estudiante no encontrado para actualizar'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para obtener todos los docentes o estudiantes
+ */
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    
+    if (action === 'getStudent') {
+      // Buscar estudiante específico
+      return getStudent(e.parameter.cedula);
+    } else if (action === 'getAllStudents') {
+      // Obtener todos los estudiantes
+      return getAllStudents();
+    } else {
+      // Obtener todos los docentes (comportamiento por defecto)
+      return getAllTeachers();
+    }
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para obtener todos los docentes
+ */
+function getAllTeachers() {
+  try {
+    const sheet = getOrCreateSheet();
     const data = sheet.getDataRange().getValues();
     
+    // Si solo hay encabezados, devolver array vacío
     if (data.length <= 1) {
-      return {
-        success: false,
-        message: 'No hay estudiantes registrados'
-      };
+      return ContentService
+        .createTextOutput(JSON.stringify({success: true, data: []}))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Buscar el estudiante por cédula (columna 2, índice 2)
-    let studentRow = null;
-    for (let i = 1; i < data.length; i++) { // Empezar desde la fila 2 (índice 1)
-      if (data[i][2] === studentId) { // Columna C (índice 2) es la cédula
-        studentRow = data[i];
-        break;
-      }
-    }
+    // Omitir la primera fila (encabezados)
+    const headers = data[0];
+    const rows = data.slice(1);
     
-    if (!studentRow) {
-      return {
-        success: false,
-        message: 'Estudiante no encontrado'
-      };
-    }
+    // Convertir a objetos (solo docentes, no estudiantes)
+    const docentes = rows
+      .filter(row => !row[8] || row[8] !== 'estudiante') // Filtrar estudiantes
+      .map(row => {
+        const docente = {};
+        headers.forEach((header, index) => {
+          docente[header] = row[index] || '';
+        });
+        return docente;
+      });
     
-    // Reconstruir los datos del estudiante
-    const studentData = {
-      studentInfo: {
-        name: studentRow[1] || '',
-        id: studentRow[2] || '',
-        grade: studentRow[3] || '',
-        year: studentRow[4] || ''
-      },
-      academicPerformance: {
-        espanol: {
-          logros: studentRow[5] || '',
-          nivel: studentRow[6] || '',
-          docente: studentRow[7] || ''
-        },
-        matematicas: {
-          logros: studentRow[8] || '',
-          nivel: studentRow[9] || '',
-          docente: studentRow[10] || ''
-        },
-        ciencias: {
-          logros: studentRow[11] || '',
-          nivel: studentRow[12] || '',
-          docente: studentRow[13] || ''
-        },
-        estudiosSociales: {
-          logros: studentRow[14] || '',
-          nivel: studentRow[15] || '',
-          docente: studentRow[16] || ''
-        },
-        otras: {
-          logros: studentRow[17] || '',
-          nivel: studentRow[18] || '',
-          docente: studentRow[19] || ''
-        }
-      },
-      vocationalDevelopment: {
-        interests: studentRow[20] || '',
-        expectations: studentRow[21] || '',
-        productiveSkills: studentRow[22] || ''
-      }
-    };
-    
-    return {
-      success: true,
-      data: studentData
-    };
-    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, data: docentes}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
   } catch (error) {
-    console.error('Error al consultar el estudiante:', error);
-    return {
-      success: false,
-      message: 'Error al consultar la hoja de cálculo: ' + error.toString()
-    };
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Función para obtener todos los estudiantes
+/**
+ * Función para obtener todos los estudiantes
+ */
 function getAllStudents() {
   try {
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
+    const sheet = getOrCreateSheet();
+    const data = sheet.getDataRange().getValues();
     
+    // Si solo hay encabezados, devolver array vacío
+    if (data.length <= 1) {
+      return ContentService
+        .createTextOutput(JSON.stringify({success: true, data: []}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Omitir la primera fila (encabezados)
+    const headers = data[0];
+    const rows = data.slice(1);
+    
+    // Convertir a objetos (solo estudiantes)
+    const estudiantes = rows
+      .filter(row => row[8] === 'estudiante') // Solo estudiantes
+      .map(row => {
+        const estudiante = {};
+        headers.forEach((header, index) => {
+          estudiante[header] = row[index] || '';
+        });
+        
+        // Parsear JSON strings si existen
+        try {
+          if (estudiante['Funcionamiento Académico']) {
+            estudiante.funcionamientoAcademico = JSON.parse(estudiante['Funcionamiento Académico']);
+          }
+          if (estudiante['Desarrollo Vocacional']) {
+            estudiante.desarrolloVocacional = JSON.parse(estudiante['Desarrollo Vocacional']);
+          }
+          if (estudiante['Docente']) {
+            estudiante.docente = JSON.parse(estudiante['Docente']);
+          }
+        } catch (e) {
+          console.log('Error parsing JSON:', e);
+        }
+        
+        return estudiante;
+      });
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, data: estudiantes}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para obtener un estudiante específico
+ */
+function getStudent(cedula) {
+  try {
+    const sheet = getOrCreateSheet();
     const data = sheet.getDataRange().getValues();
     
     if (data.length <= 1) {
-      return {
-        success: true,
-        data: [],
-        message: 'No hay estudiantes registrados'
-      };
+      return ContentService
+        .createTextOutput(JSON.stringify({success: false, error: 'Estudiante no encontrado'}))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
-    const students = [];
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      students.push({
-        timestamp: row[0],
-        name: row[1] || '',
-        id: row[2] || '',
-        grade: row[3] || '',
-        year: row[4] || ''
-      });
-    }
+    // Buscar estudiante por cédula
+    const headers = data[0];
+    const rows = data.slice(1);
     
-    return {
-      success: true,
-      data: students
-    };
-    
-  } catch (error) {
-    console.error('Error al obtener estudiantes:', error);
-    return {
-      success: false,
-      message: 'Error al obtener estudiantes: ' + error.toString()
-    };
-  }
-}
-
-// Función para asegurar que los headers estén configurados
-function ensureHeaders(sheet) {
-  try {
-    if (!sheet) {
-      console.error('Sheet es undefined');
-      return false;
-    }
-    
-    const data = sheet.getDataRange().getValues();
-    
-    // Si no hay datos o solo hay una fila vacía, configurar headers
-    if (data.length === 0 || (data.length === 1 && data[0].every(cell => !cell))) {
-      setupSpreadsheet();
-      return true;
-    }
-    
-    // Verificar si ya tiene headers
-    const firstRow = data[0];
-    if (firstRow[0] === 'Timestamp' && firstRow[1] === 'Nombre del Estudiante') {
-      return true; // Ya tiene headers
-    }
-    
-    // Si no tiene headers, configurarlos
-    setupSpreadsheet();
-    return true;
-    
-  } catch (error) {
-    console.error('Error al verificar headers:', error);
-    return false;
-  }
-}
-
-// Función para crear la estructura inicial de la hoja
-function setupSpreadsheet() {
-  try {
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
-    
-    // Crear encabezados
-    const headers = [
-      'Timestamp',
-      'Nombre del Estudiante',
-      'Cédula',
-      'Grado/Nivel',
-      'Año',
-      
-      // Funcionamiento Académico - Español
-      'Español - Logros',
-      'Español - Nivel',
-      'Español - Docente',
-      
-      // Funcionamiento Académico - Matemáticas
-      'Matemáticas - Logros',
-      'Matemáticas - Nivel',
-      'Matemáticas - Docente',
-      
-      // Funcionamiento Académico - Ciencias
-      'Ciencias - Logros',
-      'Ciencias - Nivel',
-      'Ciencias - Docente',
-      
-      // Funcionamiento Académico - Estudios Sociales
-      'Estudios Sociales - Logros',
-      'Estudios Sociales - Nivel',
-      'Estudios Sociales - Docente',
-      
-      // Funcionamiento Académico - Otras
-      'Otras - Logros',
-      'Otras - Nivel',
-      'Otras - Docente',
-      
-      // Desarrollo Vocacional
-      'Intereses y Habilidades',
-      'Expectativas Vocacionales',
-      'Habilidades Productivas'
-    ];
-    
-    // Limpiar la hoja y agregar encabezados
-    sheet.clear();
-    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    
-    // Formatear encabezados
-    const headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground('#3498db');
-    headerRange.setFontColor('white');
-    headerRange.setFontWeight('bold');
-    
-    // Ajustar ancho de columnas
-    for (let i = 1; i <= headers.length; i++) {
-      sheet.autoResizeColumn(i);
-    }
-    
-    console.log('Hoja configurada exitosamente');
-    
-    return {
-      success: true,
-      message: 'Hoja configurada exitosamente'
-    };
-    
-  } catch (error) {
-    console.error('Error al configurar la hoja:', error);
-    return {
-      success: false,
-      message: 'Error al configurar la hoja: ' + error.toString()
-    };
-  }
-}
-
-// Función para obtener estadísticas  
-function getStatistics() {
-  try {
-    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getActiveSheet();
-    
-    const data = sheet.getDataRange().getValues();
-    const totalStudents = data.length - 1; // Restar 1 por los encabezados
-    
-    if (totalStudents <= 0) {
-      return {
-        success: true,
-        data: {
-          totalStudents: 0,
-          message: 'No hay estudiantes registrados'
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row[0] && row[0].toString() === cedula && row[8] === 'estudiante') {
+        const estudiante = {};
+        headers.forEach((header, index) => {
+          estudiante[header] = row[index] || '';
+        });
+        
+        // Parsear JSON strings si existen
+        try {
+          if (estudiante['Funcionamiento Académico']) {
+            estudiante.funcionamientoAcademico = JSON.parse(estudiante['Funcionamiento Académico']);
+          }
+          if (estudiante['Desarrollo Vocacional']) {
+            estudiante.desarrolloVocacional = JSON.parse(estudiante['Desarrollo Vocacional']);
+          }
+          if (estudiante['Docente']) {
+            estudiante.docente = JSON.parse(estudiante['Docente']);
+          }
+        } catch (e) {
+          console.log('Error parsing JSON:', e);
         }
-      };
-    }
-    
-    // Contar estudiantes por nivel
-    const gradeCount = {};
-    for (let i = 1; i < data.length; i++) {
-      const grade = data[i][3]; // Columna D (índice 3) es el grado
-      if (grade) {
-        gradeCount[grade] = (gradeCount[grade] || 0) + 1;
+        
+        return ContentService
+          .createTextOutput(JSON.stringify({success: true, data: estudiante}))
+          .setMimeType(ContentService.MimeType.JSON);
       }
     }
     
-    return {
-      success: true,
-      data: {
-        totalStudents: totalStudents,
-        gradeDistribution: gradeCount,
-        lastUpdate: new Date().toISOString()
-      }
-    };
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: 'Estudiante no encontrado'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Función para inicializar la hoja de cálculo
+ */
+function initializeSheet() {
+  try {
+    // Obtener o crear la hoja
+    const sheet = getOrCreateSheet();
     
+    // Verificar si ya tiene encabezados
+    const existingData = sheet.getDataRange().getValues();
+    if (existingData.length === 0) {
+      initializeSheetHeaders(sheet);
+    }
+    
+    return 'Hoja inicializada correctamente';
   } catch (error) {
-    console.error('Error al obtener estadísticas:', error);
-    return {
-      success: false,
-      message: 'Error al obtener estadísticas: ' + error.toString()
-    };
+    return 'Error al inicializar la hoja: ' + error.toString();
   }
 }
-
-// ===== FUNCIONES DE PRUEBA PARA EJECUTAR DESDE EL EDITOR =====
-
-// Función simple para probar desde el editor
-function testSimple() {
-  console.log('✅ Función de prueba ejecutada correctamente');
-  return 'Función de prueba ejecutada correctamente';
-}
-
-// Función para probar la conexión desde el editor
-function testFromEditor() {
-  try {
-    console.log('🔄 Probando conexión...');
-    const result = testConnection();
-    console.log('Resultado:', result);
-    return result;
-  } catch (error) {
-    console.error('❌ Error en prueba:', error);
-    return { error: error.toString() };
-  }
-}
-
-// Función para crear la hoja desde el editor
-function testCreateSheet() {
-  try {
-    console.log('🔄 Creando hoja...');
-    const result = setupSpreadsheet();
-    console.log('Resultado:', result);
-    return result;
-  } catch (error) {
-    console.error('❌ Error al crear hoja:', error);
-    return { error: error.toString() };
-  }
-}
-   

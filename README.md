@@ -1,164 +1,153 @@
-# ANEXO 7 - CTP SABALITO 2025
+# ANEXO 7 - CTP Sabalito 2025
 
-Formulario web para el seguimiento del funcionamiento académico y desarrollo vocacional de estudiantes, integrado con Google Sheets mediante Google Apps Script.
+## Formulario de Información Docente
 
-## 🚀 Características
+Este proyecto contiene un formulario web moderno y responsivo para la recopilación de información del personal docente del Colegio Técnico Profesional Sabalito para el año académico 2025.
 
-- **Formulario completo** que replica el ANEXO 7 original
-- **Integración con Google Sheets** para almacenamiento de datos
-- **Consulta de estudiantes** por número de cédula
-- **Interfaz moderna y responsiva** optimizada para dispositivos móviles
-- **Validación de formularios** en tiempo real
-- **Mensajes de confirmación** para el usuario
+### 🎯 Características
 
-## 📋 Estructura del Formulario
+- **Formulario Completo**: Recopila información personal, profesional y académica de los docentes
+- **Diseño Moderno**: Interfaz atractiva con gradientes y efectos visuales
+- **Responsivo**: Funciona perfectamente en dispositivos móviles, tablets y escritorio
+- **Validación en Tiempo Real**: Validación de campos con retroalimentación inmediata
+- **Almacenamiento Local**: Los datos se guardan en el navegador del usuario
+- **Funcionalidad de Impresión**: Permite imprimir los resultados del formulario
+- **Accesible**: Diseño accesible con iconos y colores apropiados
 
-### 1. Información del Estudiante
-- Nombre completo
-- Número de cédula
-- Nivel/Grado
-- Año académico
+### 📋 Campos del Formulario
 
-### 2. Funcionamiento Académico
-- **Español**: Logros, nivel de funcionamiento, docente
-- **Matemáticas**: Logros, nivel de funcionamiento, docente
-- **Ciencias**: Logros, nivel de funcionamiento, docente
-- **Estudios Sociales**: Logros, nivel de funcionamiento, docente
-- **Otras asignaturas**: Logros, nivel de funcionamiento, docente222
- 
-### 3. Desarrollo Vocacional
-- Intereses y habilidades (deportivas, creativas, ocupacionales)
-- Expectativas vocacionales y laborales
-- Habilidades productivas
+#### Información Personal
+- Cédula de Identidad (obligatorio)
+- Nombre Completo (obligatorio)
+- Teléfono
+- Correo Electrónico (obligatorio)
+- Dirección
+- Fecha de Nacimiento
 
-## 🛠️ Configuración
+#### Información Profesional
+- Especialidad/Área (obligatorio)
+- Nivel Académico (obligatorio)
+- Años de Experiencia
+- Estado Laboral (obligatorio)
 
-### Paso 1: Configurar Google Apps Script
+#### Información de Enseñanza
+- Cursos que Imparte
+- Horas Semanales
+- Modalidad de Trabajo
 
-1. **Abrir Google Apps Script**
-   - Ve a [script.google.com](https://script.google.com)
-   - Crea un nuevo proyecto
+#### Información Adicional
+- Certificaciones o Cursos Adicionales
+- Observaciones
 
-2. **Copiar el código**
-   - Copia todo el contenido del archivo `GoogleAppsScript.gs`
-   - Pégalo en el editor de Google Apps Script
+### 🚀 Cómo Usar
 
-3. **Configurar la hoja de cálculo**
-   - Asegúrate de que el ID de la hoja en el código coincida con tu Google Sheet
-   - El ID está en la URL: `https://docs.google.com/spreadsheets/d/[ID]/edit`
+1. **Acceder al Formulario**: Abra el archivo `index.html` en cualquier navegador web
+2. **Completar Información**: Llene todos los campos obligatorios (marcados con *)
+3. **Validación**: El sistema validará automáticamente los datos ingresados
+4. **Guardar**: Haga clic en "Guardar Información" para procesar los datos
+5. **Revisar**: Los datos se mostrarán en una sección de resultados
+6. **Imprimir**: Use el botón "Imprimir" si necesita una copia física
 
-4. **Ejecutar la función de configuración**
-   - En el editor, selecciona la función `setupSpreadsheet`
-   - Haz clic en "Ejecutar" para crear la estructura de la hoja
+### 🛠️ Tecnologías Utilizadas
 
-5. **Desplegar como aplicación web**
-   - Haz clic en "Implementar" → "Nueva implementación"
-   - Selecciona "Aplicación web"
-   - Configura:
-     - **Ejecutar como**: Tu cuenta
-     - **Quién tiene acceso**: Cualquier persona
-   - Haz clic en "Implementar"
-   - Copia la URL de la aplicación web
+- **HTML5**: Estructura semántica del formulario
+- **CSS3**: Estilos modernos con gradientes y animaciones
+- **JavaScript ES6+**: Funcionalidad interactiva y validación
+- **Font Awesome**: Iconos para mejorar la experiencia visual
+- **LocalStorage**: Almacenamiento de datos en el navegador
 
-### Paso 2: Configurar el Formulario Web
+### 📱 Compatibilidad
 
-1. **Actualizar la URL de Google Apps Script**
-   - Abre `script.js`
-   - Reemplaza `YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE` con la URL que obtuviste en el paso anterior
+- ✅ Chrome 60+
+- ✅ Firefox 55+
+- ✅ Safari 12+
+- ✅ Edge 79+
+- ✅ Dispositivos móviles (iOS/Android)
 
-2. **Subir archivos a GitHub**
-   - Crea un nuevo repositorio en GitHub
-   - Sube los archivos: `index.html`, `style.css`, `script.js`
-   - Asegúrate de que `index.html` esté en la raíz del repositorio
+### 🎨 Características de Diseño
 
-3. **Habilitar GitHub Pages**
-   - Ve a Settings → Pages
-   - En "Source", selecciona "Deploy from a branch"
-   - Selecciona la rama principal (main/master)
-   - Guarda la configuración
+- **Paleta de Colores**: Gradiente azul-púrpura profesional
+- **Tipografía**: Segoe UI para mejor legibilidad
+- **Animaciones**: Transiciones suaves y efectos hover
+- **Layout**: Grid responsivo para organización óptima
+- **Accesibilidad**: Contraste adecuado y navegación por teclado
 
-## 📱 Uso del Sistema
+### 📊 Funcionalidades Técnicas
 
-### Enviar Formulario
-1. Llena todos los campos requeridos
-2. Haz clic en "Guardar Formulario"
-3. Los datos se enviarán automáticamente a Google Sheets
+- **Validación de Formularios**: 
+  - Campos obligatorios
+  - Formato de email
+  - Formato de cédula (9 dígitos)
+  - Formato de teléfono
+- **Almacenamiento**: Los datos se guardan en localStorage del navegador
+- **Impresión**: Función de impresión optimizada para documentos
+- **Responsive Design**: Adaptación automática a diferentes tamaños de pantalla
 
-### Consultar Estudiante
-1. Haz clic en "Consultar Estudiante"
-2. Ingresa el número de cédula
-3. Haz clic en "Buscar"
-4. Se mostrará toda la información del estudiante
+### 🔧 Instalación y Configuración
 
-### Limpiar Formulario
-- Haz clic en "Limpiar Formulario" para resetear todos los campos
+#### Configuración Inicial (REQUERIDA)
 
-## 🔧 Estructura de Datos en Google Sheets
+**IMPORTANTE**: Antes de usar el formulario, debe configurar Google Sheets como base de datos compartida.
 
-La hoja se organiza en las siguientes columnas:
+1. **Seguir instrucciones**: Consulte `INSTRUCCIONES_GOOGLE_APPS_SCRIPT.md` para la configuración completa
+2. **Configurar Google Sheets**: Crear una hoja de cálculo y configurar Google Apps Script
+3. **Actualizar config.js**: Reemplazar la URL del script en el archivo `config.js`
+4. **Probar configuración**: Verificar que el formulario funcione correctamente
 
-| Columna | Descripción |
-|---------|-------------|
-| A | Timestamp |
-| B | Nombre del Estudiante |
-| C | Cédula |
-| D | Grado/Nivel |
-| E | Año |
-| F-H | Español (Logros, Nivel, Docente) |
-| I-K | Matemáticas (Logros, Nivel, Docente) |
-| L-N | Ciencias (Logros, Nivel, Docente) |
-| O-Q | Estudios Sociales (Logros, Nivel, Docente) |
-| R-T | Otras (Logros, Nivel, Docente) |
-| U | Intereses y Habilidades |
-| V | Expectativas Vocacionales |
-| W | Habilidades Productivas |
+#### Uso Local
 
-## 🚨 Solución de Problemas
+1. **Clonar o Descargar**: Obtenga los archivos del proyecto
+2. **Configurar**: Complete la configuración de Google Sheets
+3. **Servir Localmente**: 
+   ```bash
+   # Opción 1: Servidor Python
+   python -m http.server 8000
+   
+   # Opción 2: Servidor Node.js
+   npx serve .
+   
+   # Opción 3: Abrir directamente
+   # Simplemente abra index.html en su navegador
+   ```
+4. **Acceder**: Navegue a `http://localhost:8000` o abra el archivo directamente
 
-### Error de CORS
-- Asegúrate de que Google Apps Script esté configurado correctamente
-- Verifica que la URL de la aplicación web sea correcta
+### 🌐 GitHub Pages
 
-### Datos no se guardan
-- Revisa la consola del navegador para errores
-- Verifica que tienes permisos de escritura en la hoja de Google Sheets
-- Asegúrate de que el ID de la hoja sea correcto
+Este proyecto está configurado para funcionar con GitHub Pages:
 
-### Formulario no se envía
-- Verifica que todos los campos requeridos estén completos
-- Revisa la conexión a internet
-- Confirma que la URL de Google Apps Script sea válida
+1. **Repositorio**: Asegúrese de que el repositorio esté configurado como público
+2. **Configuración**: Vaya a Settings > Pages en su repositorio de GitHub
+3. **Fuente**: Seleccione "Deploy from a branch" y elija "main"
+4. **Carpeta**: Seleccione "/ (root)" como carpeta de origen
+5. **Acceso**: Su sitio estará disponible en `https://[usuario].github.io/[repositorio]`
 
-## 📊 Funciones Adicionales
+### 📝 Notas Importantes
 
-### Estadísticas
-El script incluye una función `getStatistics()` que puedes ejecutar manualmente para obtener:
-- Total de estudiantes registrados
-- Distribución por grado/nivel
-- Última actualización
+- **Base de Datos Compartida**: Los datos se almacenan en Google Sheets para que todos los docentes puedan ver la información de todos
+- **Configuración Requerida**: Debe configurar Google Apps Script antes de usar el formulario
+- **Acceso Público**: Todos los docentes pueden ver y agregar información
+- **Sin Autenticación**: No requiere login para usar el formulario
+- **Instrucciones**: Consulte `INSTRUCCIONES_GOOGLE_APPS_SCRIPT.md` para la configuración
 
-### Personalización
-- Modifica `style.css` para cambiar colores y estilos
-- Ajusta `script.js` para agregar validaciones adicionales
-- Personaliza `GoogleAppsScript.gs` para modificar la lógica de almacenamiento
+### 🤝 Contribuciones
 
-## 🔒 Seguridad
+Para contribuir al proyecto:
 
-- El formulario es público y puede ser usado por cualquier persona
-- Los datos se almacenan en tu Google Sheet personal
-- Considera implementar autenticación si necesitas restringir el acceso
+1. Fork el repositorio
+2. Cree una rama para su feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit sus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abra un Pull Request
 
-## 📞 Soporte
+### 📄 Licencia
 
-Para problemas técnicos o preguntas sobre la implementación:
-1. Revisa la consola del navegador para errores
-2. Verifica la configuración de Google Apps Script
-3. Confirma que todos los archivos estén correctamente subidos
+Este proyecto está desarrollado para el Colegio Técnico Profesional Sabalito y está destinado para uso educativo e institucional.
 
-## 📝 Licencia
+### 📞 Soporte
 
-Este proyecto está diseñado para uso educativo en el CTP SABALITO 2025.
+Para soporte técnico o consultas sobre el formulario, contacte al administrador del sistema del CTP Sabalito.
 
 ---
 
-**Desarrollado para el sistema educativo costarricense** 🇨🇷
+**Desarrollado para CTP Sabalito 2025**  
+*Formulario ANEXO 7 - Recopilación de Información Docente*

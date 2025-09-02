@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANEXO 7 - Consulta de Estudiantes | CTP Sabalito 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="header-info">
+                    <h1>ANEXO 7 - Consulta de Estudiantes</h1>
+                    <p>Colegio Técnico Profesional Sabalito - 2025</p>
+                    <p>Funcionamiento Académico y Desarrollo Vocacional</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sección de Búsqueda de Estudiante -->
+        <section class="search-section">
+            <div class="search-card">
+                <h3><i class="fas fa-search"></i> Buscar Estudiante</h3>
+                <div class="search-form">
+                    <div class="form-group">
+                        <label for="cedulaEstudiante">Cédula del Estudiante:</label>
+                        <input type="text" id="cedulaEstudiante" name="cedulaEstudiante" 
+                               placeholder="Ej: 123456789" maxlength="9" required>
+                    </div>
+                    <button type="button" class="btn-search" onclick="buscarEstudiante()">
+                        <i class="fas fa-search"></i> Buscar Estudiante
+                    </button>
+                </div>
+                <div id="studentInfo" class="student-info" style="display: none;">
+                    <!-- Información del estudiante aparecerá aquí -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario Principal -->
+        <form id="studentForm" class="form" style="display: none;">
+            <!-- Información del Estudiante -->
+            <section class="form-section">
+                <h3><i class="fas fa-user"></i> Información del Estudiante</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cedula">Cédula:</label>
+                        <input type="text" id="cedula" name="cedula" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo:</label>
+                        <input type="text" id="nombre" name="nombre" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="grado">Grado:</label>
+                        <input type="text" id="grado" name="grado" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="seccion">Sección:</label>
+                        <input type="text" id="seccion" name="seccion" readonly>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Funcionamiento Académico -->
+            <section class="form-section">
+                <h3><i class="fas fa-book"></i> Funcionamiento Académico</h3>
+                <p class="section-description">
+                    (Descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, 
+                    se debe indicar claramente el nivel de funcionamiento en cada asignatura).
+                </p>
+                
+                <div class="academic-table-container">
+                    <table class="academic-table">
+                        <thead>
+                            <tr>
+                                <th>Asignatura</th>
+                                <th>Logros</th>
+                                <th>Nivel de Func.</th>
+                                <th>Nombre y firma del docente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Español</td>
+                                <td><textarea name="logros_espanol" placeholder="Describir logros alcanzados..."></textarea></td>
+                                <td>
+                                    <select name="nivel_espanol" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="docente_espanol" placeholder="Nombre del docente">
+                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('espanol')" title="Llenar con docente evaluador">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Matemáticas</td>
+                                <td><textarea name="logros_matematicas" placeholder="Describir logros alcanzados..."></textarea></td>
+                                <td>
+                                    <select name="nivel_matematicas" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="docente_matematicas" placeholder="Nombre del docente">
+                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('matematicas')" title="Llenar con docente evaluador">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ciencias</td>
+                                <td><textarea name="logros_ciencias" placeholder="Describir logros alcanzados..."></textarea></td>
+                                <td>
+                                    <select name="nivel_ciencias" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="docente_ciencias" placeholder="Nombre del docente">
+                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('ciencias')" title="Llenar con docente evaluador">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Estudios Soc.</td>
+                                <td><textarea name="logros_estudios_sociales" placeholder="Describir logros alcanzados..."></textarea></td>
+                                <td>
+                                    <select name="nivel_estudios_sociales" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="docente_estudios_sociales" placeholder="Nombre del docente">
+                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('estudios_sociales')" title="Llenar con docente evaluador">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Otras:</td>
+                                <td><textarea name="logros_otras" placeholder="Describir logros alcanzados..."></textarea></td>
+                                <td>
+                                    <select name="nivel_otras">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Excelente">Excelente</option>
+                                        <option value="Muy Bueno">Muy Bueno</option>
+                                        <option value="Bueno">Bueno</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Necesita Mejorar">Necesita Mejorar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="docente_otras" placeholder="Nombre del docente">
+                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('otras')" title="Llenar con docente evaluador">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Desarrollo Vocacional -->
+            <section class="form-section">
+                <h3><i class="fas fa-briefcase"></i> Desarrollo Vocacional</h3>
+                <p class="section-description">
+                    (Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. 
+                    Expectativas vocacionales y laborales, productivas).
+                </p>
+                
+                <div class="vocational-section">
+                    <div class="form-group">
+                        <label for="intereses_habilidades">Intereses y Habilidades:</label>
+                        <textarea id="intereses_habilidades" name="intereses_habilidades" 
+                                  placeholder="Describir intereses deportivos, creativos, ocupacionales y vocacionales del estudiante..."
+                                  rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expectativas_vocacionales">Expectativas Vocacionales y Laborales:</label>
+                        <textarea id="expectativas_vocacionales" name="expectativas_vocacionales" 
+                                  placeholder="Describir las expectativas vocacionales, laborales y productivas del estudiante..."
+                                  rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observaciones_generales">Observaciones Generales:</label>
+                        <textarea id="observaciones_generales" name="observaciones_generales" 
+                                  placeholder="Observaciones adicionales sobre el desarrollo del estudiante..."
+                                  rows="3"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Información del Docente Evaluador -->
+            <section class="form-section">
+                <h3><i class="fas fa-chalkboard-teacher"></i> Información del Docente Evaluador</h3>
+                <p class="section-description">
+                    (Información del docente que está realizando la evaluación del estudiante)
+                </p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombreDocenteEvaluador">Nombre del Docente Evaluador:</label>
+                        <input type="text" id="nombreDocenteEvaluador" name="nombreDocenteEvaluador" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedulaDocenteEvaluador">Cédula del Docente Evaluador:</label>
+                        <input type="text" id="cedulaDocenteEvaluador" name="cedulaDocenteEvaluador" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaEvaluacion">Fecha de Evaluación:</label>
+                        <input type="date" id="fechaEvaluacion" name="fechaEvaluacion" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Botones de Acción -->
+            <div class="form-actions">
+                <button type="button" class="btn-test-data" onclick="fillTestDataStudent()">
+                    <i class="fas fa-flask"></i> Datos de Prueba
+                </button>
+                <button type="button" class="btn-fill-teachers" onclick="fillTeachersFromEvaluator()">
+                    <i class="fas fa-users"></i> Llenar Docentes por Materia
+                </button>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Guardar Información
+                </button>
+                <button type="button" class="btn-print" onclick="printStudentForm()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </form>
+
+        <!-- Sección de Todos los Estudiantes -->
+        <section class="all-students-section">
+            <div class="all-students-card">
+                <h3><i class="fas fa-users"></i> Información de Todos los Estudiantes</h3>
+                <p>Aquí puede ver la información de todos los estudiantes que han sido evaluados</p>
+                
+                <div class="students-controls">
+                    <button type="button" class="btn-refresh" onclick="loadAllStudents()">
+                        <i class="fas fa-sync-alt"></i> Actualizar Lista
+                    </button>
+                    <button type="button" class="btn-test-connection" onclick="testConnection()">
+                        <i class="fas fa-wifi"></i> Probar Conexión
+                    </button>
+                    <button type="button" class="btn-export" onclick="exportStudentsToCSV()">
+                        <i class="fas fa-download"></i> Exportar a Excel
+                    </button>
+                    <button type="button" class="btn-print-all" onclick="printAllStudents()">
+                        <i class="fas fa-print"></i> Imprimir Todo
+                    </button>
+                </div>
+
+                <div id="studentsList" class="students-list">
+                    <div class="loading-message">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Cargando información de estudiantes...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="estudiante.js"></script>
+</body>
+</html>
