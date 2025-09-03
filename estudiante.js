@@ -5,7 +5,7 @@
 
 // Función para obtener la URL del script
 function getScriptUrl() {
-    return 'https://script.google.com/macros/s/AKfycbwOY0xs4gJYWzK7rZ3HzqBIr7cZB7twEmHiWCFwSebhHh0fyka27xiSyAeNHU5E5L8YKQ/exec';
+    return 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -699,7 +699,8 @@ async function saveStudentToGoogleSheets(data) {
 // Función para cargar todos los estudiantes
 async function loadAllStudents() {
     try {
-        const response = await fetch(getScriptUrl() + '?action=getAllStudents', {
+        const timestamp = new Date().getTime();
+        const response = await fetch(getScriptUrl() + '?action=getAllStudents&t=' + timestamp, {
             method: 'GET',
             mode: 'cors'
         });
@@ -785,7 +786,8 @@ function editStudent(cedula) {
 // Función para exportar estudiantes a CSV
 async function exportStudentsToCSV() {
     try {
-        const response = await fetch(getScriptUrl() + '?action=getAllStudents', {
+        const timestamp = new Date().getTime();
+        const response = await fetch(getScriptUrl() + '?action=getAllStudents&t=' + timestamp, {
             method: 'GET',
             mode: 'cors'
         });
@@ -872,7 +874,7 @@ window.guardarEstudiante = async function() {
         
         // Verificar si ya existe un estudiante con esta cédula
         console.log('Verificando cédula duplicada:', cedula);
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
         
         try {
             const existingStudent = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
@@ -1011,16 +1013,23 @@ window.cargarListaEstudiantes = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
         console.log('=== CARGANDO LISTA DE ESTUDIANTES ===');
         console.log('URL del script (FORZADA):', scriptUrl);
-        console.log('URL esperada:', 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec');
-        console.log('¿URL correcta?', scriptUrl.includes('AKfycbxzlQjpKXQHRr22DHwD17zV2e8ctIA0qg53shoLutLWbE68RQhM-k6NumJ8EgYU-cQTrA'));
+        console.log('URL esperada:', 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec');
+        console.log('¿URL correcta?', scriptUrl.includes('AKfycbyFlfX1y9mOc_ibycu5AxhKJuak9hPFsoDDQjCtEG3K77JU8Qhr3oIqO4OAFpVjpQxBwA'));
         
-        // Usar fetch con proxy para evitar problemas de CORS
+        // Usar petición directa al Google Apps Script
         const timestamp = new Date().getTime();
-        const result = await cargarDatosConFetch(`${scriptUrl}?action=getAllStudents&t=${timestamp}`);
+        const result = await cargarDatosDirecto(`${scriptUrl}?action=getAllStudents&t=${timestamp}`);
+        console.log('=== DIAGNÓSTICO COMPLETO DE RESPUESTA ===');
         console.log('Datos recibidos del servidor:', result);
+        console.log('Tipo de datos:', typeof result);
+        console.log('¿Es array?', Array.isArray(result));
+        console.log('¿Tiene propiedad data?', result && result.data !== undefined);
+        console.log('¿Tiene propiedad success?', result && result.success !== undefined);
+        console.log('Claves del objeto:', result ? Object.keys(result) : 'No es objeto');
+        console.log('==========================================');
         
         // Procesar datos directamente - asumir que siempre hay datos
         let estudiantes = [];
@@ -1097,7 +1106,13 @@ window.cargarEstudianteSeleccionado = async function() {
     const select = document.getElementById('listaEstudiantes');
     const cedula = select.value;
     
-    if (!cedula) {
+    console.log('=== CARGAR ESTUDIANTE SELECCIONADO ===');
+    console.log('Cédula seleccionada:', cedula);
+    console.log('Tipo de cédula:', typeof cedula);
+    console.log('¿Es válida?', cedula && cedula !== '' && cedula !== 'undefined');
+    
+    if (!cedula || cedula === '' || cedula === 'undefined' || cedula === '-- Seleccionar un estudiante --') {
+        console.log('❌ Cédula no válida, cancelando carga');
         return;
     }
     
@@ -1105,12 +1120,13 @@ window.cargarEstudianteSeleccionado = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+        const timestamp = new Date().getTime();
         console.log('Buscando estudiante con cédula:', cedula);
-        console.log('URL de búsqueda:', `${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        console.log('URL de búsqueda:', `${scriptUrl}?action=getStudent&cedula=${cedula}&t=${timestamp}`);
         
-        // Usar proxy CORS para cargar estudiante
-        const result = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        // Usar petición directa para cargar estudiante con timestamp para evitar caché
+        const result = await cargarDatosDirecto(`${scriptUrl}?action=getStudent&cedula=${cedula}&t=${timestamp}`);
         console.log('Respuesta de búsqueda:', result);
         
         if (result.success && result.data) {
@@ -1135,13 +1151,14 @@ window.probarConexionCompleta = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
         console.log('=== PRUEBA DE CONEXIÓN COMPLETA ===');
         console.log('URL del script (FORZADA):', scriptUrl);
         
         // Probar obtener todos los estudiantes
         console.log('1. Probando obtener todos los estudiantes...');
-        const response = await fetch(`${scriptUrl}?action=getAllStudents`);
+        const timestamp = new Date().getTime();
+        const response = await fetch(`${scriptUrl}?action=getAllStudents&t=${timestamp}`);
         
         if (response.ok) {
             const result = await response.json();
@@ -1224,6 +1241,43 @@ async function enviarDatosConFetch(scriptUrl, data) {
     }
 }
 
+// Función para cargar datos directamente del Google Apps Script
+async function cargarDatosDirecto(url) {
+    try {
+        console.log('=== CARGANDO DATOS DIRECTO ===');
+        console.log('URL:', url);
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
+        
+        console.log('Respuesta recibida:', response);
+        console.log('Status:', response.status);
+        console.log('OK:', response.ok);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Datos cargados directamente:', data);
+        return data;
+        
+    } catch (error) {
+        console.error('❌ Error en carga directa:', error);
+        console.log('Tipo de error:', error.name);
+        console.log('Mensaje de error:', error.message);
+        
+        // Fallback: intentar con proxy CORS
+        console.log('Intentando con proxy CORS como fallback...');
+        return await cargarDatosConFetch(url);
+    }
+}
+
 // Función para cargar datos usando fetch con proxy CORS
 async function cargarDatosConFetch(url) {
     try {
@@ -1244,28 +1298,72 @@ async function cargarDatosConFetch(url) {
         }
         
         const data = await response.json();
+        console.log('=== RESPUESTA DEL PROXY CORS ===');
+        console.log('Datos del proxy:', data);
+        console.log('Tipo de datos:', typeof data);
+        console.log('¿Es string?', typeof data === 'string');
+        console.log('¿Es objeto?', typeof data === 'object');
+        console.log('===============================');
+        
+        // Si el proxy devuelve un string, intentar parsearlo como JSON
+        if (typeof data === 'string') {
+            try {
+                const parsedData = JSON.parse(data);
+                console.log('Datos parseados desde string:', parsedData);
+                return parsedData;
+            } catch (parseError) {
+                console.error('Error parseando string como JSON:', parseError);
+                return data;
+            }
+        }
+        
         return data;
         
     } catch (error) {
         console.error('Error con proxy CORS:', error);
+        console.log('Tipo de error:', error.name);
+        console.log('Mensaje de error:', error.message);
         
-        // Fallback: intentar directamente (puede fallar por CORS)
+        // Fallback 1: intentar con proxy alternativo
         try {
-            console.log('Intentando conexión directa...');
-            const response = await fetch(url, {
+            console.log('Intentando con proxy alternativo...');
+            const altProxyUrl = 'https://cors-anywhere.herokuapp.com/' + url;
+            const response = await fetch(altProxyUrl, {
                 method: 'GET',
-                mode: 'no-cors',
                 headers: {
                     'Accept': 'application/json',
                 }
             });
             
-            // Con no-cors no podemos leer la respuesta, pero podemos intentar
-            throw new Error('Conexión directa no disponible');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
-        } catch (directError) {
-            console.error('Error en conexión directa:', directError);
-            throw new Error(`Error de conexión: ${error.message}. Verifica la URL del script y tu conexión a internet.`);
+            const data = await response.json();
+            console.log('✅ Proxy alternativo funcionó:', data);
+            return data;
+            
+        } catch (altError) {
+            console.error('Error con proxy alternativo:', altError);
+            
+            // Fallback 2: intentar directamente (puede fallar por CORS)
+            try {
+                console.log('Intentando conexión directa...');
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                // Con no-cors no podemos leer la respuesta, pero podemos intentar
+                throw new Error('Conexión directa no disponible');
+                
+            } catch (directError) {
+                console.error('Error en conexión directa:', directError);
+                throw new Error(`Error de conexión: ${error.message}. Verifica la URL del script y tu conexión a internet.`);
+            }
         }
     }
 }

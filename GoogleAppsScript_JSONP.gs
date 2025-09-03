@@ -13,6 +13,13 @@ const SHEET_NAME = 'Docentes';
 function doPost(e) {
   try {
     console.log('doPost llamado con:', e);
+    
+    // Validar que e no sea undefined
+    if (!e) {
+      console.log('⚠️ Parámetro e es undefined, usando valores por defecto');
+      e = { parameter: {}, postData: {} };
+    }
+    
     console.log('e.parameter:', e.parameter);
     console.log('e.postData:', e.postData);
     
@@ -72,15 +79,34 @@ function doPost(e) {
  */
 function doGet(e) {
   try {
-    console.log('doGet llamado con:', e.parameter);
+    console.log('doGet llamado con:', e);
+    
+    // Validar que e no sea undefined
+    if (!e) {
+      console.log('⚠️ Parámetro e es undefined, usando valores por defecto');
+      e = { parameter: {} };
+    }
+    
+    // Validar que e.parameter no sea undefined
+    if (!e.parameter) {
+      console.log('⚠️ e.parameter es undefined, inicializando objeto vacío');
+      e.parameter = {};
+    }
+    
+    console.log('Parámetros procesados:', e.parameter);
     
     const action = e.parameter.action;
     const callback = e.parameter.callback;
     let result;
     
+    console.log('Acción detectada:', action);
+    
     if (action === 'getAllStudents') {
+      console.log('=== EJECUTANDO getAllStudents ===');
       result = obtenerTodosEstudiantes();
+      console.log('Resultado de getAllStudents:', result);
     } else if (action === 'getAllTeachers') {
+      console.log('=== EJECUTANDO getAllTeachers ===');
       result = obtenerTodosDocentes();
     } else if (action === 'getStudent') {
       console.log('=== GET STUDENT ===');
@@ -88,8 +114,11 @@ function doGet(e) {
       console.log('Cédula recibida:', e.parameter.cedula, 'Tipo:', typeof e.parameter.cedula);
       result = obtenerEstudiantePorCedula(e.parameter.cedula);
     } else if (action === 'saveStudent') {
+      console.log('=== EJECUTANDO saveStudent ===');
       result = guardarEstudiante(e.parameter);
     } else {
+      console.log('=== ACCIÓN NO RECONOCIDA ===');
+      console.log('Acción recibida:', action);
       result = {
         success: true, 
         message: 'Script funcionando correctamente',
@@ -133,13 +162,39 @@ function obtenerTodosEstudiantes() {
     console.log('=== INICIANDO obtenerTodosEstudiantes ===');
     
     const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
     
     if (!sheet) {
+      console.log('⚠️ Hoja no encontrada, creando nueva hoja:', SHEET_NAME);
+      
+      // Crear nueva hoja
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      
+      // Agregar headers a la nueva hoja
+      const headers = [
+        'Cédula', 'Nombre', 'Grado', 'Sección',
+        'Logros Español', 'Nivel Español', 'Docente Español',
+        'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
+        'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
+        'Docente Evaluador', 'Cédula Docente Evaluador', 'Fecha Evaluación',
+        'Fecha Registro', 'Tipo'
+      ];
+      
+      // Escribir headers en la primera fila
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      console.log('✅ Hoja creada exitosamente con headers:', headers);
+      
+      // Devolver lista vacía ya que es una hoja nueva
       return {
-        success: false, 
-        error: 'Hoja no encontrada',
-        sheetName: SHEET_NAME
+        success: true,
+        data: [],
+        message: 'Hoja creada exitosamente. No hay estudiantes registrados aún.',
+        headers: headers,
+        hojaCreada: true
       };
     }
     
@@ -158,6 +213,7 @@ function obtenerTodosEstudiantes() {
     
     console.log('Headers:', headers);
     console.log('Total rows:', rows.length);
+    console.log('Primeras 3 filas de datos:', rows.slice(0, 3));
     
     // Encontrar la columna "Tipo" automáticamente
     const tipoColumnIndex = headers.findIndex(header => 
@@ -165,6 +221,17 @@ function obtenerTodosEstudiantes() {
     );
     
     console.log('Columna Tipo encontrada en índice:', tipoColumnIndex);
+    
+    // Mostrar todos los valores de la columna Tipo para diagnóstico
+    if (tipoColumnIndex !== -1) {
+      console.log('=== DIAGNÓSTICO DE COLUMNA TIPO ===');
+      const tiposEncontrados = rows.map((row, index) => ({
+        fila: index + 2, // +2 porque empezamos desde fila 2
+        tipo: row[tipoColumnIndex],
+        cedula: row[0] // Mostrar también la cédula para referencia
+      }));
+      console.log('Tipos encontrados en todas las filas:', tiposEncontrados);
+    }
     
     if (tipoColumnIndex === -1) {
       console.log('Columna Tipo no encontrada, devolviendo todos los datos');
@@ -188,8 +255,9 @@ function obtenerTodosEstudiantes() {
     const estudiantes = rows
       .filter(row => {
         const tipo = row[tipoColumnIndex];
-        console.log('Tipo encontrado:', tipo, 'Es estudiante:', tipo === 'estudiante');
-        return tipo === 'estudiante';
+        const esEstudiante = tipo === 'estudiante';
+        console.log(`Fila ${rows.indexOf(row) + 2}: Tipo="${tipo}", Es estudiante=${esEstudiante}`);
+        return esEstudiante;
       })
       .map(row => {
         const obj = {};
@@ -199,7 +267,8 @@ function obtenerTodosEstudiantes() {
         return obj;
       });
     
-    console.log('Estudiantes filtrados:', estudiantes.length);
+    console.log('✅ Estudiantes filtrados:', estudiantes.length);
+    console.log('Estudiantes encontrados:', estudiantes);
     
     return {
       success: true, 
@@ -271,10 +340,33 @@ function obtenerEstudiantePorCedula(cedula) {
     console.log('Cédula buscada:', cedula, 'Tipo:', typeof cedula);
     
     const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
     
     if (!sheet) {
-      return {success: false, error: 'Hoja no encontrada'};
+      console.log('⚠️ Hoja no encontrada, creando nueva hoja:', SHEET_NAME);
+      
+      // Crear nueva hoja
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      
+      // Agregar headers a la nueva hoja
+      const headers = [
+        'Cédula', 'Nombre', 'Grado', 'Sección',
+        'Logros Español', 'Nivel Español', 'Docente Español',
+        'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
+        'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
+        'Docente Evaluador', 'Cédula Docente Evaluador', 'Fecha Evaluación',
+        'Fecha Registro', 'Tipo'
+      ];
+      
+      // Escribir headers en la primera fila
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      console.log('✅ Hoja creada exitosamente con headers:', headers);
+      
+      return {success: false, error: 'Hoja creada exitosamente. No hay estudiantes registrados aún.'};
     }
     
     const data = sheet.getDataRange().getValues();
@@ -289,6 +381,14 @@ function obtenerEstudiantePorCedula(cedula) {
     console.log('Headers encontrados:', headers);
     console.log('Número de filas:', rows.length);
     console.log('Primeras 3 cédulas encontradas:', rows.slice(0, 3).map(row => ({cedula: row[0], tipo: typeof row[0]})));
+    
+    // Verificar que la cédula no sea undefined
+    if (!cedula || cedula === undefined || cedula === null) {
+      console.log('❌ Error: Cédula es undefined, null o vacía');
+      return {success: false, error: 'Cédula es requerida'};
+    }
+    
+    console.log('✅ Cédula válida recibida:', cedula, 'Tipo:', typeof cedula);
     
     // Buscar por cédula - manejar tanto string como número
     const estudiante = rows.find(row => {
@@ -385,10 +485,31 @@ function guardarEstudiante(params) {
     console.log('Parámetros recibidos:', params);
     
     const spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
     
     if (!sheet) {
-      return {success: false, error: 'Hoja no encontrada'};
+      console.log('⚠️ Hoja no encontrada, creando nueva hoja:', SHEET_NAME);
+      
+      // Crear nueva hoja
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      
+      // Agregar headers a la nueva hoja
+      const headers = [
+        'Cédula', 'Nombre', 'Grado', 'Sección',
+        'Logros Español', 'Nivel Español', 'Docente Español',
+        'Logros Matemáticas', 'Nivel Matemáticas', 'Docente Matemáticas',
+        'Logros Ciencias', 'Nivel Ciencias', 'Docente Ciencias',
+        'Logros Estudios Sociales', 'Nivel Estudios Sociales', 'Docente Estudios Sociales',
+        'Logros Otras', 'Nivel Otras', 'Docente Otras',
+        'Intereses y Habilidades', 'Expectativas Vocacionales', 'Observaciones Generales',
+        'Docente Evaluador', 'Cédula Docente Evaluador', 'Fecha Evaluación',
+        'Fecha Registro', 'Tipo'
+      ];
+      
+      // Escribir headers en la primera fila
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      
+      console.log('✅ Hoja creada exitosamente con headers:', headers);
     }
     
     const cedula = params.cedula || params.Cédula;
