@@ -5,7 +5,8 @@
 
 // CONFIGURACIÓN IMPORTANTE: 
 // URL del Google Apps Script desplegado para CTP Sabalito
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+// NOTA: URL actualizada al nuevo deployment provisto por el usuario (02/09/2025)
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyH8GmiD0GJTO_MCvdypRU8_LtcAJYxkIobGOVh67m8WLhdcuPcClY-u9SiBlcR5eJoxg/exec';
 
 // Configuración de la aplicación
 const CONFIG = {

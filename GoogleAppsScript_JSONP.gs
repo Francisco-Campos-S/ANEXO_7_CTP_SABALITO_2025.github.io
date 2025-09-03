@@ -251,19 +251,28 @@ function obtenerTodosEstudiantes() {
       };
     }
     
-    // Filtrar solo estudiantes (columna Tipo = 'estudiante')
+    // Filtrar solo estudiantes (columna Tipo = 'estudiante') - CORRECCIÓN: comparación case-insensitive
     const estudiantes = rows
-      .filter(row => {
-        const tipo = row[tipoColumnIndex];
-        const esEstudiante = tipo === 'estudiante';
-        console.log(`Fila ${rows.indexOf(row) + 2}: Tipo="${tipo}", Es estudiante=${esEstudiante}`);
-        return esEstudiante;
+      .filter((row, idx) => {
+        let tipo = row[tipoColumnIndex];
+        const tipoNormalizado = (tipo || '').toString().trim().toLowerCase();
+        const esEstudiante = tipoNormalizado === 'estudiante';
+        // Fallback: si la columna Tipo quedó vacía por error anterior de índices, considerar estudiante
+        const posibleRegistroPrevioSinTipo = !tipo && row[0] && row[1]; // Tiene cédula y nombre
+        const decision = esEstudiante || posibleRegistroPrevioSinTipo;
+        console.log(`Fila ${idx + 2}: TipoOriginal="${tipo}" Normalizado="${tipoNormalizado}" -> Estudiante=${decision}`);
+        return decision;
       })
       .map(row => {
         const obj = {};
         headers.forEach((header, index) => {
           obj[header] = row[index] || '';
         });
+        // Normalizar también claves en minúscula para front-end legacy
+        obj.cedula = obj['Cédula'] || '';
+        obj.nombre = obj['Nombre'] || '';
+        obj.grado = obj['Grado'] || '';
+        obj.seccion = obj['Sección'] || '';
         return obj;
       });
     
@@ -540,15 +549,11 @@ function guardarEstudiante(params) {
     if (existingRowIndex > 0) {
       // ACTUALIZAR fila existente
       console.log('ACTUALIZANDO estudiante existente...');
-      
-      // Obtener la fila existente
+
       const existingRow = rows[existingRowIndex - 2];
-      console.log('Fila existente:', existingRow);
-      
-      // Crear nueva fila con los datos actualizados
-      const newRow = [...existingRow]; // Copiar fila existente
-      
-      // Mapear los datos del formulario a las columnas correctas
+      const newRow = [...existingRow];
+
+      // Mapeo corregido (27 columnas)
       const fieldMapping = {
         'cedula': 0, 'Cédula': 0,
         'nombre': 1, 'Nombre': 1,
@@ -573,39 +578,29 @@ function guardarEstudiante(params) {
         'expectativas_vocacionales': 20, 'Expectativas Vocacionales': 20,
         'observaciones_generales': 21, 'Observaciones Generales': 21,
         'nombreDocenteEvaluador': 22, 'Docente Evaluador': 22,
-        'fechaEvaluacion': 23, 'Fecha Evaluación': 23,
-        'fechaRegistro': 24, 'Fecha Registro': 24,
-        'tipo': 25, 'Tipo': 25
+        'cedulaDocenteEvaluador': 23, 'Cédula Docente Evaluador': 23,
+        'fechaEvaluacion': 24, 'Fecha Evaluación': 24,
+        'fechaRegistro': 25, 'Fecha Registro': 25,
+        'tipo': 26, 'Tipo': 26
       };
-      
-      // Actualizar solo los campos que se envían
+
       Object.keys(params).forEach(key => {
         if (fieldMapping[key] !== undefined && params[key] !== undefined && params[key] !== null && params[key] !== '') {
           const columnIndex = fieldMapping[key];
-          newRow[columnIndex] = params[key];
-          console.log(`Campo "${key}" (columna ${columnIndex}) actualizado: "${params[key]}"`);
+            newRow[columnIndex] = params[key];
+            console.log(`Campo "${key}" (col ${columnIndex}) actualizado: "${params[key]}"`);
         }
       });
-      
-      console.log('Nueva fila a escribir:', newRow);
-      
-      // Escribir la fila actualizada
+
       const range = sheet.getRange(existingRowIndex, 1, 1, headers.length);
       range.setValues([newRow]);
-      
-      return {
-        success: true, 
-        message: 'Estudiante actualizado exitosamente',
-        action: 'updated',
-        rowIndex: existingRowIndex
-      };
+
+      return { success: true, message: 'Estudiante actualizado exitosamente', action: 'updated', rowIndex: existingRowIndex };
     } else {
       // CREAR nueva fila
       console.log('CREANDO nuevo estudiante...');
-      
-      const newRow = new Array(headers.length).fill(''); // Crear fila vacía
-      
-      // Mapear los datos del formulario a las columnas correctas
+      const newRow = new Array(headers.length).fill('');
+
       const fieldMapping = {
         'cedula': 0, 'Cédula': 0,
         'nombre': 1, 'Nombre': 1,
@@ -630,28 +625,26 @@ function guardarEstudiante(params) {
         'expectativas_vocacionales': 20, 'Expectativas Vocacionales': 20,
         'observaciones_generales': 21, 'Observaciones Generales': 21,
         'nombreDocenteEvaluador': 22, 'Docente Evaluador': 22,
-        'fechaEvaluacion': 23, 'Fecha Evaluación': 23,
-        'fechaRegistro': 24, 'Fecha Registro': 24,
-        'tipo': 25, 'Tipo': 25
+        'cedulaDocenteEvaluador': 23, 'Cédula Docente Evaluador': 23,
+        'fechaEvaluacion': 24, 'Fecha Evaluación': 24,
+        'fechaRegistro': 25, 'Fecha Registro': 25,
+        'tipo': 26, 'Tipo': 26
       };
-      
-      // Llenar los campos enviados
+
       Object.keys(params).forEach(key => {
         if (fieldMapping[key] !== undefined && params[key] !== undefined && params[key] !== null) {
           const columnIndex = fieldMapping[key];
           newRow[columnIndex] = params[key];
-          console.log(`Campo "${key}" (columna ${columnIndex}) establecido: "${params[key]}"`);
+          console.log(`Campo "${key}" (col ${columnIndex}) establecido: "${params[key]}"`);
         }
       });
-      
-      console.log('Nueva fila a agregar:', newRow);
+
+      // Asegurar campos esenciales
+      if (!newRow[25]) newRow[25] = params.fechaRegistro || new Date().toLocaleString('es-CR');
+      if (!newRow[26]) newRow[26] = params.tipo || 'estudiante';
+
       sheet.appendRow(newRow);
-      
-      return {
-        success: true, 
-        message: 'Estudiante creado exitosamente',
-        action: 'created'
-      };
+      return { success: true, message: 'Estudiante creado exitosamente', action: 'created' };
     }
       
   } catch (error) {

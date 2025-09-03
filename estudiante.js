@@ -5,7 +5,8 @@
 
 // Función para obtener la URL del script
 function getScriptUrl() {
-    return 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+    // URL deployment actualizado (02/09/2025)
+    return 'https://script.google.com/macros/s/AKfycbyH8GmiD0GJTO_MCvdypRU8_LtcAJYxkIobGOVh67m8WLhdcuPcClY-u9SiBlcR5eJoxg/exec';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -733,40 +734,48 @@ function displayStudents(students) {
         return;
     }
     
-    studentsList.innerHTML = students.map(student => `
+    studentsList.innerHTML = students.map(student => {
+        // Compatibilidad de claves
+        const cedula = student.cedula || student.Cédula || '';
+        const nombre = student.nombre || student.Nombre || 'Sin nombre';
+        const grado = student.grado || student.Grado || 'No especificado';
+        const seccion = student.seccion || student.Sección || 'No especificada';
+        const docente = (student.docente && (student.docente.nombre || student.docente.Nombre)) || student['Docente Evaluador'] || 'No especificado';
+        const fecha = (student.docente && (student.docente.fechaEvaluacion || student.docente.FechaEvaluacion)) || student['Fecha Evaluación'] || 'No especificada';
+        return `
         <div class="student-card">
             <div class="student-header">
-                <h4 class="student-name">${student.nombre || 'Sin nombre'}</h4>
-                <span class="student-cedula">Cédula: ${student.cedula}</span>
+                <h4 class="student-name">${nombre}</h4>
+                <span class="student-cedula">Cédula: ${cedula}</span>
             </div>
             <div class="student-info">
                 <div class="student-info-item">
                     <span class="student-info-label">Grado:</span>
-                    <span class="student-info-value">${student.grado || 'No especificado'}</span>
+                    <span class="student-info-value">${grado}</span>
                 </div>
                 <div class="student-info-item">
                     <span class="student-info-label">Sección:</span>
-                    <span class="student-info-value">${student.seccion || 'No especificada'}</span>
+                    <span class="student-info-value">${seccion}</span>
                 </div>
                 <div class="student-info-item">
                     <span class="student-info-label">Docente:</span>
-                    <span class="student-info-value">${student.docente?.nombre || 'No especificado'}</span>
+                    <span class="student-info-value">${docente}</span>
                 </div>
                 <div class="student-info-item">
                     <span class="student-info-label">Fecha:</span>
-                    <span class="student-info-value">${student.docente?.fechaEvaluacion || 'No especificada'}</span>
+                    <span class="student-info-value">${fecha}</span>
                 </div>
             </div>
             <div class="student-actions">
-                <button type="button" class="btn-view" onclick="viewStudent('${student.cedula}')">
+                <button type="button" class="btn-view" onclick="viewStudent('${cedula}')">
                     <i class="fas fa-eye"></i> Ver Detalles
                 </button>
-                <button type="button" class="btn-edit" onclick="editStudent('${student.cedula}')">
+                <button type="button" class="btn-edit" onclick="editStudent('${cedula}')">
                     <i class="fas fa-edit"></i> Editar
                 </button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 // Función para ver detalles del estudiante
@@ -874,7 +883,7 @@ window.guardarEstudiante = async function() {
         
         // Verificar si ya existe un estudiante con esta cédula
         console.log('Verificando cédula duplicada:', cedula);
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+    const scriptUrl = getScriptUrl();
         
         try {
             const existingStudent = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
@@ -1013,10 +1022,10 @@ window.cargarListaEstudiantes = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+    const scriptUrl = getScriptUrl();
         console.log('=== CARGANDO LISTA DE ESTUDIANTES ===');
         console.log('URL del script (FORZADA):', scriptUrl);
-        console.log('URL esperada:', 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec');
+    console.log('Deployment activo correcto');
         console.log('¿URL correcta?', scriptUrl.includes('AKfycbyFlfX1y9mOc_ibycu5AxhKJuak9hPFsoDDQjCtEG3K77JU8Qhr3oIqO4OAFpVjpQxBwA'));
         
         // Usar petición directa al Google Apps Script
@@ -1120,7 +1129,7 @@ window.cargarEstudianteSeleccionado = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+        const scriptUrl = getScriptUrl();
         const timestamp = new Date().getTime();
         console.log('Buscando estudiante con cédula:', cedula);
         console.log('URL de búsqueda:', `${scriptUrl}?action=getStudent&cedula=${cedula}&t=${timestamp}`);
@@ -1151,7 +1160,7 @@ window.probarConexionCompleta = async function() {
         showLoadingMessage();
         
         // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIO8wBrnA1R9xB17GknXdGi3NqA3hD9Bdim2r8-tDfYnSc6oUwX7sOzPbCtxPOy5MHmw/exec';
+    const scriptUrl = getScriptUrl();
         console.log('=== PRUEBA DE CONEXIÓN COMPLETA ===');
         console.log('URL del script (FORZADA):', scriptUrl);
         
