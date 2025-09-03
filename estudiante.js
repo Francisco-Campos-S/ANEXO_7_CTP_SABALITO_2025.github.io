@@ -65,7 +65,13 @@ async function buscarEstudiante() {
 
 // Función para llenar formulario con datos del estudiante
 function llenarFormularioEstudiante(estudiante) {
-    console.log('Llenando formulario con datos:', estudiante);
+    console.log('=== DIAGNÓSTICO: DATOS DEL ESTUDIANTE ===');
+    console.log('Datos completos recibidos:', estudiante);
+    console.log('Tipo de datos:', typeof estudiante);
+    console.log('Claves disponibles:', Object.keys(estudiante));
+    console.log('¿Tiene funcionamientoAcademico?', !!estudiante.funcionamientoAcademico);
+    console.log('¿Tiene funcionamientoAcademico como string?', typeof estudiante.funcionamientoAcademico);
+    console.log('==========================================');
     
     // Llenar campos básicos
     document.getElementById('cedula').value = estudiante.Cédula || estudiante.cedula || '';
@@ -86,60 +92,119 @@ function llenarFormularioEstudiante(estudiante) {
         seccion: document.getElementById('seccion').value
     });
     
-    // Llenar datos académicos si existen
-    if (estudiante.funcionamientoAcademico) {
-        const academic = estudiante.funcionamientoAcademico;
-        
-        // Español
-        document.querySelector('[name="logros_espanol"]').value = academic.logros_espanol || '';
-        document.querySelector('[name="nivel_espanol"]').value = academic.nivel_espanol || '';
-        document.querySelector('[name="docente_espanol"]').value = academic.docente_espanol || '';
-        
-        // Matemáticas
-        document.querySelector('[name="logros_matematicas"]').value = academic.logros_matematicas || '';
-        document.querySelector('[name="nivel_matematicas"]').value = academic.nivel_matematicas || '';
-        document.querySelector('[name="docente_matematicas"]').value = academic.docente_matematicas || '';
-        
-        // Ciencias
-        document.querySelector('[name="logros_ciencias"]').value = academic.logros_ciencias || '';
-        document.querySelector('[name="nivel_ciencias"]').value = academic.nivel_ciencias || '';
-        document.querySelector('[name="docente_ciencias"]').value = academic.docente_ciencias || '';
-        
-        // Estudios Sociales
-        document.querySelector('[name="logros_estudios_sociales"]').value = academic.logros_estudios_sociales || '';
-        document.querySelector('[name="nivel_estudios_sociales"]').value = academic.nivel_estudios_sociales || '';
-        document.querySelector('[name="docente_estudios_sociales"]').value = academic.docente_estudios_sociales || '';
-        
-        // Otras
-        document.querySelector('[name="logros_otras"]').value = academic.logros_otras || '';
-        document.querySelector('[name="nivel_otras"]').value = academic.nivel_otras || '';
-        document.querySelector('[name="docente_otras"]').value = academic.docente_otras || '';
-    }
+    // Llenar datos académicos - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
+    console.log('Llenando datos académicos con datos directos del Google Sheets');
     
-    // Llenar datos vocacionales si existen
-    if (estudiante.desarrolloVocacional) {
-        const vocational = estudiante.desarrolloVocacional;
-        document.getElementById('intereses_habilidades').value = vocational.intereses_habilidades || '';
-        document.getElementById('expectativas_vocacionales').value = vocational.expectativas_vocacionales || '';
-        document.getElementById('observaciones_generales').value = vocational.observaciones_generales || '';
-    }
+    // Mapeo directo de los datos del Google Sheets a los campos del formulario
+    // Los datos vienen directamente del Google Sheets con los nombres de las columnas
     
-    // Llenar datos del docente evaluador si existen
-    if (estudiante.docente) {
-        document.getElementById('nombreDocenteEvaluador').value = estudiante.docente.nombre || '';
-        document.getElementById('cedulaDocenteEvaluador').value = estudiante.docente.cedula || '';
-        document.getElementById('fechaEvaluacion').value = estudiante.docente.fechaEvaluacion || new Date().toISOString().split('T')[0];
-    }
+    // Español
+    document.querySelector('[name="logros_espanol"]').value = estudiante['Logros Español'] || '';
+    document.querySelector('[name="nivel_espanol"]').value = estudiante['Nivel Español'] || '';
+    document.querySelector('[name="docente_espanol"]').value = estudiante['Docente Español'] || '';
+    
+    // Matemáticas
+    document.querySelector('[name="logros_matematicas"]').value = estudiante['Logros Matemáticas'] || '';
+    document.querySelector('[name="nivel_matematicas"]').value = estudiante['Nivel Matemáticas'] || '';
+    document.querySelector('[name="docente_matematicas"]').value = estudiante['Docente Matemáticas'] || '';
+    
+    // Ciencias
+    document.querySelector('[name="logros_ciencias"]').value = estudiante['Logros Ciencias'] || '';
+    document.querySelector('[name="nivel_ciencias"]').value = estudiante['Nivel Ciencias'] || '';
+    document.querySelector('[name="docente_ciencias"]').value = estudiante['Docente Ciencias'] || '';
+    
+    // Estudios Sociales
+    document.querySelector('[name="logros_estudios_sociales"]').value = estudiante['Logros Estudios Sociales'] || '';
+    document.querySelector('[name="nivel_estudios_sociales"]').value = estudiante['Nivel Estudios Sociales'] || '';
+    document.querySelector('[name="docente_estudios_sociales"]').value = estudiante['Docente Estudios Sociales'] || '';
+    
+    // Otras
+    document.querySelector('[name="logros_otras"]').value = estudiante['Logros Otras'] || '';
+    document.querySelector('[name="nivel_otras"]').value = estudiante['Nivel Otras'] || '';
+    document.querySelector('[name="docente_otras"]').value = estudiante['Docente Otras'] || '';
+    
+    console.log('Datos académicos llenados desde Google Sheets');
+    
+    // Llenar datos vocacionales - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
+    console.log('Llenando datos vocacionales desde Google Sheets');
+    document.getElementById('intereses_habilidades').value = estudiante['Intereses y Habilidades'] || '';
+    document.getElementById('expectativas_vocacionales').value = estudiante['Expectativas Vocacionales'] || '';
+    document.getElementById('observaciones_generales').value = estudiante['Observaciones Generales'] || '';
+    
+    // Llenar datos del docente evaluador - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
+    console.log('Llenando datos del docente desde Google Sheets');
+    document.getElementById('nombreDocenteEvaluador').value = estudiante['Docente Evaluador'] || '';
+    document.getElementById('cedulaDocenteEvaluador').value = estudiante['Cédula Docente Evaluador'] || '';
+    document.getElementById('fechaEvaluacion').value = estudiante['Fecha Evaluación'] || new Date().toISOString().split('T')[0];
+    
+    console.log('Todos los datos llenados desde Google Sheets');
+}
+
+// Función para limpiar completamente el formulario
+function limpiarFormularioCompleto() {
+    console.log('Limpiando formulario completamente...');
+    
+    // Limpiar campos básicos
+    document.getElementById('cedula').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('grado').value = '';
+    document.getElementById('seccion').value = '';
+    
+    // Hacer campos editables
+    document.getElementById('cedula').readOnly = false;
+    document.getElementById('nombre').readOnly = false;
+    document.getElementById('grado').readOnly = false;
+    document.getElementById('seccion').readOnly = false;
+    
+    // Limpiar campos académicos - Español
+    document.querySelector('[name="logros_espanol"]').value = '';
+    document.querySelector('[name="nivel_espanol"]').value = '';
+    document.querySelector('[name="docente_espanol"]').value = '';
+    
+    // Limpiar campos académicos - Matemáticas
+    document.querySelector('[name="logros_matematicas"]').value = '';
+    document.querySelector('[name="nivel_matematicas"]').value = '';
+    document.querySelector('[name="docente_matematicas"]').value = '';
+    
+    // Limpiar campos académicos - Ciencias
+    document.querySelector('[name="logros_ciencias"]').value = '';
+    document.querySelector('[name="nivel_ciencias"]').value = '';
+    document.querySelector('[name="docente_ciencias"]').value = '';
+    
+    // Limpiar campos académicos - Estudios Sociales
+    document.querySelector('[name="logros_estudios_sociales"]').value = '';
+    document.querySelector('[name="nivel_estudios_sociales"]').value = '';
+    document.querySelector('[name="docente_estudios_sociales"]').value = '';
+    
+    // Limpiar campos académicos - Otras
+    document.querySelector('[name="logros_otras"]').value = '';
+    document.querySelector('[name="nivel_otras"]').value = '';
+    document.querySelector('[name="docente_otras"]').value = '';
+    
+    // Limpiar campos vocacionales
+    document.getElementById('intereses_habilidades').value = '';
+    document.getElementById('expectativas_vocacionales').value = '';
+    document.getElementById('observaciones_generales').value = '';
+    
+    // Limpiar campos del docente evaluador
+    document.getElementById('nombreDocenteEvaluador').value = '';
+    document.getElementById('cedulaDocenteEvaluador').value = '';
+    document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
+    
+    // Limpiar lista de estudiantes
+    const select = document.getElementById('listaEstudiantes');
+    select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
+    
+    console.log('Formulario limpiado completamente');
 }
 
 // Función para crear nuevo estudiante
 function crearNuevoEstudiante(cedula) {
-    // Limpiar formulario
-    document.getElementById('studentForm').reset();
+    // Limpiar formulario completamente
+    limpiarFormularioCompleto();
     
     // Llenar cédula
     document.getElementById('cedula').value = cedula;
-    document.getElementById('cedulaEstudiante').value = cedula;
     
     // Configurar fecha actual
     document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
@@ -151,26 +216,16 @@ function crearNuevoEstudiante(cedula) {
         grado: '',
         seccion: ''
     });
+    
+    console.log('Nuevo estudiante creado con cédula:', cedula);
 }
 
 // Función para crear nuevo estudiante manualmente
 window.crearNuevoEstudianteManual = function() {
     console.log('Creando nuevo estudiante...');
     
-    // Limpiar formulario
-    document.getElementById('studentForm').reset();
-    
-    // Limpiar lista de selección
-    const select = document.getElementById('listaEstudiantes');
-    if (select) {
-        select.value = '';
-    }
-    
-    // Hacer campos editables para nuevo estudiante
-    document.getElementById('cedula').readOnly = false;
-    document.getElementById('nombre').readOnly = false;
-    document.getElementById('grado').readOnly = false;
-    document.getElementById('seccion').readOnly = false;
+    // Limpiar formulario completamente
+    limpiarFormularioCompleto();
     
     // Configurar fecha actual
     document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
@@ -807,44 +862,75 @@ window.guardarEstudiante = async function() {
     try {
         showLoadingMessage();
         
-        // Recopilar todos los datos del formulario
+        const cedula = document.getElementById('cedula').value || '';
+        
+        // Validar que la cédula no esté vacía
+        if (!cedula) {
+            showErrorMessage('❌ La cédula es obligatoria');
+            return;
+        }
+        
+        // Verificar si ya existe un estudiante con esta cédula
+        console.log('Verificando cédula duplicada:', cedula);
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
+        
+        try {
+            const existingStudent = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+            
+            if (existingStudent.success && existingStudent.data) {
+                // Si existe, preguntar si quiere editarlo
+                const confirmEdit = confirm(`Ya existe un estudiante con la cédula ${cedula}. ¿Desea actualizar la información existente?`);
+                if (!confirmEdit) {
+                    showErrorMessage('❌ Operación cancelada');
+                    return;
+                }
+                console.log('Editando estudiante existente');
+            } else {
+                console.log('Creando nuevo estudiante');
+            }
+        } catch (error) {
+            console.log('Error al verificar cédula, continuando con guardado:', error);
+        }
+        
+        // Recopilar todos los datos del formulario - ENVIAR COMO CAMPOS INDIVIDUALES
         const data = {
-            cedula: document.getElementById('cedula').value || '',
+            cedula: cedula,
             nombre: document.getElementById('nombre').value || '',
             grado: document.getElementById('grado').value || '',
             seccion: document.getElementById('seccion').value || '',
-            funcionamientoAcademico: JSON.stringify({
-                logros_espanol: document.querySelector('[name="logros_espanol"]').value || '',
-                nivel_espanol: document.querySelector('[name="nivel_espanol"]').value || '',
-                docente_espanol: document.querySelector('[name="docente_espanol"]').value || '',
-                logros_matematicas: document.querySelector('[name="logros_matematicas"]').value || '',
-                nivel_matematicas: document.querySelector('[name="nivel_matematicas"]').value || '',
-                docente_matematicas: document.querySelector('[name="docente_matematicas"]').value || '',
-                logros_ciencias: document.querySelector('[name="logros_ciencias"]').value || '',
-                nivel_ciencias: document.querySelector('[name="nivel_ciencias"]').value || '',
-                docente_ciencias: document.querySelector('[name="docente_ciencias"]').value || '',
-                logros_estudios_sociales: document.querySelector('[name="logros_estudios_sociales"]').value || '',
-                nivel_estudios_sociales: document.querySelector('[name="nivel_estudios_sociales"]').value || '',
-                docente_estudios_sociales: document.querySelector('[name="docente_estudios_sociales"]').value || '',
-                logros_otras: document.querySelector('[name="logros_otras"]').value || '',
-                nivel_otras: document.querySelector('[name="nivel_otras"]').value || '',
-                docente_otras: document.querySelector('[name="docente_otras"]').value || ''
-            }),
-            desarrolloVocacional: JSON.stringify({
-                intereses_habilidades: document.getElementById('intereses_habilidades').value || '',
-                expectativas_vocacionales: document.getElementById('expectativas_vocacionales').value || '',
-                observaciones_generales: document.getElementById('observaciones_generales').value || ''
-            }),
-            docente: JSON.stringify({
-                nombre: document.getElementById('nombreDocenteEvaluador').value || '',
-                cedula: document.getElementById('cedulaDocenteEvaluador').value || '',
-                fechaEvaluacion: document.getElementById('fechaEvaluacion').value || new Date().toISOString().split('T')[0]
-            }),
+            // Funcionamiento Académico - campos individuales
+            logros_espanol: document.querySelector('[name="logros_espanol"]').value || '',
+            nivel_espanol: document.querySelector('[name="nivel_espanol"]').value || '',
+            docente_espanol: document.querySelector('[name="docente_espanol"]').value || '',
+            logros_matematicas: document.querySelector('[name="logros_matematicas"]').value || '',
+            nivel_matematicas: document.querySelector('[name="nivel_matematicas"]').value || '',
+            docente_matematicas: document.querySelector('[name="docente_matematicas"]').value || '',
+            logros_ciencias: document.querySelector('[name="logros_ciencias"]').value || '',
+            nivel_ciencias: document.querySelector('[name="nivel_ciencias"]').value || '',
+            docente_ciencias: document.querySelector('[name="docente_ciencias"]').value || '',
+            logros_estudios_sociales: document.querySelector('[name="logros_estudios_sociales"]').value || '',
+            nivel_estudios_sociales: document.querySelector('[name="nivel_estudios_sociales"]').value || '',
+            docente_estudios_sociales: document.querySelector('[name="docente_estudios_sociales"]').value || '',
+            logros_otras: document.querySelector('[name="logros_otras"]').value || '',
+            nivel_otras: document.querySelector('[name="nivel_otras"]').value || '',
+            docente_otras: document.querySelector('[name="docente_otras"]').value || '',
+            // Desarrollo Vocacional - campos individuales
+            intereses_habilidades: document.getElementById('intereses_habilidades').value || '',
+            expectativas_vocacionales: document.getElementById('expectativas_vocacionales').value || '',
+            observaciones_generales: document.getElementById('observaciones_generales').value || '',
+            // Docente Evaluador - campos individuales
+            nombreDocenteEvaluador: document.getElementById('nombreDocenteEvaluador').value || '',
+            cedulaDocenteEvaluador: document.getElementById('cedulaDocenteEvaluador').value || '',
+            fechaEvaluacion: document.getElementById('fechaEvaluacion').value || new Date().toISOString().split('T')[0],
+            // Metadatos
             fechaRegistro: new Date().toLocaleString('es-CR'),
             tipo: 'estudiante'
         };
         
+        console.log('=== ENVIANDO DATOS AL SERVIDOR ===');
         console.log('Datos a enviar:', data);
+        console.log('Claves de datos:', Object.keys(data));
+        console.log('Valores de datos:', Object.values(data));
         
         // Crear parámetros
         const params = new URLSearchParams();
@@ -852,26 +938,59 @@ window.guardarEstudiante = async function() {
             params.append(key, data[key]);
         });
         
-        // Enviar con método simple
-        const scriptUrl = getScriptUrl();
-        console.log('Enviando a:', scriptUrl);
+        // Enviar usando proxy CORS
+        console.log('Enviando datos:', data);
         
-        const response = await fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: params
+        // Crear URL con parámetros GET (más compatible con proxy)
+        const urlParams = new URLSearchParams();
+        urlParams.append('action', 'saveStudent');
+        Object.keys(data).forEach(key => {
+            urlParams.append(key, data[key]);
         });
         
-        // Mostrar éxito
-        showSuccessMessage('✅ ¡Estudiante guardado exitosamente!');
+        const finalUrl = `${scriptUrl}?${urlParams.toString()}`;
+        console.log('URL final:', finalUrl);
+        console.log('Parámetros URL:', urlParams.toString());
+        
+        // Usar proxy CORS para enviar datos
+        console.log('Enviando datos al servidor...');
+        
+        // Intentar primero con GET (más confiable con proxy CORS)
+        let result;
+        try {
+            result = await cargarDatosConFetch(finalUrl);
+            console.log('Respuesta del servidor (GET):', result);
+        } catch (getError) {
+            console.log('Error con GET, intentando POST:', getError);
+            result = await enviarDatosConFetch(scriptUrl, data);
+            console.log('Respuesta del servidor (POST):', result);
+        }
+        
+        if (result && result.success) {
+            const action = result.action || 'guardado';
+            const message = result.message || 'Estudiante guardado exitosamente';
+            
+            if (action === 'updated') {
+                showSuccessMessage('✅ ¡Estudiante actualizado exitosamente!');
+            } else if (action === 'created') {
+                showSuccessMessage('✅ ¡Nuevo estudiante creado exitosamente!');
+            } else {
+                showSuccessMessage('✅ ' + message);
+            }
+        } else {
+            const errorMsg = result?.error || 'Error desconocido del servidor';
+            console.error('Error del servidor:', errorMsg);
+            showErrorMessage('❌ Error al guardar: ' + errorMsg);
+            return;
+        }
         
         // Actualizar lista
         setTimeout(async () => {
             await cargarListaEstudiantes();
         }, 2000);
         
-        // Limpiar formulario
-        document.getElementById('studentForm').reset();
+        // Limpiar formulario COMPLETAMENTE
+        limpiarFormularioCompleto();
         document.getElementById('studentInfo').style.display = 'none';
         
     } catch (error) {
@@ -891,78 +1010,85 @@ window.cargarListaEstudiantes = async function() {
     try {
         showLoadingMessage();
         
-        const scriptUrl = getScriptUrl();
+        // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
         console.log('=== CARGANDO LISTA DE ESTUDIANTES ===');
-        console.log('URL del script:', scriptUrl);
+        console.log('URL del script (FORZADA):', scriptUrl);
+        console.log('URL esperada:', 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec');
+        console.log('¿URL correcta?', scriptUrl.includes('AKfycbxzlQjpKXQHRr22DHwD17zV2e8ctIA0qg53shoLutLWbE68RQhM-k6NumJ8EgYU-cQTrA'));
         
-        const response = await fetch(`${scriptUrl}?action=getAllStudents`);
-        console.log('Respuesta HTTP:', response.status, response.statusText);
+        // Usar fetch con proxy para evitar problemas de CORS
+        const timestamp = new Date().getTime();
+        const result = await cargarDatosConFetch(`${scriptUrl}?action=getAllStudents&t=${timestamp}`);
+        console.log('Datos recibidos del servidor:', result);
         
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Datos recibidos del servidor:', result);
-            
-            // Procesar datos directamente - asumir que siempre hay datos
-            let estudiantes = [];
-            
-            // Intentar diferentes formatos de respuesta
-            if (Array.isArray(result)) {
-                estudiantes = result;
-                console.log('Datos recibidos como array directo');
-            } else if (result && result.data && Array.isArray(result.data)) {
-                estudiantes = result.data;
-                console.log('Datos recibidos con estructura {data}');
-            } else if (result && result.success && result.data && Array.isArray(result.data)) {
-                estudiantes = result.data;
-                console.log('Datos recibidos con estructura {success, data}');
-            }
-            
-            console.log('Estudiantes extraídos:', estudiantes);
-            console.log('Cantidad de estudiantes:', estudiantes ? estudiantes.length : 'undefined');
-            
-            // Si no hay estudiantes, mostrar error
-            if (!estudiantes || estudiantes.length === 0) {
-                console.log('No se encontraron estudiantes en el servidor');
-                console.log('Result completo:', result);
-                showErrorMessage('❌ No se encontraron estudiantes en la base de datos');
-                return;
-            }
-            
-            console.log('Estudiantes a procesar:', estudiantes);
-            
-            // Procesar la lista
-            const select = document.getElementById('listaEstudiantes');
-            if (!select) {
-                console.error('Elemento listaEstudiantes no encontrado');
-                showErrorMessage('❌ Error: Elemento de lista no encontrado');
-                return;
-            }
-            
-            select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
-            
-            estudiantes.forEach((estudiante, index) => {
-                const option = document.createElement('option');
-                
-                // Obtener datos del estudiante
-                const cedula = estudiante.Cédula || estudiante.cedula || '';
-                const nombre = estudiante.Nombre || estudiante.nombre || 'Sin nombre';
-                const seccion = estudiante.Sección || estudiante.seccion || '';
-                
-                option.value = cedula;
-                option.textContent = `${nombre} - ${seccion}`;
-                
-                select.appendChild(option);
-            });
-            
-            console.log('Lista actualizada exitosamente');
-            showSuccessMessage(`✅ Lista actualizada: ${estudiantes.length} estudiantes encontrados`);
-        } else {
-            console.error('Error en la respuesta del servidor:', response.status);
-            showErrorMessage(`❌ Error al cargar la lista de estudiantes (${response.status})`);
+        // Procesar datos directamente - asumir que siempre hay datos
+        let estudiantes = [];
+        
+        // Intentar diferentes formatos de respuesta
+        if (Array.isArray(result)) {
+            estudiantes = result;
+            console.log('Datos recibidos como array directo');
+        } else if (result && result.data && Array.isArray(result.data)) {
+            estudiantes = result.data;
+            console.log('Datos recibidos con estructura {data}');
+        } else if (result && result.success && result.data && Array.isArray(result.data)) {
+            estudiantes = result.data;
+            console.log('Datos recibidos con estructura {success, data}');
         }
+        
+        console.log('Estudiantes extraídos:', estudiantes);
+        console.log('Cantidad de estudiantes:', estudiantes ? estudiantes.length : 'undefined');
+        
+        // Si no hay estudiantes, mostrar error
+        if (!estudiantes || estudiantes.length === 0) {
+            console.log('No se encontraron estudiantes en el servidor');
+            console.log('Result completo:', result);
+            showErrorMessage('❌ No se encontraron estudiantes en la base de datos');
+            return;
+        }
+        
+        console.log('Estudiantes a procesar:', estudiantes);
+        
+        // Procesar la lista
+        const select = document.getElementById('listaEstudiantes');
+        if (!select) {
+            console.error('Elemento listaEstudiantes no encontrado');
+            showErrorMessage('❌ Error: Elemento de lista no encontrado');
+            return;
+        }
+        
+        select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
+        
+        estudiantes.forEach((estudiante, index) => {
+            const option = document.createElement('option');
+            
+            // Obtener datos del estudiante
+            const cedula = estudiante.Cédula || estudiante.cedula || '';
+            const nombre = estudiante.Nombre || estudiante.nombre || 'Sin nombre';
+            const seccion = estudiante.Sección || estudiante.seccion || '';
+            
+            option.value = cedula;
+            option.textContent = `${nombre} - ${seccion}`;
+            
+            select.appendChild(option);
+        });
+        
+        console.log('Lista actualizada exitosamente');
+        showSuccessMessage(`✅ Lista actualizada: ${estudiantes.length} estudiantes encontrados`);
     } catch (error) {
         console.error('Error al cargar lista de estudiantes:', error);
-        showErrorMessage('❌ Error de conexión al cargar estudiantes: ' + error.message);
+        console.error('Error type:', error.name);
+        console.error('Error message:', error.message);
+        
+        // Manejar diferentes tipos de errores
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            showErrorMessage('❌ Error de conexión: No se puede conectar al servidor. Verifica la URL del script.');
+        } else if (error.name === 'SyntaxError') {
+            showErrorMessage('❌ Error de datos: El servidor devolvió datos inválidos.');
+        } else {
+            showErrorMessage('❌ Error de conexión al cargar estudiantes: ' + error.message);
+        }
     }
 };
 
@@ -978,33 +1104,28 @@ window.cargarEstudianteSeleccionado = async function() {
     try {
         showLoadingMessage();
         
-        const scriptUrl = getScriptUrl();
+        // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
         console.log('Buscando estudiante con cédula:', cedula);
         console.log('URL de búsqueda:', `${scriptUrl}?action=getStudent&cedula=${cedula}`);
         
-        const response = await fetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        // Usar proxy CORS para cargar estudiante
+        const result = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
+        console.log('Respuesta de búsqueda:', result);
         
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Respuesta de búsqueda:', result);
-            
-            if (result.success && result.data) {
-                console.log('Datos del estudiante recibidos:', result.data);
-                llenarFormularioEstudiante(result.data);
-                document.getElementById('studentForm').style.display = 'block';
-                mostrarInfoEstudiante(result.data);
-                showSuccessMessage('✅ Estudiante cargado correctamente');
-            } else {
-                console.log('No se encontraron datos del estudiante:', result);
-                showErrorMessage('❌ No se pudo cargar la información del estudiante');
-            }
+        if (result.success && result.data) {
+            console.log('Datos del estudiante recibidos:', result.data);
+            llenarFormularioEstudiante(result.data);
+            document.getElementById('studentForm').style.display = 'block';
+            mostrarInfoEstudiante(result.data);
+            showSuccessMessage('✅ Estudiante cargado correctamente');
         } else {
-            console.error('Error en la respuesta:', response.status);
-            showErrorMessage('❌ Error al cargar el estudiante');
+            console.log('No se encontraron datos del estudiante:', result);
+            showErrorMessage('❌ No se pudo cargar la información del estudiante');
         }
     } catch (error) {
         console.error('Error al cargar estudiante:', error);
-        showErrorMessage('❌ Error de conexión al cargar estudiante');
+        showErrorMessage('❌ Error de conexión al cargar estudiante: ' + error.message);
     }
 };
 
@@ -1013,9 +1134,10 @@ window.probarConexionCompleta = async function() {
     try {
         showLoadingMessage();
         
-        const scriptUrl = getScriptUrl();
+        // FORZAR LA URL CORRECTA (JSONP) para evitar problemas de caché
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxPpkkIHSCe0q60oBPTv1oLalm0k7Zn1aD-DE3TsFpnmR2uqxy5rywSHEHERifA5ar9XQ/exec';
         console.log('=== PRUEBA DE CONEXIÓN COMPLETA ===');
-        console.log('URL del script:', scriptUrl);
+        console.log('URL del script (FORZADA):', scriptUrl);
         
         // Probar obtener todos los estudiantes
         console.log('1. Probando obtener todos los estudiantes...');
@@ -1047,3 +1169,144 @@ window.probarConexionCompleta = async function() {
         showErrorMessage('❌ Error de conexión: ' + error.message);
     }
 };
+
+// Función para enviar datos usando fetch con CORS proxy
+async function enviarDatosConFetch(scriptUrl, data) {
+    try {
+        // Crear parámetros para POST
+        const params = new URLSearchParams();
+        params.append('action', 'saveStudent');
+        Object.keys(data).forEach(key => {
+            params.append(key, data[key]);
+        });
+        
+        // Usar un proxy CORS público para POST
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(scriptUrl);
+        
+        console.log('Enviando POST a:', proxyUrl);
+        console.log('Datos POST:', params.toString());
+        
+        const response = await fetch(proxyUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+            },
+            body: params.toString()
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        return result;
+        
+    } catch (error) {
+        console.error('Error enviando datos:', error);
+        
+        // Fallback: intentar con GET
+        try {
+            console.log('Fallback: intentando con GET...');
+            const urlParams = new URLSearchParams();
+            urlParams.append('action', 'saveStudent');
+            Object.keys(data).forEach(key => {
+                urlParams.append(key, data[key]);
+            });
+            
+            const getUrl = `${scriptUrl}?${urlParams.toString()}`;
+            return await cargarDatosConFetch(getUrl);
+            
+        } catch (fallbackError) {
+            console.error('Error en fallback GET:', fallbackError);
+            throw new Error(`Error de conexión: ${error.message}. Verifica la URL del script y tu conexión a internet.`);
+        }
+    }
+}
+
+// Función para cargar datos usando fetch con proxy CORS
+async function cargarDatosConFetch(url) {
+    try {
+        // Usar un proxy CORS público
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+        
+        console.log('Usando proxy CORS:', proxyUrl);
+        
+        const response = await fetch(proxyUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+        
+    } catch (error) {
+        console.error('Error con proxy CORS:', error);
+        
+        // Fallback: intentar directamente (puede fallar por CORS)
+        try {
+            console.log('Intentando conexión directa...');
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'no-cors',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+            
+            // Con no-cors no podemos leer la respuesta, pero podemos intentar
+            throw new Error('Conexión directa no disponible');
+            
+        } catch (directError) {
+            console.error('Error en conexión directa:', directError);
+            throw new Error(`Error de conexión: ${error.message}. Verifica la URL del script y tu conexión a internet.`);
+        }
+    }
+}
+
+// Función para cargar datos usando JSONP (evita problemas de CORS)
+function cargarDatosConJSONP(url) {
+    return new Promise((resolve, reject) => {
+        // Crear un callback único
+        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        
+        // Crear el script tag
+        const script = document.createElement('script');
+        script.src = url + '&callback=' + callbackName;
+        
+        // Definir la función callback global
+        window[callbackName] = function(data) {
+            // Limpiar
+            document.head.removeChild(script);
+            delete window[callbackName];
+            
+            // Resolver la promesa
+            resolve(data);
+        };
+        
+        // Manejar errores
+        script.onerror = function() {
+            document.head.removeChild(script);
+            delete window[callbackName];
+            reject(new Error('Error al cargar datos con JSONP'));
+        };
+        
+        // Agregar el script al head
+        document.head.appendChild(script);
+        
+        // Timeout de 10 segundos
+        setTimeout(() => {
+            if (window[callbackName]) {
+                document.head.removeChild(script);
+                delete window[callbackName];
+                reject(new Error('Timeout al cargar datos'));
+            }
+        }, 10000);
+    });
+}
