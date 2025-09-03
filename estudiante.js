@@ -10,15 +10,20 @@ function getScriptUrl() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Configurar fecha actual
+    // Configurar fecha actual solo si el campo existe
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaEvaluacion').value = today;
-    
-    // Cargar lista de estudiantes al inicio
-    loadAllStudents();
-    
-    // Cargar lista de estudiantes en el select
-    cargarListaEstudiantes();
+    var fechaInput = document.getElementById('fechaEvaluacion');
+    if (fechaInput) fechaInput.value = today;
+
+    // Actualizar lista de estudiantes SIEMPRE al abrir o recargar
+    if (typeof loadAllStudents === 'function') {
+        loadAllStudents();
+    }
+
+    // Cargar lista de estudiantes en el select (si existe)
+    if (typeof cargarListaEstudiantes === 'function') {
+        cargarListaEstudiantes();
+    }
 });
 
 // Función para buscar estudiante

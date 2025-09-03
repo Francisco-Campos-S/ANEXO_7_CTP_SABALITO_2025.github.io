@@ -222,6 +222,40 @@ body {
     transform: scale(1.05);
 }
 
+/* Botón de guardado inline (reemplaza al anterior de llenar docente) */
+
+.btn-save-inline {
+    background: #dc3545; /* rojo base */
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: .3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(220,53,69,0.4);
+    transition: background .2s, transform .15s, box-shadow .25s;
+    position: relative;
+}
+.btn-save-inline i { pointer-events: none; font-size: .9rem; }
+.btn-save-inline:hover { background:#c82333; transform: translateY(-2px); box-shadow:0 4px 10px rgba(220,53,69,0.5); }
+.btn-save-inline:active { transform: translateY(0) scale(.92); box-shadow:0 2px 6px rgba(220,53,69,0.4); }
+.btn-save-inline:focus { outline:2px solid #f8d7da; outline-offset:2px; }
+.btn-save-inline.saved { background:#198754; box-shadow:0 2px 6px rgba(25,135,84,0.45); }
+.btn-save-inline.saved:hover { background:#157347; }
+
+/* Versión éxito al guardar (se puede alternar dinámicamente si se desea) */
+.btn-save-inline.saved {
+    background:#198754;
+}
+.btn-save-inline.saved:hover { background:#157347; }
+
 /* Form Actions */
 .form-actions {
     display: flex;

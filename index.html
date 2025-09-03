@@ -37,9 +37,6 @@
                     <button type="button" class="btn-refresh" onclick="cargarListaEstudiantes()">
                         <i class="fas fa-sync-alt"></i> Actualizar Lista
                     </button>
-                    <button type="button" class="btn-new-student" onclick="crearNuevoEstudianteManual()">
-                        <i class="fas fa-plus"></i> Nuevo Estudiante
-                    </button>
                 </div>
                 <div id="studentInfo" class="student-info" style="display: none;">
                     <!-- Información del estudiante aparecerá aquí -->
@@ -106,8 +103,8 @@
                                 </td>
                                 <td>
                                     <input type="text" name="docente_espanol" placeholder="Nombre del docente">
-                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('espanol')" title="Llenar con docente evaluador">
-                                        <i class="fas fa-user-plus"></i>
+                                    <button type="button" class="btn-save-inline" onclick="guardarEstudiante()" title="Guardar información">
+                                        <i class="fas fa-save"></i> Guardar
                                     </button>
                                 </td>
                             </tr>
@@ -126,8 +123,8 @@
                                 </td>
                                 <td>
                                     <input type="text" name="docente_matematicas" placeholder="Nombre del docente">
-                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('matematicas')" title="Llenar con docente evaluador">
-                                        <i class="fas fa-user-plus"></i>
+                                    <button type="button" class="btn-save-inline" onclick="guardarEstudiante()" title="Guardar información">
+                                        <i class="fas fa-save"></i> Guardar
                                     </button>
                                 </td>
                             </tr>
@@ -146,8 +143,8 @@
                                 </td>
                                 <td>
                                     <input type="text" name="docente_ciencias" placeholder="Nombre del docente">
-                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('ciencias')" title="Llenar con docente evaluador">
-                                        <i class="fas fa-user-plus"></i>
+                                    <button type="button" class="btn-save-inline" onclick="guardarEstudiante()" title="Guardar información">
+                                        <i class="fas fa-save"></i> Guardar
                                     </button>
                                 </td>
                             </tr>
@@ -166,8 +163,8 @@
                                 </td>
                                 <td>
                                     <input type="text" name="docente_estudios_sociales" placeholder="Nombre del docente">
-                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('estudios_sociales')" title="Llenar con docente evaluador">
-                                        <i class="fas fa-user-plus"></i>
+                                    <button type="button" class="btn-save-inline" onclick="guardarEstudiante()" title="Guardar información">
+                                        <i class="fas fa-save"></i> Guardar
                                     </button>
                                 </td>
                             </tr>
@@ -186,8 +183,8 @@
                                 </td>
                                 <td>
                                     <input type="text" name="docente_otras" placeholder="Nombre del docente">
-                                    <button type="button" class="btn-fill-teacher" onclick="fillTeacherForSubject('otras')" title="Llenar con docente evaluador">
-                                        <i class="fas fa-user-plus"></i>
+                                    <button type="button" class="btn-save-inline" onclick="guardarEstudiante()" title="Guardar información">
+                                        <i class="fas fa-save"></i> Guardar
                                     </button>
                                 </td>
                             </tr>
@@ -228,44 +225,14 @@
                 </div>
             </section>
 
-            <!-- Información del Docente Evaluador -->
-            <section class="form-section">
-                <h3><i class="fas fa-chalkboard-teacher"></i> Información del Docente Evaluador</h3>
-                <p class="section-description">
-                    (Información del docente que está realizando la evaluación del estudiante)
-                </p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="nombreDocenteEvaluador">Nombre del Docente Evaluador:</label>
-                        <input type="text" id="nombreDocenteEvaluador" name="nombreDocenteEvaluador" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cedulaDocenteEvaluador">Cédula del Docente Evaluador:</label>
-                        <input type="text" id="cedulaDocenteEvaluador" name="cedulaDocenteEvaluador" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="fechaEvaluacion">Fecha de Evaluación:</label>
-                        <input type="date" id="fechaEvaluacion" name="fechaEvaluacion" required>
-                    </div>
-                </div>
-            </section>
 
             <!-- Botones de Acción -->
             <div class="form-actions">
                 <button type="button" class="btn-test-data" onclick="fillTestDataStudent()">
                     <i class="fas fa-flask"></i> Datos de Prueba
                 </button>
-                <button type="button" class="btn-test-simple" onclick="guardarEstudianteSimple()">
-                    <i class="fas fa-rocket"></i> Guardar Prueba Simple
-                </button>
-                <button type="button" class="btn-fill-teachers" onclick="fillTeachersFromEvaluator()">
-                    <i class="fas fa-users"></i> Llenar Docentes por Materia
-                </button>
                 <button type="button" class="btn-submit" onclick="guardarEstudiante()">
                     <i class="fas fa-save"></i> Guardar Información
-                </button>
-                <button type="button" class="btn-print" onclick="printStudentForm()">
-                    <i class="fas fa-print"></i> Imprimir
                 </button>
             </div>
         </form>
@@ -273,37 +240,27 @@
         <!-- Sección de Todos los Estudiantes -->
         <section class="all-students-section">
             <div class="all-students-card">
-                <h3><i class="fas fa-users"></i> Información de Todos los Estudiantes</h3>
-                <p>Aquí puede ver la información de todos los estudiantes que han sido evaluados</p>
                 
                 <div class="students-controls">
-                    <button type="button" class="btn-refresh" onclick="loadAllStudents()">
-                        <i class="fas fa-sync-alt"></i> Actualizar Lista
-                    </button>
-                    <button type="button" class="btn-test-connection" onclick="testConnection()">
-                        <i class="fas fa-wifi"></i> Probar Conexión
-                    </button>
-                    <button type="button" class="btn-test-save" onclick="testSaveStudent()">
-                        <i class="fas fa-save"></i> Probar Guardado
-                    </button>
-                    <button type="button" class="btn-export" onclick="exportStudentsToCSV()">
-                        <i class="fas fa-download"></i> Exportar a Excel
-                    </button>
                     <button type="button" class="btn-print-all" onclick="printAllStudents()">
                         <i class="fas fa-print"></i> Imprimir Todo
                     </button>
                 </div>
 
                 <div id="studentsList" class="students-list">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>Cargando información de estudiantes...</span>
-                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <script src="estudiante.js"></script>
+        <script src="estudiante.js"></script>
+        <script>
+            // Actualiza la lista de estudiantes automáticamente al cargar la página
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof loadAllStudents === 'function') {
+                    loadAllStudents();
+                }
+            });
+        </script>
 </body>
 </html>
