@@ -928,13 +928,8 @@ window.guardarEstudiante = async function() {
             const existingStudent = await cargarDatosConFetch(`${scriptUrl}?action=getStudent&cedula=${cedula}`);
             
             if (existingStudent.success && existingStudent.data) {
-                // Si existe, preguntar si quiere editarlo
-                const confirmEdit = confirm('¿Desea actualizar la información existente?');
-                if (!confirmEdit) {
-                    showErrorMessage('❌ Operación cancelada');
-                    return;
-                }
-                console.log('Editando estudiante existente');
+                // Si existe, actualizar automáticamente sin preguntar
+                console.log('Actualizando estudiante existente automáticamente');
             } else {
                 console.log('Creando nuevo estudiante');
             }
