@@ -80,16 +80,20 @@ function llenarFormularioEstudiante(estudiante) {
     console.log('==========================================');
     
     // Llenar campos básicos
-    document.getElementById('cedula').value = estudiante.Cédula || estudiante.cedula || '';
-    document.getElementById('nombre').value = estudiante.Nombre || estudiante.nombre || '';
-    document.getElementById('grado').value = estudiante.Grado || estudiante.grado || '';
-    document.getElementById('seccion').value = estudiante.Sección || estudiante.seccion || '';
-    
+    var cedulaInput = document.getElementById('cedula');
+    if (cedulaInput) cedulaInput.value = estudiante.Cédula || estudiante.cedula || '';
+    var nombreInput = document.getElementById('nombre');
+    if (nombreInput) nombreInput.value = estudiante.Nombre || estudiante.nombre || '';
+    var gradoInput = document.getElementById('grado');
+    if (gradoInput) gradoInput.value = estudiante.Grado || estudiante.grado || '';
+    var seccionInput = document.getElementById('seccion');
+    if (seccionInput) seccionInput.value = estudiante.Sección || estudiante.seccion || '';
+
     // Hacer campos de solo lectura para estudiante existente
-    document.getElementById('cedula').readOnly = true;
-    document.getElementById('nombre').readOnly = true;
-    document.getElementById('grado').readOnly = true;
-    document.getElementById('seccion').readOnly = true;
+    if (cedulaInput) cedulaInput.readOnly = true;
+    if (nombreInput) nombreInput.readOnly = true;
+    if (gradoInput) gradoInput.readOnly = true;
+    if (seccionInput) seccionInput.readOnly = true;
     
     console.log('Campos básicos llenados:', {
         cedula: document.getElementById('cedula').value,
@@ -133,9 +137,12 @@ function llenarFormularioEstudiante(estudiante) {
     
     // Llenar datos vocacionales - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
     console.log('Llenando datos vocacionales desde Google Sheets');
-    document.getElementById('intereses_habilidades').value = estudiante['Intereses y Habilidades'] || '';
-    document.getElementById('expectativas_vocacionales').value = estudiante['Expectativas Vocacionales'] || '';
-    document.getElementById('observaciones_generales').value = estudiante['Observaciones Generales'] || '';
+    var interesesInput = document.getElementById('intereses_habilidades');
+    if (interesesInput) interesesInput.value = estudiante['Intereses y Habilidades'] || '';
+    var expectativasInput = document.getElementById('expectativas_vocacionales');
+    if (expectativasInput) expectativasInput.value = estudiante['Expectativas Vocacionales'] || '';
+    var observacionesInput = document.getElementById('observaciones_generales');
+    if (observacionesInput) observacionesInput.value = estudiante['Observaciones Generales'] || '';
     
     // Llenar datos del docente evaluador - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
     console.log('Llenando datos del docente desde Google Sheets');
