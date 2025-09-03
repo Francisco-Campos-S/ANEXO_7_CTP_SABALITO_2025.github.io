@@ -15,12 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var fechaInput = document.getElementById('fechaEvaluacion');
     if (fechaInput) fechaInput.value = today;
 
-    // Actualizar lista de estudiantes SIEMPRE al abrir o recargar
-    if (typeof loadAllStudents === 'function') {
-        loadAllStudents();
-    }
+    // Ocultar el formulario al inicio
+    var studentForm = document.getElementById('studentForm');
+    if (studentForm) studentForm.style.display = 'none';
 
-    // Cargar lista de estudiantes en el select (si existe)
+    // Mostrar solo la lista de estudiantes al cargar
     if (typeof cargarListaEstudiantes === 'function') {
         cargarListaEstudiantes();
     }
@@ -899,7 +898,16 @@ function printAllStudents() {
 // Función para guardar formulario (llamada desde el botón)
 window.guardarEstudiante = async function() {
     try {
-        showLoadingMessage();
+    // Mostrar notificación de envío inmediatamente
+    // Mostrar notificación y ocultar todo INMEDIATAMENTE
+    showLoadingMessage('⏳ Espere, se está enviando la información...');
+    var studentForm = document.getElementById('studentForm');
+    if (studentForm) studentForm.style.display = 'none';
+    var studentInfo = document.getElementById('studentInfo');
+    if (studentInfo) studentInfo.style.display = 'none';
+
+    // Recopilar datos y enviar SIN esperar validaciones previas
+    // ...existing code para recopilar datos y enviar...
         
         const cedula = document.getElementById('cedula').value || '';
         
@@ -918,7 +926,7 @@ window.guardarEstudiante = async function() {
             
             if (existingStudent.success && existingStudent.data) {
                 // Si existe, preguntar si quiere editarlo
-                const confirmEdit = confirm(`Ya existe un estudiante con la cédula ${cedula}. ¿Desea actualizar la información existente?`);
+                const confirmEdit = confirm('¿Desea actualizar la información existente?');
                 if (!confirmEdit) {
                     showErrorMessage('❌ Operación cancelada');
                     return;
@@ -1006,16 +1014,7 @@ window.guardarEstudiante = async function() {
         }
         
         if (result && result.success) {
-            const action = result.action || 'guardado';
-            const message = result.message || 'Estudiante guardado exitosamente';
-            
-            if (action === 'updated') {
-                showSuccessMessage('✅ ¡Estudiante actualizado exitosamente!');
-            } else if (action === 'created') {
-                showSuccessMessage('✅ ¡Nuevo estudiante creado exitosamente!');
-            } else {
-                showSuccessMessage('✅ ' + message);
-            }
+            showSuccessMessage('✅ Información guardada con éxito');
         } else {
             const errorMsg = result?.error || 'Error desconocido del servidor';
             console.error('Error del servidor:', errorMsg);
@@ -1028,12 +1027,14 @@ window.guardarEstudiante = async function() {
             await cargarListaEstudiantes();
         }, 2000);
         
-        // Limpiar formulario COMPLETAMENTE
-        limpiarFormularioCompleto();
-        var studentInfo = document.getElementById('studentInfo');
-        if (studentInfo) studentInfo.style.display = 'none';
-        var studentForm = document.getElementById('studentForm');
-        if (studentForm) studentForm.style.display = 'none';
+    // Limpiar formulario COMPLETAMENTE y ocultar todo
+    limpiarFormularioCompleto();
+    var studentInfo = document.getElementById('studentInfo');
+    if (studentInfo) studentInfo.style.display = 'none';
+    var studentForm = document.getElementById('studentForm');
+    if (studentForm) studentForm.style.display = 'none';
+    // Mensaje de éxito visible
+    showSuccessMessage('✅ Información enviada y formulario oculto');
         
     } catch (error) {
         console.error('Error:', error);
@@ -1172,7 +1173,8 @@ window.cargarEstudianteSeleccionado = async function() {
         if (result.success && result.data) {
             console.log('Datos del estudiante recibidos:', result.data);
             llenarFormularioEstudiante(result.data);
-            document.getElementById('studentForm').style.display = 'block';
+            var studentForm = document.getElementById('studentForm');
+            if (studentForm) studentForm.style.display = 'block';
             mostrarInfoEstudiante(result.data);
             showSuccessMessage('✅ Estudiante cargado correctamente');
         } else {
