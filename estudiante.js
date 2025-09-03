@@ -224,13 +224,12 @@ function limpiarFormularioCompleto() {
 function crearNuevoEstudiante(cedula) {
     // Limpiar formulario completamente
     limpiarFormularioCompleto();
-    
     // Llenar cédula
-    document.getElementById('cedula').value = cedula;
-    
+    var cedulaInput = document.getElementById('cedula');
+    if (cedulaInput) cedulaInput.value = cedula;
     // Configurar fecha actual
-    document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
-    
+    var fechaEvaluacionInput = document.getElementById('fechaEvaluacion');
+    if (fechaEvaluacionInput) fechaEvaluacionInput.value = new Date().toISOString().split('T')[0];
     // Mostrar información del estudiante
     mostrarInfoEstudiante({
         cedula: cedula,
@@ -238,7 +237,6 @@ function crearNuevoEstudiante(cedula) {
         grado: '',
         seccion: ''
     });
-    
     console.log('Nuevo estudiante creado con cédula:', cedula);
 }
 
@@ -268,6 +266,7 @@ window.crearNuevoEstudianteManual = function() {
 // Función para mostrar información del estudiante
 function mostrarInfoEstudiante(estudiante) {
     const studentInfo = document.getElementById('studentInfo');
+    if (!studentInfo) return; // Si no existe el elemento, no hacer nada
     studentInfo.innerHTML = `
         <div class="student-card">
             <h4><i class="fas fa-user"></i> ${estudiante.nombre || 'Nuevo Estudiante'}</h4>
@@ -1437,4 +1436,39 @@ function cargarDatosConJSONP(url) {
             }
         }, 10000);
     });
+}
+
+// Ocultar info estudiante si existe el elemento
+var studentInfo = document.getElementById('studentInfo');
+if (studentInfo) studentInfo.style.display = 'none';
+
+// Agregar listener a la lista de estudiantes
+const listaEstudiantes = document.getElementById('listaEstudiantes');
+if (listaEstudiantes) {
+    listaEstudiantes.addEventListener('change', function() {
+        const cedula = this.value;
+        if (cedula) {
+            // Buscar y mostrar estudiante
+            document.getElementById('cedulaEstudiante').value = cedula;
+            buscarEstudiante();
+        } else {
+            // Limpiar formulario si no hay cédula
+            limpiarFormularioCompleto();
+        }
+    });
+}
+
+// Configurar fecha actual solo si el campo existe
+const today = new Date().toISOString().split('T')[0];
+var fechaInput = document.getElementById('fechaEvaluacion');
+if (fechaInput) fechaInput.value = today;
+
+// Actualizar lista de estudiantes SIEMPRE al abrir o recargar
+if (typeof loadAllStudents === 'function') {
+    loadAllStudents();
+}
+
+// Cargar lista de estudiantes en el select (si existe)
+if (typeof cargarListaEstudiantes === 'function') {
+    cargarListaEstudiantes();
 }
