@@ -42,15 +42,12 @@ async function buscarEstudiante() {
     
     try {
         showLoadingMessage();
-        
         // Buscar en la lista de estudiantes existentes
         const response = await fetch(getScriptUrl() + '?action=getStudent&cedula=' + cedula, {
             method: 'GET',
             mode: 'cors'
         });
-        
         const result = await response.json();
-        
         if (result.success && result.data) {
             // Estudiante encontrado, llenar formulario
             llenarFormularioEstudiante(result.data);
@@ -62,10 +59,12 @@ async function buscarEstudiante() {
             document.getElementById('studentForm').style.display = 'block';
             showSuccessMessage('Nuevo estudiante creado');
         }
-        
     } catch (error) {
         console.error('Error al buscar estudiante:', error);
-        showErrorMessage('Error al buscar estudiante: ' + error.message);
+        // Solo mostrar el error si el usuario intentó buscar, no al inicio
+        if (cedula) {
+            showErrorMessage('Error al buscar estudiante: ' + error.message);
+        }
     }
 }
 
@@ -280,6 +279,8 @@ function mostrarInfoEstudiante(estudiante) {
 
 // Función para mostrar mensaje de éxito
 function showSuccessMessage(message) {
+    // Eliminar notificaciones previas de éxito
+    document.querySelectorAll('.notification.success').forEach(n => n.remove());
     // Crear notificación
     const notification = document.createElement('div');
     notification.className = 'notification success';
@@ -324,6 +325,8 @@ function showSuccessMessage(message) {
 
 // Función para mostrar mensaje de error
 function showErrorMessage(message) {
+    // Eliminar notificaciones previas de error
+    document.querySelectorAll('.notification.error').forEach(n => n.remove());
     // Crear notificación
     const notification = document.createElement('div');
     notification.className = 'notification error';
@@ -731,12 +734,17 @@ async function loadAllStudents() {
         if (result.success) {
             displayStudents(result.data);
         } else {
-            showErrorMessage('Error al cargar estudiantes: ' + result.error);
+            // Solo mostrar el error si hay un mensaje real
+            if (result.error && result.error !== 'undefined' && result.error !== '') {
+                showErrorMessage('Error al cargar estudiantes: ' + result.error);
+            }
         }
-        
     } catch (error) {
         console.error('Error al cargar estudiantes:', error);
-        showErrorMessage('Error de conexión al cargar estudiantes');
+        // Solo mostrar el error si el usuario interactuó (no al inicio)
+        if (window.__userInteracted) {
+            showErrorMessage('Error de conexión al cargar estudiantes');
+        }
     }
 }
 
@@ -1472,3 +1480,8 @@ if (typeof loadAllStudents === 'function') {
 if (typeof cargarListaEstudiantes === 'function') {
     cargarListaEstudiantes();
 }
+
+// Registrar interacción del usuario
+window.__userInteracted = false;
+document.addEventListener('click', function() { window.__userInteracted = true; });
+document.addEventListener('change', function() { window.__userInteracted = true; });
