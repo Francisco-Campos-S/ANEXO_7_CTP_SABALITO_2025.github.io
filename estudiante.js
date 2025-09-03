@@ -71,14 +71,6 @@ async function buscarEstudiante() {
 
 // Función para llenar formulario con datos del estudiante
 function llenarFormularioEstudiante(estudiante) {
-    console.log('=== DIAGNÓSTICO: DATOS DEL ESTUDIANTE ===');
-    console.log('Datos completos recibidos:', estudiante);
-    console.log('Tipo de datos:', typeof estudiante);
-    console.log('Claves disponibles:', Object.keys(estudiante));
-    console.log('¿Tiene funcionamientoAcademico?', !!estudiante.funcionamientoAcademico);
-    console.log('¿Tiene funcionamientoAcademico como string?', typeof estudiante.funcionamientoAcademico);
-    console.log('==========================================');
-    
     // Llenar campos básicos
     var cedulaInput = document.getElementById('cedula');
     if (cedulaInput) cedulaInput.value = estudiante.Cédula || estudiante.cedula || '';
@@ -95,11 +87,12 @@ function llenarFormularioEstudiante(estudiante) {
     if (gradoInput) gradoInput.readOnly = true;
     if (seccionInput) seccionInput.readOnly = true;
     
+    // Mostrar en consola los valores actuales
     console.log('Campos básicos llenados:', {
-        cedula: document.getElementById('cedula').value,
-        nombre: document.getElementById('nombre').value,
-        grado: document.getElementById('grado').value,
-        seccion: document.getElementById('seccion').value
+        cedula: cedulaInput ? cedulaInput.value : '',
+        nombre: nombreInput ? nombreInput.value : '',
+        grado: gradoInput ? gradoInput.value : '',
+        seccion: seccionInput ? seccionInput.value : ''
     });
     
     // Llenar datos académicos - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
@@ -146,9 +139,12 @@ function llenarFormularioEstudiante(estudiante) {
     
     // Llenar datos del docente evaluador - USAR DATOS DIRECTOS DEL GOOGLE SHEETS
     console.log('Llenando datos del docente desde Google Sheets');
-    document.getElementById('nombreDocenteEvaluador').value = estudiante['Docente Evaluador'] || '';
-    document.getElementById('cedulaDocenteEvaluador').value = estudiante['Cédula Docente Evaluador'] || '';
-    document.getElementById('fechaEvaluacion').value = estudiante['Fecha Evaluación'] || new Date().toISOString().split('T')[0];
+    var nombreDocenteInput = document.getElementById('nombreDocenteEvaluador');
+    if (nombreDocenteInput) nombreDocenteInput.value = estudiante['Docente Evaluador'] || '';
+    var cedulaDocenteInput = document.getElementById('cedulaDocenteEvaluador');
+    if (cedulaDocenteInput) cedulaDocenteInput.value = estudiante['Cédula Docente Evaluador'] || '';
+    var fechaEvaluacionInput = document.getElementById('fechaEvaluacion');
+    if (fechaEvaluacionInput) fechaEvaluacionInput.value = estudiante['Fecha Evaluación'] || new Date().toISOString().split('T')[0];
     
     console.log('Todos los datos llenados desde Google Sheets');
 }
@@ -156,18 +152,27 @@ function llenarFormularioEstudiante(estudiante) {
 // Función para limpiar completamente el formulario
 function limpiarFormularioCompleto() {
     console.log('Limpiando formulario completamente...');
-    
-    // Limpiar campos básicos
-    document.getElementById('cedula').value = '';
-    document.getElementById('nombre').value = '';
-    document.getElementById('grado').value = '';
-    document.getElementById('seccion').value = '';
-    
-    // Hacer campos editables
-    document.getElementById('cedula').readOnly = false;
-    document.getElementById('nombre').readOnly = false;
-    document.getElementById('grado').readOnly = false;
-    document.getElementById('seccion').readOnly = false;
+    // Limpiar campos básicos y hacer editables solo si existen
+    var cedulaInput = document.getElementById('cedula');
+    if (cedulaInput) {
+        cedulaInput.value = '';
+        cedulaInput.readOnly = false;
+    }
+    var nombreInput = document.getElementById('nombre');
+    if (nombreInput) {
+        nombreInput.value = '';
+        nombreInput.readOnly = false;
+    }
+    var gradoInput = document.getElementById('grado');
+    if (gradoInput) {
+        gradoInput.value = '';
+        gradoInput.readOnly = false;
+    }
+    var seccionInput = document.getElementById('seccion');
+    if (seccionInput) {
+        seccionInput.value = '';
+        seccionInput.readOnly = false;
+    }
     
     // Limpiar campos académicos - Español
     document.querySelector('[name="logros_espanol"]').value = '';
@@ -195,18 +200,22 @@ function limpiarFormularioCompleto() {
     document.querySelector('[name="docente_otras"]').value = '';
     
     // Limpiar campos vocacionales
-    document.getElementById('intereses_habilidades').value = '';
-    document.getElementById('expectativas_vocacionales').value = '';
-    document.getElementById('observaciones_generales').value = '';
-    
+    var interesesInput = document.getElementById('intereses_habilidades');
+    if (interesesInput) interesesInput.value = '';
+    var expectativasInput = document.getElementById('expectativas_vocacionales');
+    if (expectativasInput) expectativasInput.value = '';
+    var observacionesInput = document.getElementById('observaciones_generales');
+    if (observacionesInput) observacionesInput.value = '';
     // Limpiar campos del docente evaluador
-    document.getElementById('nombreDocenteEvaluador').value = '';
-    document.getElementById('cedulaDocenteEvaluador').value = '';
-    document.getElementById('fechaEvaluacion').value = new Date().toISOString().split('T')[0];
-    
+    var nombreDocenteInput = document.getElementById('nombreDocenteEvaluador');
+    if (nombreDocenteInput) nombreDocenteInput.value = '';
+    var cedulaDocenteInput = document.getElementById('cedulaDocenteEvaluador');
+    if (cedulaDocenteInput) cedulaDocenteInput.value = '';
+    var fechaEvaluacionInput = document.getElementById('fechaEvaluacion');
+    if (fechaEvaluacionInput) fechaEvaluacionInput.value = new Date().toISOString().split('T')[0];
     // Limpiar lista de estudiantes
     const select = document.getElementById('listaEstudiantes');
-    select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
+    if (select) select.innerHTML = '<option value="">-- Seleccionar un estudiante --</option>';
     
     console.log('Formulario limpiado completamente');
 }
