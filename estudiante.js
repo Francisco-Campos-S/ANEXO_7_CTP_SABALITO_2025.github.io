@@ -1030,7 +1030,10 @@ window.guardarEstudiante = async function() {
         
         // Limpiar formulario COMPLETAMENTE
         limpiarFormularioCompleto();
-        document.getElementById('studentInfo').style.display = 'none';
+        var studentInfo = document.getElementById('studentInfo');
+        if (studentInfo) studentInfo.style.display = 'none';
+        var studentForm = document.getElementById('studentForm');
+        if (studentForm) studentForm.style.display = 'none';
         
     } catch (error) {
         console.error('Error:', error);
