@@ -648,6 +648,759 @@ window.fillTeacherForSubject = function(subject) {
     document.querySelector(`[name="docente_${subject}"]`).value = nombreEvaluador;
 };
 
+// Función para probar la impresión
+window.probarImpresion = function() {
+    console.log('=== PROBANDO FUNCIÓN DE IMPRESIÓN ===');
+    console.log('Función printStudentForm existe:', typeof window.printStudentForm);
+    
+    if (typeof window.printStudentForm === 'function') {
+        showSuccessMessage('✅ Función de impresión disponible. Probando...');
+        window.printStudentForm();
+    } else {
+        showErrorMessage('❌ Función de impresión no encontrada');
+    }
+};
+
+// Función para generar PDF usando html2pdf
+window.generarPDF = function() {
+    console.log('=== GENERANDO PDF ===');
+    
+    // Verificar que hay datos del estudiante
+    const cedula = document.getElementById('cedula').value || '';
+    const nombre = document.getElementById('nombre').value || '';
+    
+    if (!cedula || !nombre) {
+        showErrorMessage('❌ No hay información del estudiante para generar PDF. Por favor selecciona un estudiante primero.');
+        return;
+    }
+    
+    // Crear el contenido HTML del documento
+    const contenidoHTML = generarContenidoANEXO7();
+    
+    // Crear una nueva ventana para el PDF
+    const pdfWindow = window.open('', '_blank');
+    pdfWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>ANEXO 7 - ${nombre}</title>
+                <meta charset="UTF-8">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        font-size: 11px;
+                        line-height: 1.4;
+                        color: #000;
+                        padding: 20px;
+                    }
+                    .page-break { page-break-before: always; }
+                    .no-break { page-break-inside: avoid; }
+                    .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                    .header h1 { font-size: 18px; font-weight: bold; margin: 0; text-transform: uppercase; }
+                    .header h2 { font-size: 14px; margin: 3px 0; font-weight: normal; }
+                    .header h3 { font-size: 12px; margin: 2px 0; font-weight: normal; }
+                    .student-info { margin-bottom: 20px; border: 1px solid #000; padding: 8px; }
+                    .student-info table { width: 100%; border-collapse: collapse; }
+                    .student-info td { padding: 4px; border: 1px solid #000; vertical-align: top; font-size: 10px; }
+                    .student-info .label { background-color: #f0f0f0; font-weight: bold; width: 20%; }
+                    .section { margin-bottom: 20px; page-break-inside: avoid; }
+                    .section h3 { font-size: 12px; font-weight: bold; margin-bottom: 10px; background-color: #f0f0f0; padding: 8px; border: 1px solid #000; text-align: center; }
+                    .section-content { border: 1px solid #000; padding: 12px; min-height: 80px; margin-bottom: 15px; line-height: 1.5; }
+                    .academic-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 10px; page-break-inside: avoid; }
+                    .academic-table th, .academic-table td { border: 1px solid #000; padding: 8px; text-align: left; vertical-align: top; line-height: 1.4; }
+                    .academic-table th { background-color: #f0f0f0; font-weight: bold; text-align: center; font-size: 11px; }
+                    .academic-table .subject { font-weight: bold; width: 15%; text-align: center; }
+                    .academic-table .achievements { width: 35%; }
+                    .academic-table .level { width: 15%; text-align: center; }
+                    .academic-table .teacher { width: 35%; }
+                    .signature-section { display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 30px; page-break-inside: avoid; }
+                    .signature-box { width: 45%; text-align: center; }
+                    .signature-line { border-bottom: 1px solid #000; height: 40px; margin-bottom: 8px; }
+                    .signature-label { font-size: 10px; font-weight: bold; }
+                    .footer { margin-top: 30px; font-size: 10px; text-align: center; page-break-inside: avoid; }
+                </style>
+            </head>
+            <body>
+                <div id="documento">
+                    ${contenidoHTML}
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="generarPDF()" style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                        📄 Descargar PDF
+                    </button>
+                    <button onclick="window.close()" style="background: #dc3545; color: white; border: none; padding: 15px 30px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-left: 10px;">
+                        ❌ Cerrar
+                    </button>
+                </div>
+                
+                <script>
+                    function generarPDF() {
+                        const element = document.getElementById('documento');
+                        const opt = {
+                            margin: [1, 1, 1, 1],
+                            filename: 'ANEXO_7_${nombre.replace(/\s+/g, '_')}.pdf',
+                            image: { type: 'jpeg', quality: 0.98 },
+                            html2canvas: { 
+                                scale: 2,
+                                useCORS: true,
+                                allowTaint: true,
+                                backgroundColor: '#ffffff'
+                            },
+                            jsPDF: { 
+                                unit: 'cm', 
+                                format: 'a4', 
+                                orientation: 'portrait',
+                                compress: true
+                            },
+                            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                        };
+                        
+                        html2pdf().set(opt).from(element).save();
+                    }
+                </script>
+            </body>
+        </html>
+    `);
+    pdfWindow.document.close();
+    
+    showSuccessMessage('✅ Ventana de PDF generada. Usa el botón "Descargar PDF" para guardar el archivo.');
+};
+
+// Función para generar documento en formato exacto de 2 páginas
+window.generarPDFSimple = function() {
+    console.log('=== GENERANDO DOCUMENTO 2 PÁGINAS ===');
+    
+    // Verificar que hay datos del estudiante
+    const cedula = document.getElementById('cedula').value || '';
+    const nombre = document.getElementById('nombre').value || '';
+    
+    if (!cedula || !nombre) {
+        showErrorMessage('❌ No hay información del estudiante para generar PDF. Por favor selecciona un estudiante primero.');
+        return;
+    }
+    
+    // Obtener datos del formulario
+    const grado = document.getElementById('grado').value || '';
+    const seccion = document.getElementById('seccion').value || '';
+    
+    // Datos académicos
+    const logrosEspanol = document.querySelector('[name="logros_espanol"]')?.value || '';
+    const nivelEspanol = document.querySelector('[name="nivel_espanol"]')?.value || '';
+    const docenteEspanol = document.querySelector('[name="docente_espanol"]')?.value || '';
+    
+    const logrosMatematicas = document.querySelector('[name="logros_matematicas"]')?.value || '';
+    const nivelMatematicas = document.querySelector('[name="nivel_matematicas"]')?.value || '';
+    const docenteMatematicas = document.querySelector('[name="docente_matematicas"]')?.value || '';
+    
+    const logrosCiencias = document.querySelector('[name="logros_ciencias"]')?.value || '';
+    const nivelCiencias = document.querySelector('[name="nivel_ciencias"]')?.value || '';
+    const docenteCiencias = document.querySelector('[name="docente_ciencias"]')?.value || '';
+    
+    const logrosEstudiosSociales = document.querySelector('[name="logros_estudios_sociales"]')?.value || '';
+    const nivelEstudiosSociales = document.querySelector('[name="nivel_estudios_sociales"]')?.value || '';
+    const docenteEstudiosSociales = document.querySelector('[name="docente_estudios_sociales"]')?.value || '';
+    
+    const logrosOtras = document.querySelector('[name="logros_otras"]')?.value || '';
+    const nivelOtras = document.querySelector('[name="nivel_otras"]')?.value || '';
+    const docenteOtras = document.querySelector('[name="docente_otras"]')?.value || '';
+    
+    // Datos vocacionales
+    const interesesHabilidades = document.getElementById('intereses_habilidades')?.value || '';
+    const expectativasVocacionales = document.getElementById('expectativas_vocacionales')?.value || '';
+    const observacionesGenerales = document.getElementById('observaciones_generales')?.value || '';
+    
+    // Crear una nueva ventana para el documento
+    const docWindow = window.open('', '_blank');
+    docWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>ANEXO 7 - ${nombre}</title>
+                <meta charset="UTF-8">
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        font-size: 11px;
+                        line-height: 1.4;
+                        color: #000;
+                        background: white;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    
+                    .page {
+                        width: 21cm;
+                        min-height: 29.7cm;
+                        padding: 2cm;
+                        margin: 0 auto;
+                        background: white;
+                        box-sizing: border-box;
+                    }
+                    
+                    .page-break {
+                        page-break-before: always;
+                    }
+                    
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 20px; 
+                        border-bottom: 2px solid #000; 
+                        padding-bottom: 10px; 
+                    }
+                    
+                    .header h1 { 
+                        font-size: 18px; 
+                        font-weight: bold; 
+                        margin: 0; 
+                        text-transform: uppercase; 
+                    }
+                    
+                    .header h2 { 
+                        font-size: 14px; 
+                        margin: 3px 0; 
+                        font-weight: normal; 
+                    }
+                    
+                    .header h3 { 
+                        font-size: 12px; 
+                        margin: 2px 0; 
+                        font-weight: normal; 
+                    }
+                    
+                    .student-info { 
+                        margin-bottom: 15px; 
+                        border: 1px solid #000; 
+                        padding: 8px; 
+                    }
+                    
+                    .student-info table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                    }
+                    
+                    .student-info td { 
+                        padding: 4px; 
+                        border: 1px solid #000; 
+                        vertical-align: top; 
+                        font-size: 10px; 
+                    }
+                    
+                    .student-info .label { 
+                        background-color: #f0f0f0; 
+                        font-weight: bold; 
+                        width: 20%; 
+                    }
+                    
+                    .section { 
+                        margin-bottom: 12px; 
+                    }
+                    
+                    .section h3 { 
+                        font-size: 12px; 
+                        font-weight: bold; 
+                        margin-bottom: 8px; 
+                        background-color: #f0f0f0; 
+                        padding: 6px; 
+                        border: 1px solid #000; 
+                        text-align: center; 
+                    }
+                    
+                    .section-content { 
+                        border: 1px solid #000; 
+                        padding: 8px; 
+                        min-height: 50px; 
+                        margin-bottom: 10px; 
+                        line-height: 1.4; 
+                        font-size: 10px;
+                    }
+                    
+                    .academic-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin: 10px 0; 
+                        font-size: 9px; 
+                    }
+                    
+                    .academic-table th, .academic-table td { 
+                        border: 1px solid #000; 
+                        padding: 4px; 
+                        text-align: left; 
+                        vertical-align: top; 
+                        line-height: 1.3; 
+                    }
+                    
+                    .academic-table th { 
+                        background-color: #f0f0f0; 
+                        font-weight: bold; 
+                        text-align: center; 
+                        font-size: 10px; 
+                    }
+                    
+                    .academic-table .subject { 
+                        font-weight: bold; 
+                        width: 15%; 
+                        text-align: center; 
+                    }
+                    
+                    .academic-table .achievements { 
+                        width: 35%; 
+                    }
+                    
+                    .academic-table .level { 
+                        width: 15%; 
+                        text-align: center; 
+                    }
+                    
+                    .academic-table .teacher { 
+                        width: 35%; 
+                    }
+                    
+                    .signature-section { 
+                        display: flex; 
+                        justify-content: space-between; 
+                        margin-top: 20px; 
+                        margin-bottom: 20px; 
+                    }
+                    
+                    .signature-box { 
+                        width: 45%; 
+                        text-align: center; 
+                    }
+                    
+                    .signature-line { 
+                        border-bottom: 1px solid #000; 
+                        height: 30px; 
+                        margin-bottom: 5px; 
+                    }
+                    
+                    .signature-label { 
+                        font-size: 9px; 
+                        font-weight: bold; 
+                    }
+                    
+                    .footer { 
+                        margin-top: 20px; 
+                        font-size: 9px; 
+                        text-align: center; 
+                    }
+                    
+                    @media print {
+                        body { margin: 0; padding: 0; }
+                        .page { margin: 0; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="no-print" style="text-align: center; margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px;">
+                    <h3>ANEXO 7 - ${nombre}</h3>
+                    <button onclick="window.print()" style="background: #007bff; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">
+                        🖨️ Imprimir
+                    </button>
+                    <button onclick="window.close()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">
+                        ❌ Cerrar
+                    </button>
+                </div>
+                
+                <!-- PÁGINA 1 -->
+                <div class="page">
+                    <div class="header">
+                        <h1>ANEXO 7:</h1>
+                        <h2>Trámite de Apoyo Curricular Significativo</h2>
+                        <h3>Informe Integral del Proceso Educativo del Estudiante</h3>
+                    </div>
+
+                    <div class="student-info">
+                        <table>
+                            <tr>
+                                <td class="label">Institución:</td>
+                                <td>Colegio Técnico Profesional Sabalito</td>
+                                <td class="label">Circuito escolar:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Estudiante:</td>
+                                <td>${nombre}</td>
+                                <td class="label">Edad:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Nivel que cursa:</td>
+                                <td>${grado}</td>
+                                <td class="label">Cédula:</td>
+                                <td>${cedula}</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Fecha nacimiento:</td>
+                                <td></td>
+                                <td class="label">Dirección:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Nombre del encargado:</td>
+                                <td></td>
+                                <td class="label">Sección:</td>
+                                <td>${seccion}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h3>Condición General De Salud:</h3>
+                        <div class="section-content">
+                            (nutrición, capacidad visual, capacidad auditiva, enfermedades crónicas de tipo respiratorio, neurodegenerativas, secuelas ocasionadas por accidentes, entre otros)
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Condición Física y de movilidad:</h3>
+                        <div class="section-content">
+                            (movilidad, motricidad fina y gruesa, coordinación visomotora)
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Desarrollo Socio Afectivo:</h3>
+                        <div class="section-content">
+                            (autoestima, independencia, toma de decisiones, relación con iguales, relación con los adultos, capacidad para seguir normas establecidas)
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Aspectos relevantes de familia y comunidad:</h3>
+                        <div class="section-content">
+                            (descripción de la participación familiar en el proceso educativo y en la toma de decisiones, manejo de límites responsabilidades, autonomía en el hogar y la comunidad, describiendo los apoyos requeridos para su participación en estos ámbitos)
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Comunicación y lenguaje:</h3>
+                        <div class="section-content">
+                            (escucha, habla, lectura, escritura. Lenguas que usa el estudiante para comunicarse, "LESCO, lenguas indígenas entre otras ". Sistemas de comunicación utilizados)
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Capacidades y condiciones básicas para el aprendizaje:</h3>
+                        <div class="section-content">
+                            <strong>Habilidades del pensamiento:</strong><br>
+                            <strong>Estilos de aprendizaje (visual, auditivo y kinestésico):</strong><br>
+                            <strong>Ritmo de aprendizajes (igual, lento, rápido):</strong><br>
+                            <strong>Memoria (corta o largo plazo):</strong><br>
+                            <strong>Atención y concentración (periodos y tipos de actividades de interés):</strong><br>
+                            <strong>Razonamiento (resolución de problemas académicos y de la vida diaria):</strong><br>
+                            <strong>Tipo de agrupamientos en que se desempeña mejor (parejas, tríos, otros):</strong><br>
+                            <strong>Materiales y apoyos requeridos:</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PÁGINA 2 -->
+                <div class="page page-break">
+                    <div class="section">
+                        <h3>Funcionamiento Académico:</h3>
+                        <p style="font-style: italic; margin-bottom: 8px; font-size: 10px;">
+                            (descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura)
+                        </p>
+                        
+                        <table class="academic-table">
+                            <thead>
+                                <tr>
+                                    <th class="subject">Asignatura</th>
+                                    <th class="achievements">Logros</th>
+                                    <th class="level">Nivel de Func.</th>
+                                    <th class="teacher">Nombre y firma del docente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="subject">Español</td>
+                                    <td class="achievements">${logrosEspanol}</td>
+                                    <td class="level">${nivelEspanol}</td>
+                                    <td class="teacher">${docenteEspanol}</td>
+                                </tr>
+                                <tr>
+                                    <td class="subject">Matemáticas</td>
+                                    <td class="achievements">${logrosMatematicas}</td>
+                                    <td class="level">${nivelMatematicas}</td>
+                                    <td class="teacher">${docenteMatematicas}</td>
+                                </tr>
+                                <tr>
+                                    <td class="subject">Ciencias</td>
+                                    <td class="achievements">${logrosCiencias}</td>
+                                    <td class="level">${nivelCiencias}</td>
+                                    <td class="teacher">${docenteCiencias}</td>
+                                </tr>
+                                <tr>
+                                    <td class="subject">Estudios Soc.</td>
+                                    <td class="achievements">${logrosEstudiosSociales}</td>
+                                    <td class="level">${nivelEstudiosSociales}</td>
+                                    <td class="teacher">${docenteEstudiosSociales}</td>
+                                </tr>
+                                <tr>
+                                    <td class="subject">Otras:</td>
+                                    <td class="achievements">${logrosOtras}</td>
+                                    <td class="level">${nivelOtras}</td>
+                                    <td class="teacher">${docenteOtras}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h3>Desarrollo Vocacional:</h3>
+                        <p style="font-style: italic; margin-bottom: 8px; font-size: 10px;">
+                            (Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas)
+                        </p>
+                        <div class="section-content">
+                            <strong>Intereses y Habilidades:</strong><br>
+                            ${interesesHabilidades}<br><br>
+                            <strong>Expectativas Vocacionales y Laborales:</strong><br>
+                            ${expectativasVocacionales}<br><br>
+                            <strong>Observaciones Generales:</strong><br>
+                            ${observacionesGenerales}
+                        </div>
+                    </div>
+
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <div class="signature-label">Nombre y Firma del Docente Solicitante</div>
+                        </div>
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <div class="signature-label">Nombre y firma del encargado legal</div>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <p>C.c Expediente Único del Estudiante.</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+    `);
+    docWindow.document.close();
+    
+    showSuccessMessage('✅ Documento de 2 páginas generado. Usa "Imprimir" y selecciona "Guardar como PDF" en tu navegador.');
+};
+
+// Función para generar el contenido HTML del ANEXO 7
+function generarContenidoANEXO7() {
+    // Obtener datos del formulario actual
+    const cedula = document.getElementById('cedula').value || '';
+    const nombre = document.getElementById('nombre').value || '';
+    const grado = document.getElementById('grado').value || '';
+    const seccion = document.getElementById('seccion').value || '';
+    
+    // Datos académicos
+    const logrosEspanol = document.querySelector('[name="logros_espanol"]')?.value || '';
+    const nivelEspanol = document.querySelector('[name="nivel_espanol"]')?.value || '';
+    const docenteEspanol = document.querySelector('[name="docente_espanol"]')?.value || '';
+    
+    const logrosMatematicas = document.querySelector('[name="logros_matematicas"]')?.value || '';
+    const nivelMatematicas = document.querySelector('[name="nivel_matematicas"]')?.value || '';
+    const docenteMatematicas = document.querySelector('[name="docente_matematicas"]')?.value || '';
+    
+    const logrosCiencias = document.querySelector('[name="logros_ciencias"]')?.value || '';
+    const nivelCiencias = document.querySelector('[name="nivel_ciencias"]')?.value || '';
+    const docenteCiencias = document.querySelector('[name="docente_ciencias"]')?.value || '';
+    
+    const logrosEstudiosSociales = document.querySelector('[name="logros_estudios_sociales"]')?.value || '';
+    const nivelEstudiosSociales = document.querySelector('[name="nivel_estudios_sociales"]')?.value || '';
+    const docenteEstudiosSociales = document.querySelector('[name="docente_estudios_sociales"]')?.value || '';
+    
+    const logrosOtras = document.querySelector('[name="logros_otras"]')?.value || '';
+    const nivelOtras = document.querySelector('[name="nivel_otras"]')?.value || '';
+    const docenteOtras = document.querySelector('[name="docente_otras"]')?.value || '';
+    
+    // Datos vocacionales
+    const interesesHabilidades = document.getElementById('intereses_habilidades')?.value || '';
+    const expectativasVocacionales = document.getElementById('expectativas_vocacionales')?.value || '';
+    const observacionesGenerales = document.getElementById('observaciones_generales')?.value || '';
+    
+    return `
+        <div class="header">
+            <h1>ANEXO 7:</h1>
+            <h2>Trámite de Apoyo Curricular Significativo</h2>
+            <h3>Informe Integral del Proceso Educativo del Estudiante</h3>
+        </div>
+
+        <div class="student-info">
+            <table>
+                <tr>
+                    <td class="label">Institución:</td>
+                    <td>Colegio Técnico Profesional Sabalito</td>
+                    <td class="label">Circuito escolar:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">Estudiante:</td>
+                    <td>${nombre}</td>
+                    <td class="label">Edad:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">Nivel que cursa:</td>
+                    <td>${grado}</td>
+                    <td class="label">Cédula:</td>
+                    <td>${cedula}</td>
+                </tr>
+                <tr>
+                    <td class="label">Fecha nacimiento:</td>
+                    <td></td>
+                    <td class="label">Dirección:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">Nombre del encargado:</td>
+                    <td></td>
+                    <td class="label">Sección:</td>
+                    <td>${seccion}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section no-break">
+            <h3>Condición General De Salud:</h3>
+            <div class="section-content">
+                (nutrición, capacidad visual, capacidad auditiva, enfermedades crónicas de tipo respiratorio, neurodegenerativas, secuelas ocasionadas por accidentes, entre otros)
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <h3>Condición Física y de movilidad:</h3>
+            <div class="section-content">
+                (movilidad, motricidad fina y gruesa, coordinación visomotora)
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <h3>Desarrollo Socio Afectivo:</h3>
+            <div class="section-content">
+                (autoestima, independencia, toma de decisiones, relación con iguales, relación con los adultos, capacidad para seguir normas establecidas)
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <h3>Aspectos relevantes de familia y comunidad:</h3>
+            <div class="section-content">
+                (descripción de la participación familiar en el proceso educativo y en la toma de decisiones, manejo de límites responsabilidades, autonomía en el hogar y la comunidad, describiendo los apoyos requeridos para su participación en estos ámbitos)
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <h3>Comunicación y lenguaje:</h3>
+            <div class="section-content">
+                (escucha, habla, lectura, escritura. Lenguas que usa el estudiante para comunicarse, "LESCO, lenguas indígenas entre otras ". Sistemas de comunicación utilizados)
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <h3>Capacidades y condiciones básicas para el aprendizaje:</h3>
+            <div style="margin-bottom: 10px;">
+                <strong>Habilidades del pensamiento:</strong><br>
+                <strong>Estilos de aprendizaje (visual, auditivo y kinestésico):</strong><br>
+                <strong>Ritmo de aprendizajes (igual, lento, rápido):</strong><br>
+                <strong>Memoria (corta o largo plazo):</strong><br>
+                <strong>Atención y concentración (periodos y tipos de actividades de interés):</strong><br>
+                <strong>Razonamiento (resolución de problemas académicos y de la vida diaria):</strong><br>
+                <strong>Tipo de agrupamientos en que se desempeña mejor (parejas, tríos, otros):</strong><br>
+                <strong>Materiales y apoyos requeridos:</strong>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section no-break">
+            <h3>Funcionamiento Académico:</h3>
+            <p style="font-style: italic; margin-bottom: 8px;">
+                (descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura)
+            </p>
+            
+            <table class="academic-table">
+                <thead>
+                    <tr>
+                        <th class="subject">Asignatura</th>
+                        <th class="achievements">Logros</th>
+                        <th class="level">Nivel de Func.</th>
+                        <th class="teacher">Nombre y firma del docente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="subject">Español</td>
+                        <td class="achievements">${logrosEspanol}</td>
+                        <td class="level">${nivelEspanol}</td>
+                        <td class="teacher">${docenteEspanol}</td>
+                    </tr>
+                    <tr>
+                        <td class="subject">Matemáticas</td>
+                        <td class="achievements">${logrosMatematicas}</td>
+                        <td class="level">${nivelMatematicas}</td>
+                        <td class="teacher">${docenteMatematicas}</td>
+                    </tr>
+                    <tr>
+                        <td class="subject">Ciencias</td>
+                        <td class="achievements">${logrosCiencias}</td>
+                        <td class="level">${nivelCiencias}</td>
+                        <td class="teacher">${docenteCiencias}</td>
+                    </tr>
+                    <tr>
+                        <td class="subject">Estudios Soc.</td>
+                        <td class="achievements">${logrosEstudiosSociales}</td>
+                        <td class="level">${nivelEstudiosSociales}</td>
+                        <td class="teacher">${docenteEstudiosSociales}</td>
+                    </tr>
+                    <tr>
+                        <td class="subject">Otras:</td>
+                        <td class="achievements">${logrosOtras}</td>
+                        <td class="level">${nivelOtras}</td>
+                        <td class="teacher">${docenteOtras}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="section no-break">
+            <h3>Desarrollo Vocacional:</h3>
+            <p style="font-style: italic; margin-bottom: 8px;">
+                (Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas)
+            </p>
+            <div class="section-content">
+                <strong>Intereses y Habilidades:</strong><br>
+                ${interesesHabilidades}<br><br>
+                <strong>Expectativas Vocacionales y Laborales:</strong><br>
+                ${expectativasVocacionales}<br><br>
+                <strong>Observaciones Generales:</strong><br>
+                ${observacionesGenerales}
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-label">Nombre y Firma del Docente Solicitante</div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-label">Nombre y firma del encargado legal</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>C.c Expediente Único del Estudiante.</p>
+        </div>
+    `;
+}
+
 // Función para guardar información del estudiante
 async function saveStudentToGoogleSheets(data) {
     try {
@@ -845,32 +1598,486 @@ async function exportStudentsToCSV() {
     }
 }
 
-// Función para imprimir formulario del estudiante
-function printStudentForm() {
-    const printContent = document.getElementById('studentForm').innerHTML;
+// Función para imprimir formulario del estudiante con formato ANEXO 7
+window.printStudentForm = function() {
+    console.log('=== INICIANDO IMPRESIÓN ANEXO 7 ===');
+    
+    // Verificar que hay datos del estudiante
+    const cedula = document.getElementById('cedula').value || '';
+    const nombre = document.getElementById('nombre').value || '';
+    
+    if (!cedula || !nombre) {
+        showErrorMessage('❌ No hay información del estudiante para imprimir. Por favor selecciona un estudiante primero.');
+        return;
+    }
+    
+    // Obtener datos del formulario actual
+    const grado = document.getElementById('grado').value || '';
+    const seccion = document.getElementById('seccion').value || '';
+    
+    // Datos académicos - con verificación de elementos
+    const logrosEspanol = document.querySelector('[name="logros_espanol"]')?.value || '';
+    const nivelEspanol = document.querySelector('[name="nivel_espanol"]')?.value || '';
+    const docenteEspanol = document.querySelector('[name="docente_espanol"]')?.value || '';
+    
+    const logrosMatematicas = document.querySelector('[name="logros_matematicas"]')?.value || '';
+    const nivelMatematicas = document.querySelector('[name="nivel_matematicas"]')?.value || '';
+    const docenteMatematicas = document.querySelector('[name="docente_matematicas"]')?.value || '';
+    
+    const logrosCiencias = document.querySelector('[name="logros_ciencias"]')?.value || '';
+    const nivelCiencias = document.querySelector('[name="nivel_ciencias"]')?.value || '';
+    const docenteCiencias = document.querySelector('[name="docente_ciencias"]')?.value || '';
+    
+    const logrosEstudiosSociales = document.querySelector('[name="logros_estudios_sociales"]')?.value || '';
+    const nivelEstudiosSociales = document.querySelector('[name="nivel_estudios_sociales"]')?.value || '';
+    const docenteEstudiosSociales = document.querySelector('[name="docente_estudios_sociales"]')?.value || '';
+    
+    const logrosOtras = document.querySelector('[name="logros_otras"]')?.value || '';
+    const nivelOtras = document.querySelector('[name="nivel_otras"]')?.value || '';
+    const docenteOtras = document.querySelector('[name="docente_otras"]')?.value || '';
+    
+    // Datos vocacionales
+    const interesesHabilidades = document.getElementById('intereses_habilidades')?.value || '';
+    const expectativasVocacionales = document.getElementById('expectativas_vocacionales')?.value || '';
+    const observacionesGenerales = document.getElementById('observaciones_generales')?.value || '';
+    
+    // Datos del docente evaluador
+    const nombreDocenteEvaluador = document.getElementById('nombreDocenteEvaluador')?.value || '';
+    const cedulaDocenteEvaluador = document.getElementById('cedulaDocenteEvaluador')?.value || '';
+    const fechaEvaluacion = document.getElementById('fechaEvaluacion')?.value || '';
+    
+    console.log('Datos capturados para impresión:', {
+        cedula, nombre, grado, seccion,
+        logrosEspanol, nivelEspanol, docenteEspanol,
+        logrosMatematicas, nivelMatematicas, docenteMatematicas,
+        logrosCiencias, nivelCiencias, docenteCiencias,
+        logrosEstudiosSociales, nivelEstudiosSociales, docenteEstudiosSociales,
+        logrosOtras, nivelOtras, docenteOtras,
+        interesesHabilidades, expectativasVocacionales, observacionesGenerales,
+        nombreDocenteEvaluador, cedulaDocenteEvaluador, fechaEvaluacion
+    });
+    
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
+        <!DOCTYPE html>
         <html>
             <head>
-                <title>ANEXO 7 - Estudiante</title>
+                <title>ANEXO 7 - ${nombre}</title>
+                <meta charset="UTF-8">
                 <style>
-                    body { font-family: Arial, sans-serif; margin: 20px; }
-                    .form-section { margin-bottom: 30px; }
-                    .academic-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                    .academic-table th, .academic-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                    .academic-table th { background-color: #f2f2f2; }
-                    textarea { width: 100%; min-height: 60px; }
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    
+                    @page {
+                        size: A4;
+                        margin: 2.5cm 2cm 2cm 2cm;
+                    }
+                    
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 0;
+                        padding: 20px;
+                        font-size: 11px;
+                        line-height: 1.4;
+                        color: #000;
+                        background: white;
+                    }
+                    
+                    .page-break {
+                        page-break-before: always;
+                        break-before: page;
+                    }
+                    
+                    .no-break {
+                        page-break-inside: avoid;
+                        break-inside: avoid;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                        border-bottom: 2px solid #000;
+                        padding-bottom: 10px;
+                    }
+                    .header h1 {
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin: 0;
+                        text-transform: uppercase;
+                    }
+                    .header h2 {
+                        font-size: 14px;
+                        margin: 3px 0;
+                        font-weight: normal;
+                    }
+                    .header h3 {
+                        font-size: 12px;
+                        margin: 2px 0;
+                        font-weight: normal;
+                    }
+                    .student-info {
+                        margin-bottom: 20px;
+                        border: 1px solid #000;
+                        padding: 8px;
+                    }
+                    .student-info table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    .student-info td {
+                        padding: 4px;
+                        border: 1px solid #000;
+                        vertical-align: top;
+                        font-size: 10px;
+                    }
+                    .student-info .label {
+                        background-color: #f0f0f0;
+                        font-weight: bold;
+                        width: 20%;
+                    }
+                    .section {
+                        margin-bottom: 20px;
+                        page-break-inside: avoid;
+                    }
+                    .section h3 {
+                        font-size: 12px;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        background-color: #f0f0f0;
+                        padding: 8px;
+                        border: 1px solid #000;
+                        text-align: center;
+                    }
+                    .section-content {
+                        border: 1px solid #000;
+                        padding: 12px;
+                        min-height: 80px;
+                        margin-bottom: 15px;
+                        line-height: 1.5;
+                    }
+                    .academic-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin: 15px 0;
+                        font-size: 10px;
+                        page-break-inside: avoid;
+                    }
+                    .academic-table th, .academic-table td { 
+                        border: 1px solid #000; 
+                        padding: 8px; 
+                        text-align: left;
+                        vertical-align: top;
+                        line-height: 1.4;
+                    }
+                    .academic-table th { 
+                        background-color: #f0f0f0;
+                        font-weight: bold;
+                        text-align: center;
+                        font-size: 11px;
+                    }
+                    .academic-table .subject {
+                        font-weight: bold;
+                        width: 15%;
+                        text-align: center;
+                    }
+                    .academic-table .achievements {
+                        width: 35%;
+                    }
+                    .academic-table .level {
+                        width: 15%;
+                        text-align: center;
+                    }
+                    .academic-table .teacher {
+                        width: 35%;
+                    }
+                    .signature-section {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 40px;
+                        margin-bottom: 30px;
+                        page-break-inside: avoid;
+                    }
+                    .signature-box {
+                        width: 45%;
+                        text-align: center;
+                    }
+                    .signature-line {
+                        border-bottom: 1px solid #000;
+                        height: 40px;
+                        margin-bottom: 8px;
+                    }
+                    .signature-label {
+                        font-size: 10px;
+                        font-weight: bold;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        font-size: 10px;
+                        text-align: center;
+                        page-break-inside: avoid;
+                    }
+                    @media print {
+                        body { 
+                            margin: 0; 
+                            padding: 20px;
+                            font-size: 11px;
+                            background: white;
+                        }
+                        .no-print { display: none; }
+                        .page-break {
+                            page-break-before: always;
+                        }
+                        .no-break {
+                            page-break-inside: avoid;
+                        }
+                        .document-container {
+                            background: white;
+                            padding: 0;
+                            box-shadow: none;
+                            border-radius: 0;
+                        }
+                    }
+                    
+                    @media screen {
+                        body {
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            background: #f5f5f5;
+                        }
+                        .document-container {
+                            background: white;
+                            padding: 30px;
+                            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                            border-radius: 5px;
+                        }
+                    }
                 </style>
             </head>
             <body>
-                <h1>ANEXO 7 - Funcionamiento Académico y Desarrollo Vocacional</h1>
-                <h2>Colegio Técnico Profesional Sabalito - 2025</h2>
-                ${printContent}
+                <div class="document-container">
+                    <div class="no-print" style="text-align: center; margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px;">
+                        <h3>ANEXO 7 - ${nombre}</h3>
+                        <button onclick="window.print()" style="background: #007bff; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">
+                            🖨️ Imprimir
+                        </button>
+                        <button onclick="downloadPDF()" style="background: #28a745; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">
+                            📄 Descargar PDF
+                        </button>
+                        <button onclick="window.close()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer;">
+                            ❌ Cerrar
+                        </button>
+                    </div>
+                    
+                    <div class="header">
+                    <h1>ANEXO 7:</h1>
+                    <h2>Trámite de Apoyo Curricular Significativo</h2>
+                    <h3>Informe Integral del Proceso Educativo del Estudiante</h3>
+                </div>
+
+                <div class="student-info">
+                    <table>
+                        <tr>
+                            <td class="label">Institución:</td>
+                            <td>Colegio Técnico Profesional Sabalito</td>
+                            <td class="label">Circuito escolar:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Estudiante:</td>
+                            <td>${nombre}</td>
+                            <td class="label">Edad:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Nivel que cursa:</td>
+                            <td>${grado}</td>
+                            <td class="label">Cédula:</td>
+                            <td>${cedula}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Fecha nacimiento:</td>
+                            <td></td>
+                            <td class="label">Dirección:</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Nombre del encargado:</td>
+                            <td></td>
+                            <td class="label">Sección:</td>
+                            <td>${seccion}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Condición General De Salud:</h3>
+                    <div class="section-content">
+                        (nutrición, capacidad visual, capacidad auditiva, enfermedades crónicas de tipo respiratorio, neurodegenerativas, secuelas ocasionadas por accidentes, entre otros)
+                    </div>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Condición Física y de movilidad:</h3>
+                    <div class="section-content">
+                        (movilidad, motricidad fina y gruesa, coordinación visomotora)
+                    </div>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Desarrollo Socio Afectivo:</h3>
+                    <div class="section-content">
+                        (autoestima, independencia, toma de decisiones, relación con iguales, relación con los adultos, capacidad para seguir normas establecidas)
+                    </div>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Aspectos relevantes de familia y comunidad:</h3>
+                    <div class="section-content">
+                        (descripción de la participación familiar en el proceso educativo y en la toma de decisiones, manejo de límites responsabilidades, autonomía en el hogar y la comunidad, describiendo los apoyos requeridos para su participación en estos ámbitos)
+                    </div>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Comunicación y lenguaje:</h3>
+                    <div class="section-content">
+                        (escucha, habla, lectura, escritura. Lenguas que usa el estudiante para comunicarse, "LESCO, lenguas indígenas entre otras ". Sistemas de comunicación utilizados)
+                    </div>
+                </div>
+
+                <div class="section no-break">
+                    <h3>Capacidades y condiciones básicas para el aprendizaje:</h3>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Habilidades del pensamiento:</strong><br>
+                        <strong>Estilos de aprendizaje (visual, auditivo y kinestésico):</strong><br>
+                        <strong>Ritmo de aprendizajes (igual, lento, rápido):</strong><br>
+                        <strong>Memoria (corta o largo plazo):</strong><br>
+                        <strong>Atención y concentración (periodos y tipos de actividades de interés):</strong><br>
+                        <strong>Razonamiento (resolución de problemas académicos y de la vida diaria):</strong><br>
+                        <strong>Tipo de agrupamientos en que se desempeña mejor (parejas, tríos, otros):</strong><br>
+                        <strong>Materiales y apoyos requeridos:</strong>
+                    </div>
+                </div>
+
+                <div class="page-break"></div>
+
+                <div class="section no-break">
+                    <h3>Funcionamiento Académico:</h3>
+                    <p style="font-style: italic; margin-bottom: 8px;">
+                        (descripción de los logros académicos alcanzados por el estudiante en cada una de las asignaturas, se debe indicar claramente el nivel de funcionamiento en cada asignatura)
+                    </p>
+                    
+                    <table class="academic-table">
+                        <thead>
+                            <tr>
+                                <th class="subject">Asignatura</th>
+                                <th class="achievements">Logros</th>
+                                <th class="level">Nivel de Func.</th>
+                                <th class="teacher">Nombre y firma del docente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="subject">Español</td>
+                                <td class="achievements">${logrosEspanol}</td>
+                                <td class="level">${nivelEspanol}</td>
+                                <td class="teacher">${docenteEspanol}</td>
+                            </tr>
+                            <tr>
+                                <td class="subject">Matemáticas</td>
+                                <td class="achievements">${logrosMatematicas}</td>
+                                <td class="level">${nivelMatematicas}</td>
+                                <td class="teacher">${docenteMatematicas}</td>
+                            </tr>
+                            <tr>
+                                <td class="subject">Ciencias</td>
+                                <td class="achievements">${logrosCiencias}</td>
+                                <td class="level">${nivelCiencias}</td>
+                                <td class="teacher">${docenteCiencias}</td>
+                            </tr>
+                            <tr>
+                                <td class="subject">Estudios Soc.</td>
+                                <td class="achievements">${logrosEstudiosSociales}</td>
+                                <td class="level">${nivelEstudiosSociales}</td>
+                                <td class="teacher">${docenteEstudiosSociales}</td>
+                            </tr>
+                            <tr>
+                                <td class="subject">Otras:</td>
+                                <td class="achievements">${logrosOtras}</td>
+                                <td class="level">${nivelOtras}</td>
+                                <td class="teacher">${docenteOtras}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="page-break"></div>
+
+                <div class="section no-break">
+                    <h3>Desarrollo Vocacional:</h3>
+                    <p style="font-style: italic; margin-bottom: 8px;">
+                        (Intereses y habilidades deportivas, creativas, ocupacionales y vocacionales. Expectativas vocacionales y laborales, productivas)
+                    </p>
+                    <div class="section-content">
+                        <strong>Intereses y Habilidades:</strong><br>
+                        ${interesesHabilidades}<br><br>
+                        <strong>Expectativas Vocacionales y Laborales:</strong><br>
+                        ${expectativasVocacionales}<br><br>
+                        <strong>Observaciones Generales:</strong><br>
+                        ${observacionesGenerales}
+                    </div>
+                </div>
+
+                <div class="signature-section">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">Nombre y Firma del Docente Solicitante</div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">Nombre y firma del encargado legal</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <p>C.c Expediente Único del Estudiante.</p>
+                </div>
+                </div>
+                
+                <script>
+                    function downloadPDF() {
+                        // Crear un nuevo documento para PDF
+                        const printContent = document.querySelector('.document-container').innerHTML;
+                        const originalContent = document.body.innerHTML;
+                        
+                        // Reemplazar el contenido con solo el documento
+                        document.body.innerHTML = printContent;
+                        
+                        // Imprimir como PDF
+                        window.print();
+                        
+                        // Restaurar el contenido original
+                        setTimeout(() => {
+                            document.body.innerHTML = originalContent;
+                        }, 1000);
+                    }
+                </script>
             </body>
         </html>
     `);
     printWindow.document.close();
+    
+    // Mostrar mensaje de éxito
+    showSuccessMessage('✅ Documento ANEXO 7 generado. Se abrirá la ventana de impresión.');
+    
+    // Esperar un momento y luego imprimir
+    setTimeout(() => {
     printWindow.print();
+    }, 500);
+    
+    console.log('=== IMPRESIÓN ANEXO 7 COMPLETADA ===');
 }
 
 // Función para imprimir todos los estudiantes
@@ -1238,7 +2445,7 @@ async function enviarDatosConFetch(scriptUrl, data) {
         params.append('action', data.action || 'saveStudent');
         Object.keys(data).forEach(key => {
             if (key !== 'action') { // Evitar duplicar el parámetro action
-                params.append(key, data[key]);
+            params.append(key, data[key]);
             }
         });
         
