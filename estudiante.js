@@ -657,6 +657,9 @@ async function saveStudentToGoogleSheets(data) {
         const scriptUrl = getScriptUrl();
         const params = new URLSearchParams();
         
+        // Agregar el parámetro action primero
+        params.append('action', 'saveStudent');
+        
         // Agregar datos como parámetros
         Object.keys(data).forEach(key => {
             if (typeof data[key] === 'object') {
@@ -1009,7 +1012,9 @@ window.guardarEstudiante = async function() {
             console.log('Respuesta del servidor (GET):', result);
         } catch (getError) {
             console.log('Error con GET, intentando POST:', getError);
-            result = await enviarDatosConFetch(scriptUrl, data);
+            // Asegurar que el parámetro action esté incluido en los datos para POST
+            const dataWithAction = { ...data, action: 'saveStudent' };
+            result = await enviarDatosConFetch(scriptUrl, dataWithAction);
             console.log('Respuesta del servidor (POST):', result);
         }
         
@@ -1234,9 +1239,12 @@ async function enviarDatosConFetch(scriptUrl, data) {
     try {
         // Crear parámetros para POST
         const params = new URLSearchParams();
-        params.append('action', 'saveStudent');
+        // Asegurar que el parámetro action esté presente
+        params.append('action', data.action || 'saveStudent');
         Object.keys(data).forEach(key => {
-            params.append(key, data[key]);
+            if (key !== 'action') { // Evitar duplicar el parámetro action
+                params.append(key, data[key]);
+            }
         });
         
         // Usar un proxy CORS público para POST
